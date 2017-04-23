@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Mapa Solidario</string>
+    <string name="title_map"></string>
+    <string name="title_news"></string>
+    <string name="title_user"></string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="map_fragment">Map fragment</string>
+    <string name="user_fragment">User fragment</string>
+
+    <string name="facebook_app_id">645982488946433</string>
+    <string name="keyhash">ga0RGNYHvNM5d0SLGQfpQWAPGJ8=</string>
+    <string name="title_activity_login">LoginActivity</string>
+
+</resources>
