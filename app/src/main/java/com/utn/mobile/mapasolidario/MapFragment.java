@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -23,63 +25,66 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.plus.PlusOneButton;
 
-/**
- * A fragment with a Google +1 button.
- * Activities that contain this fragment must implement the
- * {@link MapFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link MapFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class MapFragment extends Fragment {
+
+public class MapFragment extends Fragment implements OnMapReadyCallback {
+
+
+    private static final int LOCATION_REQUEST_CODE = 1;
+
+    GoogleMap mMap;
+    MapView mMapView;
+    View mView;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_map, container, false);
-        return view;
+        mView = inflater.inflate(R.layout.fragment_map, container, false);
+        return mView;
     }
 
 
-/*implements OnMapReadyCallback
+    @Override
+    public void onViewCreated(View view, Bundle savedInstance) {
+        super.onViewCreated(view, savedInstance);
 
-    {
-
-        private static final int LOCATION_REQUEST_CODE = 1;
-        private GoogleMap mMap;
-
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-    }*/
+        mMapView = (MapView) mView.findViewById(R.id.map);
+                if (mMapView != null){
+                    mMapView.onCreate(null);
+                    mMapView.onResume();
+                    mMapView.getMapAsync(this);
+                }
+    }
 
 
-        /*@Override
-        public void onMapReady(GoogleMap googleMap) {
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+
+
+        MapsInitializer.initialize(getContext());
+
         mMap = googleMap;
+
         LatLng ejemplo1 = new LatLng(-34.6085 , -58.3812);
         LatLng ejemplo2 = new LatLng(-34.6083 , -58.3732);
         LatLng ejemplo3 = new LatLng(-34.607 , -58.3712);
 
+        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+
         // Controles UI
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ContextCompat.checkSelfPermission(super.getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
         } else {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+            if (ActivityCompat.shouldShowRequestPermissionRationale(super.getActivity(),
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
                 // Mostrar diálogo explicativo
             } else {
                 // Solicitar permiso
                 ActivityCompat.requestPermissions(
-                        this,
+                        super.getActivity(),
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         LOCATION_REQUEST_CODE);
             }
@@ -88,18 +93,19 @@ public class MapFragment extends Fragment {
         mMap.getUiSettings().setZoomControlsEnabled(true);
 
         // Marcadores
-        mMap.addMarker(new MarkerOptions().position(ejemplo1).title("Test").icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)).snippet("Prueba de texto"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ejemplo1, 18));
+        //mMap.addMarker(new MarkerOptions().position(ejemplo1).title("Test").icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)).snippet("Prueba de texto"));
+        //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ejemplo1, 18));
         mMap.addMarker(new MarkerOptions().position(ejemplo2).title("Test").draggable(true).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ejemplo2, 18));
-        mMap.addMarker(new MarkerOptions().position(ejemplo3).title("Test"));
+        mMap.addMarker(new MarkerOptions().position(ejemplo3).title("Test").snippet("Prueba de texto"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ejemplo3, 18));
 
 
 
-    }*/
+    }
 
-     /*   @Override
+
+        @Override
         public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
         @NonNull int[] grantResults) {
         if (requestCode == LOCATION_REQUEST_CODE) {
@@ -109,11 +115,13 @@ public class MapFragment extends Fragment {
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 mMap.setMyLocationEnabled(true);
             } else {
-                Toast.makeText(this, "Error de permisos", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Error de permisos", Toast.LENGTH_LONG).show();
             }
 
         }
-    }*/
+    }
+
+    private OnFragmentInteractionListener mListener;
 
     /*// TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -128,7 +136,7 @@ public class MapFragment extends Fragment {
     private String mParam2;
     private PlusOneButton mPlusOneButton;
 
-    private OnFragmentInteractionListener mListener;
+
 
     public MapFragment() {
         // Required empty public constructor
@@ -161,15 +169,13 @@ public class MapFragment extends Fragment {
         }
     }
 
-
-
     @Override
     public void onResume() {
         super.onResume();
 
         // Refresh the state of the +1 button each time the activity receives focus.
         mPlusOneButton.initialize(PLUS_ONE_URL, PLUS_ONE_REQUEST_CODE);
-    }
+    }*/
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -195,7 +201,7 @@ public class MapFragment extends Fragment {
         mListener = null;
     }
 
-    *//**
+    /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
