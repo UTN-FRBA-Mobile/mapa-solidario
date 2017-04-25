@@ -14,4 +14,8 @@
     <string name="keyhash">ga0RGNYHvNM5d0SLGQfpQWAPGJ8=</string>
     <string name="title_activity_login">LoginActivity</string>
 
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">
+        AIzaSyBZru0i1cIJMYkUL4oVqd4ckNazCpbylG8
+    </string>
+
 </resources>
