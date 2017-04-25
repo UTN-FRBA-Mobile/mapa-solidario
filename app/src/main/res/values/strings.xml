@@ -3,6 +3,8 @@
     <string name="title_map"></string>
     <string name="title_news"></string>
     <string name="title_user"></string>
+    <string name="title_login">Mapa Solidario</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="map_fragment">Map fragment</string>
