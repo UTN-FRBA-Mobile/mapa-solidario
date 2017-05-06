@@ -8,10 +8,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -26,7 +30,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.plus.PlusOneButton;
 
 
-public class MapFragment extends Fragment implements OnMapReadyCallback {
+public class MapFragment extends Fragment implements OnMapReadyCallback, View.OnClickListener {
 
 
     private static final int LOCATION_REQUEST_CODE = 1;
@@ -34,6 +38,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     GoogleMap mMap;
     MapView mMapView;
     View mView;
+    private Button botonf;
 
 
     @Override
@@ -41,8 +46,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_map, container, false);
+
+
+ //       botonf = (Button) mView.findViewById(R.id.bpunto);
+  //      botonf.setOnClickListener(this);
+        nuevaNecesidad();
+
         return mView;
+
     }
+
+    @Override
+        public void onClick(View v) {
+            Fragment fragment = new PointFragment();
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.mapcontainer, fragment, "Fragment");
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        }
+
 
 
     @Override
@@ -55,6 +78,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     mMapView.onResume();
                     mMapView.getMapAsync(this);
                 }
+
     }
 
 
@@ -103,7 +127,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
 
     }
+    public void nuevaNecesidad(){
 
+        botonf = (Button) mView.findViewById(R.id.bpunto);
+        botonf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                        Fragment fragment = new PointFragment();
+                        FragmentManager fragmentManager = getFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.mapcontainer, fragment, "Fragment");
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
+                    }
+                });
+    }
 
         @Override
         public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
