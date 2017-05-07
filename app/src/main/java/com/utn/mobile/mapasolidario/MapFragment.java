@@ -19,11 +19,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.plus.PlusOneButton;
 
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
@@ -34,7 +32,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     GoogleMap mMap;
     MapView mMapView;
     View mView;
-
+    private OnFragmentInteractionListener mListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,7 +41,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mView = inflater.inflate(R.layout.fragment_map, container, false);
         return mView;
     }
-
 
     @Override
     public void onViewCreated(View view, Bundle savedInstance) {
@@ -56,7 +53,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     mMapView.getMapAsync(this);
                 }
     }
-
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -104,7 +100,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
-
         @Override
         public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
         @NonNull int[] grantResults) {
@@ -120,8 +115,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         }
     }
-
-    private OnFragmentInteractionListener mListener;
 
     /*// TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -142,7 +135,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         // Required empty public constructor
     }
 
-    *//**
+    */
+
+    /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
@@ -173,7 +168,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onResume() {
         super.onResume();
 
-        // Refresh the state of the +1 button each time the activity receives focus.
+        // Refresh the state of the +1 textView each time the activity receives focus.
         mPlusOneButton.initialize(PLUS_ONE_URL, PLUS_ONE_REQUEST_CODE);
     }*/
 
