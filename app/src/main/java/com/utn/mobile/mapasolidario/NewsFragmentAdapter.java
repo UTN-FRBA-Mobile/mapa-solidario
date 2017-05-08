@@ -5,7 +5,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by svillarreal on 06/05/17.
@@ -14,11 +18,13 @@ import android.widget.TextView;
 public class NewsFragmentAdapter extends RecyclerView.Adapter<NewsFragmentAdapter.ViewHolder> {
 
     private LayoutInflater layoutInflater;
-    private String texto;
+    private List<NewsEvent> news = new ArrayList<>();
 
-    public NewsFragmentAdapter(Context context, String texto) {
+    public NewsFragmentAdapter(Context context) {
         layoutInflater = LayoutInflater.from(context);
-        this.texto = texto;
+        news.add(new NewsEvent(null, "Nuevo punto en Banfield", "En la Escuela Media N°21 se están recibiendo alimentos", false, null));
+        news.add(new NewsEvent(null, "Campaña en Boedo", "En la Iglesia de Av. La Plata se creó una heladera solidaria", true, "21/07/2017"));
+        news.add(new NewsEvent(null, "Nuevo punto en La Matanza", "En el Centro San Agustín se está recibiendo ropa de todo tipo", false, null));
     }
 
     @Override
@@ -29,20 +35,41 @@ public class NewsFragmentAdapter extends RecyclerView.Adapter<NewsFragmentAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.textView.setText(texto + " " + String.valueOf(position));
+        holder.bind(news.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return 50;
+        return news != null ? news.size() : 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView textView;
 
-        public ViewHolder(View itemView) {
+        private ImageView newsUserImg;
+        private TextView newsTitle;
+        private TextView newsDescription;
+        private ImageView newsIsImportantImg;
+
+        ViewHolder(View itemView) {
             super(itemView);
-            textView = (TextView) itemView.findViewById(R.id.txt_newDescription);
+            newsUserImg = (ImageView) itemView.findViewById(R.id.img_newsUser);
+            newsTitle = (TextView) itemView.findViewById(R.id.txt_newsTitle);
+            newsDescription = (TextView) itemView.findViewById(R.id.txt_newsDescription);
+            newsIsImportantImg = (ImageView) itemView.findViewById(R.id.img_newsIsImportant);
+        }
+
+        void bind(NewsEvent message) {
+            /*User user = findUser(message.getUser());
+            if (user != null) {
+                ImageLoader.instance.loadImage(user.getProfile().getImage_24(), newsUserImg);
+            }*/
+            newsTitle.setText(message.getNewsTitle());
+            newsDescription.setText(message.getNewsDescription());
+            if (message.isNewsIsImportant()) {
+                newsIsImportantImg.setVisibility(View.VISIBLE);
+            } else {
+                newsIsImportantImg.setVisibility(View.INVISIBLE);
+            }
         }
     }
 }
