@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import com.facebook.AccessToken;
@@ -34,42 +35,29 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         loginButton = (LoginButton)findViewById(R.id.login_button);
 
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                Log.d(TAG, "User ID:  " +
-                        loginResult.getAccessToken().getUserId() + "\n" +
-                        "Auth Token: " + loginResult.getAccessToken().getToken());
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
 
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-
-            @Override
-            public void onCancel() {
-
-            }
-
-            @Override
-            public void onError(FacebookException e) {
-
-            }
-        });
-
-        accessTokenTracker = new AccessTokenTracker() {
-            @Override
-            protected void onCurrentAccessTokenChanged(
-                    AccessToken oldAccessToken,
-                    AccessToken currentAccessToken) {
-            }
-        };
-
-        accessToken = AccessToken.getCurrentAccessToken();
-        if (accessToken != null) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+        if(accessToken != null){
+            Intent _intent = new Intent(this, MainActivity.class);
+            startActivity(_intent);
             finish();
+        }
+        else {
+            loginButton.setVisibility(View.VISIBLE);
+            loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                @Override
+                public void onSuccess(LoginResult loginResult) {
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+
+                @Override
+                public void onCancel() {}
+
+                @Override
+                public void onError(FacebookException e) {}
+            });
         }
     }
 

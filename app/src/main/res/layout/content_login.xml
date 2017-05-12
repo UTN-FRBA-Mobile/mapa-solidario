@@ -14,27 +14,34 @@
         android:background="@color/colorBrand"
         android:orientation="vertical"
         tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:weightSum="1">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textSize="30dp"
+            android:textSize="36dp"
+            android:fontFamily="sans-serif-thin"
             android:text="@string/title_login"
-            android:textColor="#FFF">
+            android:textColor="#FFF"
+            android:layout_weight="0.13"
+            android:layout_marginTop="200dp">
 
         </TextView>
 
         <com.facebook.login.widget.LoginButton xmlns:facebook="http://schemas.android.com/apk/res-auto"
             android:id="@+id/login_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:layout_width="219dp"
+            android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
             facebook:com_facebook_login_text="Login con Facebook"
             facebook:layout_constraintLeft_toLeftOf="parent"
             facebook:layout_constraintRight_toRightOf="parent"
-            tools:layout_editor_absoluteY="0dp" />
+            tools:layout_editor_absoluteY="0dp"
+            android:layout_weight="0.04" />
     </LinearLayout>
 
 </RelativeLayout>
