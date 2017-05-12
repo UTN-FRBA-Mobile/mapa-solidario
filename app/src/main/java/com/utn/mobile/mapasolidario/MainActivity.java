@@ -6,16 +6,22 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
+
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MainActivity extends AppCompatActivity
         implements MapFragment.OnFragmentInteractionListener,
         NewsFragment.OnFragmentInteractionListener,
         UserFragment.OnFragmentInteractionListener{
 
+    public static final String TAG = "MainActivity";
     private TextView mTextMessage;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -51,6 +57,12 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
+
+        // Get Firebase token
+        String token = FirebaseInstanceId.getInstance().getToken();
+
+        // Log and toast
+        Log.d(TAG, "Firebase token: "+token);
 
         if(accessToken != null){
             BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);

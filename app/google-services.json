@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "20055776086",
+    "firebase_url": "https://mapa-solidario.firebaseio.com",
+    "project_id": "mapa-solidario",
+    "storage_bucket": "mapa-solidario.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:20055776086:android:a0a8ebf32a59e02a",
+        "android_client_info": {
+          "package_name": "com.utn.mobile.mapasolidario"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "20055776086-pe3gkj2ad7jqflnl3ck21uaft33sk2au.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwG63odtSiZ2O0-Fy_-CQXQXSp1riD-G0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
