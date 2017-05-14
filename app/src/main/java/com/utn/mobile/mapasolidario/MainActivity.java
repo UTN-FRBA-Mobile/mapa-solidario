@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity
         UserFragment.OnFragmentInteractionListener{
 
     private TextView mTextMessage;
+    private ClaseUsuario usuarioActual;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity
                     return true;
                 case R.id.navigation_user:
                     getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.content, new UserFragment(), "Fragment")
+                            .replace(R.id.content, new UserFragment(usuarioActual), "Fragment")
                             .commit();
                     return true;
             }
@@ -51,6 +52,9 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
+
+        Intent intent = getIntent();
+        usuarioActual = (ClaseUsuario)intent.getSerializableExtra("usuario");
 
         if(accessToken != null){
             BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
