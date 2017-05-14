@@ -73,7 +73,12 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-
+    //@Override
+    public void goBack() {
+        getFragmentManager().popBackStack();
+        //Muestro el botón que estaba oculto
+   //     botonf.setVisibility(View.VISIBLE);
+    }
 
     @Override
     public void onFragmentInteraction(Uri uri) {

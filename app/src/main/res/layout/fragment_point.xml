@@ -1,17 +1,46 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="500px"
-    android:layout_height="500px"
+    android:layout_width="300dp"
+    android:layout_height="300dp"
     android:layout_centerInParent="true"
     android:layout_gravity="center"
+    android:background="@color/white"
     android:id="@+id/pointcontainer"
     tools:context="com.utn.mobile.mapasolidario.PointFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:text="@string/punto_confirmacion" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="130dp"
+        android:text="mostrar ubicación"/>
+
+    <Button
+        android:id="@+id/fcancel_boton"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom|left"
+        android:text="@string/punto_volver"
+        android:textColor="@color/white"
+        android:background="@drawable/com_facebook_tooltip_blue_background"
+        />
+
+    <Button
+        android:id="@+id/fcont_boton"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom|right"
+        android:text="@string/punto_avanzar"
+        android:textColor="@color/white"
+        android:background="@drawable/com_facebook_tooltip_blue_background"
+        />
+
 
 </FrameLayout>

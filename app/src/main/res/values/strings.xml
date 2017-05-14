@@ -4,9 +4,12 @@
     <string name="title_news"></string>
     <string name="title_user"></string>
     <string name="title_login">Mapa Solidario</string>
+    <string name="punto_confirmacion">Está por crear una nueva necesidad en:</string>
+    <string name="punto_continuar">¿Desea continuar?</string>
+    <string name="punto_volver">Volver</string>
+    <string name="punto_avanzar">Continuar</string>
 
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="map_fragment">Map fragment</string>
     <string name="user_fragment">User fragment</string>
 

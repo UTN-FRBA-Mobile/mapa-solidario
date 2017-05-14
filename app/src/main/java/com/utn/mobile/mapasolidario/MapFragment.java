@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -30,7 +31,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.plus.PlusOneButton;
 
 
-public class MapFragment extends Fragment implements OnMapReadyCallback, View.OnClickListener {
+public class MapFragment extends Fragment
+        implements OnMapReadyCallback, View.OnClickListener{
 
 
     private static final int LOCATION_REQUEST_CODE = 1;
@@ -38,7 +40,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
     GoogleMap mMap;
     MapView mMapView;
     View mView;
-    private Button botonf;
+    FloatingActionButton botonf;
 
 
     @Override
@@ -47,26 +49,34 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_map, container, false);
 
-
- //       botonf = (Button) mView.findViewById(R.id.bpunto);
-  //      botonf.setOnClickListener(this);
         nuevaNecesidad();
 
         return mView;
 
     }
 
+    public void nuevaNecesidad(){
+
+        botonf = (FloatingActionButton) mView.findViewById(R.id.bpunto);
+        botonf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Fragment fragment = new PointFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.mapcontainer, fragment, "Fragment");
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+                botonf.setVisibility(View.GONE);
+            }
+        });
+    }
+
     @Override
         public void onClick(View v) {
-            Fragment fragment = new PointFragment();
-            FragmentManager fragmentManager = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.mapcontainer, fragment, "Fragment");
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
+
         }
-
-
 
     @Override
     public void onViewCreated(View view, Bundle savedInstance) {
@@ -79,6 +89,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
                     mMapView.getMapAsync(this);
                 }
 
+         if (botonf.getVisibility()==View.GONE){
+             botonf.setVisibility(View.VISIBLE);
+         }
     }
 
 
@@ -124,24 +137,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
         mMap.addMarker(new MarkerOptions().position(ejemplo3).title("Test").snippet("Prueba de texto"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ejemplo3, 18));
 
-
-
-    }
-    public void nuevaNecesidad(){
-
-        botonf = (Button) mView.findViewById(R.id.bpunto);
-        botonf.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                        Fragment fragment = new PointFragment();
-                        FragmentManager fragmentManager = getFragmentManager();
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.mapcontainer, fragment, "Fragment");
-                        fragmentTransaction.addToBackStack(null);
-                        fragmentTransaction.commit();
-                    }
-                });
     }
 
         @Override
@@ -159,6 +154,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
 
         }
     }
+
+
+
 
     private OnFragmentInteractionListener mListener;
 

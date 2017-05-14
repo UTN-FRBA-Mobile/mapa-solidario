@@ -3,10 +3,15 @@ package com.utn.mobile.mapasolidario;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 
 /**
@@ -17,7 +22,8 @@ import android.view.ViewGroup;
  * Use the {@link PointFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PointFragment extends Fragment {
+public class PointFragment extends Fragment
+        implements View.OnClickListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -28,6 +34,8 @@ public class PointFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private Button bcancelar;
+    private Button bcontinuar;
 
     public PointFragment() {
         // Required empty public constructor
@@ -58,22 +66,50 @@ public class PointFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-  */  }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_point, container, false);
+  */
     }
 
+    @Override
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_point, container, false);
+        accionBotonVolver(view);
+        return view;
+    }
+
+
+    public void  accionBotonVolver(View view){
+        bcancelar = (Button)view.findViewById(R.id.fcancel_boton);
+            bcancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getFragmentManager().popBackStack();
+                //volver a mostrar el botón +
+                View map = (View) getView().getParent();
+                FloatingActionButton botonf = (FloatingActionButton) map.findViewById(R.id.bpunto);
+                botonf.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    @Override
+    public void onClick(View v) {
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+/*
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
     }
-
+*/
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -102,7 +138,6 @@ public class PointFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void goBack ();
     }
 }
