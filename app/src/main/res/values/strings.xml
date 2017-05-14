@@ -18,4 +18,11 @@
         AIzaSyBZru0i1cIJMYkUL4oVqd4ckNazCpbylG8
     </string>
 
+    <string name="sin_conexion">No se pudo conectar con el servidor, verifique su conexión de internet</string>
+    <string name="fetching_news">Buscando novedades en el servidor, espere por favor...</string>
+    <string name="no_connection">No hay conexión con el servidor. Por favor intente más tarde.</string>
+    <string name="sin_comunicacion">No se pudo conectar con el Servidor. Verifique la comunicación con el mismo</string>
+    <string name="POPUP_MENSAJE_SIN_NOVEDADES">No se encontraron novedades</string>
+    <string name="POPUP_TITLE_SIN_NOVEDADES">Sin novedades</string>
+    <string name="POPUP_TITLE_SERVIDOR">Servidor</string>
 </resources>

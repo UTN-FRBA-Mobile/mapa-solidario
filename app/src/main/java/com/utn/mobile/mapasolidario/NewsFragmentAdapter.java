@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.utn.mobile.mapasolidario.dto.NovedadResponse;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,14 +20,13 @@ import java.util.List;
 
 public class NewsFragmentAdapter extends RecyclerView.Adapter<NewsFragmentAdapter.ViewHolder> {
 
+    private final NewsFragmentView newsFragmentView;
     private LayoutInflater layoutInflater;
-    private List<NewsEvent> news = new ArrayList<>();
+    private List<NovedadResponse> news = new ArrayList<>();
 
-    public NewsFragmentAdapter(Context context) {
+    public NewsFragmentAdapter(Context context, NewsFragmentView newsFragmentView) {
         layoutInflater = LayoutInflater.from(context);
-        news.add(new NewsEvent(null, "Nuevo punto en Banfield", "En la Escuela Media N°21 se están recibiendo alimentos", false, null));
-        news.add(new NewsEvent(null, "Campaña en Boedo", "En la Iglesia de Av. La Plata se creó una heladera solidaria", true, "21/07/2017"));
-        news.add(new NewsEvent(null, "Nuevo punto en La Matanza", "En el Centro San Agustín se está recibiendo ropa de todo tipo", false, null));
+        this.newsFragmentView = newsFragmentView;
     }
 
     @Override
@@ -43,32 +45,49 @@ public class NewsFragmentAdapter extends RecyclerView.Adapter<NewsFragmentAdapte
         return news != null ? news.size() : 0;
     }
 
+    public void updateData(List<NovedadResponse> novedades) {
+        news.clear();
+        news.addAll(novedades);
+        notifyDataSetChanged();
+    }
+
+    public void removeItem(int position) {
+        news.remove(position);
+        notifyItemRemoved(position);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView newsUserImg;
         private TextView newsTitle;
         private TextView newsDescription;
-        private ImageView newsIsImportantImg;
+        private TextView newsExpireDate;
+        private View relativeLayout;
 
         ViewHolder(View itemView) {
             super(itemView);
             newsUserImg = (ImageView) itemView.findViewById(R.id.img_newsUser);
             newsTitle = (TextView) itemView.findViewById(R.id.txt_newsTitle);
             newsDescription = (TextView) itemView.findViewById(R.id.txt_newsDescription);
-            newsIsImportantImg = (ImageView) itemView.findViewById(R.id.img_newsIsImportant);
+            newsExpireDate = (TextView) itemView.findViewById(R.id.txt_newsExpireDate);
+            relativeLayout = (View) itemView.findViewById(R.id.lay_newsIsImportant);
+
         }
 
-        void bind(NewsEvent message) {
-            /*User user = findUser(message.getUser());
-            if (user != null) {
-                ImageLoader.instance.loadImage(user.getProfile().getImage_24(), newsUserImg);
-            }*/
-            newsTitle.setText(message.getNewsTitle());
-            newsDescription.setText(message.getNewsDescription());
-            if (message.isNewsIsImportant()) {
-                newsIsImportantImg.setVisibility(View.VISIBLE);
+        void bind(NovedadResponse novedad) {
+//            User user = findUser(novedad.getUser());
+//            if (user != null) {
+//                ImageLoader.instance.loadImage(user.getProfile().getImage_24(), newsUserImg);
+//            }
+            newsTitle.setText(novedad.getTitle());
+            newsDescription.setText(novedad.getDescription());
+            if (novedad.getExpires() != null) {
+                newsFragmentView.changeItemColor(itemView);
+                newsExpireDate.setVisibility(View.VISIBLE);
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                newsExpireDate.setText("Fecha de Finalizazión: " + sdf.format(novedad.getExpires()));
             } else {
-                newsIsImportantImg.setVisibility(View.INVISIBLE);
+                newsExpireDate.setVisibility(View.INVISIBLE);
             }
         }
     }

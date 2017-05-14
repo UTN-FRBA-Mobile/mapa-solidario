@@ -1,22 +1,29 @@
 package com.utn.mobile.mapasolidario;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import com.facebook.AccessToken;
+import com.google.inject.Inject;
+import com.utn.mobile.mapasolidario.event.HideProgressDialogEvent;
+import com.utn.mobile.mapasolidario.event.ShowProgressDialogEvent;
 
-public class MainActivity extends AppCompatActivity
+import org.greenrobot.eventbus.Subscribe;
+
+import roboguice.activity.RoboFragmentActivity;
+
+public class MainActivity extends RoboFragmentActivity
         implements MapFragment.OnFragmentInteractionListener,
         NewsFragment.OnFragmentInteractionListener,
         UserFragment.OnFragmentInteractionListener{
 
-    private TextView mTextMessage;
+    @Inject
+    private ProgressDialog progressDialog;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -69,5 +76,24 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Subscribe
+    public void hideProgressDialogEventRecieved(HideProgressDialogEvent hideProgressDialogEvent) {
+        if (progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
+    @Subscribe
+    public void showProgressDialogEventRecieved(ShowProgressDialogEvent showProgressDialogEvent) {
+        progressDialog.setMessage(getString(R.string.fetching_news));
+        if (!progressDialog.isShowing()) {
+            progressDialog.setIcon(android.R.drawable.ic_popup_sync);
+            progressDialog.setCancelable(false);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.show();
+        }
     }
 }
