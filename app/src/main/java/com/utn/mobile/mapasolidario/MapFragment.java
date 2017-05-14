@@ -156,23 +156,20 @@ public class MapFragment extends Fragment
     }
 
 
-
-
     private OnFragmentInteractionListener mListener;
 
-    /*// TODO: Rename parameter arguments, choose names that match
 
-/**
+/*
  * A fragment with a Google +1 button.
  * Activities that contain this fragment must implement the
  * {@link MapFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link MapFragment#newInstance} factory method to
  * create an instance of this fragment.
- */
-public class MapFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-
+*/ 
+//public class MapFragment extends Fragment {
+ 
+   /*// TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -225,7 +222,7 @@ public class MapFragment extends Fragment {
         mPlusOneButton.initialize(PLUS_ONE_URL, PLUS_ONE_REQUEST_CODE);
     }*/
 
-    }
+    
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {

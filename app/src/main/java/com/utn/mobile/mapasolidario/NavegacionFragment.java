@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,6 +64,7 @@ public class NavegacionFragment extends Fragment
 
         accionBotonAvanzar();
         accionBotonRetroceder();
+        accionBotonConfirmar();
         return view;
     }
 
@@ -97,9 +99,13 @@ public class NavegacionFragment extends Fragment
             @Override
             public void onClick(View view) {
                 activeP=0;
-
                 //confirmar los datos cargados en la base de datos
-
+                getFragmentManager().popBackStack();
+                getFragmentManager().popBackStack();
+                //volver a mostrar el botón +
+                View map = (View) getView().getParent().getParent();
+                FloatingActionButton botonf = (FloatingActionButton) map.findViewById(R.id.bpunto);
+                botonf.setVisibility(View.VISIBLE);
             }
         });
     }
