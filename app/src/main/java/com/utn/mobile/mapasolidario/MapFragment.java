@@ -1,45 +1,192 @@
 package com.utn.mobile.mapasolidario;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
-/**
- * A fragment with a Google +1 button.
- * Activities that contain this fragment must implement the
- * {@link MapFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link MapFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class MapFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.plus.PlusOneButton;
+
+
+public class MapFragment extends Fragment
+        implements OnMapReadyCallback, View.OnClickListener{
+
+
+    private static final int LOCATION_REQUEST_CODE = 1;
+
+    GoogleMap mMap;
+    MapView mMapView;
+    View mView;
+    FloatingActionButton botonf;
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        mView = inflater.inflate(R.layout.fragment_map, container, false);
+
+        nuevaNecesidad();
+
+        return mView;
+
+    }
+
+    public void nuevaNecesidad(){
+
+        botonf = (FloatingActionButton) mView.findViewById(R.id.bpunto);
+        botonf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Fragment fragment = new PointFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.mapcontainer, fragment, "Fragment");
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+                botonf.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    @Override
+        public void onClick(View v) {
+
+        }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstance) {
+        super.onViewCreated(view, savedInstance);
+
+        mMapView = (MapView) mView.findViewById(R.id.map);
+                if (mMapView != null){
+                    mMapView.onCreate(null);
+                    mMapView.onResume();
+                    mMapView.getMapAsync(this);
+                }
+
+         if (botonf.getVisibility()==View.GONE){
+             botonf.setVisibility(View.VISIBLE);
+         }
+    }
+
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+
+
+        MapsInitializer.initialize(getContext());
+
+        mMap = googleMap;
+
+        LatLng ejemplo1 = new LatLng(-34.6085 , -58.3812);
+        LatLng ejemplo2 = new LatLng(-34.6083 , -58.3732);
+        LatLng ejemplo3 = new LatLng(-34.607 , -58.3712);
+
+        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+
+        // Controles UI
+        if (ContextCompat.checkSelfPermission(super.getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mMap.setMyLocationEnabled(true);
+        } else {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(super.getActivity(),
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+                // Mostrar diálogo explicativo
+            } else {
+                // Solicitar permiso
+                ActivityCompat.requestPermissions(
+                        super.getActivity(),
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        LOCATION_REQUEST_CODE);
+            }
+        }
+
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+
+        // Marcadores
+        //mMap.addMarker(new MarkerOptions().position(ejemplo1).title("Test").icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)).snippet("Prueba de texto"));
+        //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ejemplo1, 18));
+        mMap.addMarker(new MarkerOptions().position(ejemplo2).title("Test").draggable(true).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ejemplo2, 18));
+        mMap.addMarker(new MarkerOptions().position(ejemplo3).title("Test").snippet("Prueba de texto"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ejemplo3, 18));
+
+    }
+
+        @Override
+        public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+        @NonNull int[] grantResults) {
+        if (requestCode == LOCATION_REQUEST_CODE) {
+            // ¿Permisos asignados?
+            if (permissions.length > 0 &&
+                    permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION) &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                mMap.setMyLocationEnabled(true);
+            } else {
+                Toast.makeText(getContext(), "Error de permisos", Toast.LENGTH_LONG).show();
+            }
+
+        }
+    }
+
+
+
+
+    private OnFragmentInteractionListener mListener;
+
+    /*// TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     // The request code must be 0 or greater.
+    private static final int PLUS_ONE_REQUEST_CODE = 0;
+    // The URL to +1.  Must be a valid URL.
+    private final String PLUS_ONE_URL = "http://developer.android.com";
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private PlusOneButton mPlusOneButton;
 
-    private OnFragmentInteractionListener mListener;
+
 
     public MapFragment() {
         // Required empty public constructor
     }
 
-    /**
+    *//**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
      * @return A new instance of fragment MapFragment.
-     */
+     *//*
     // TODO: Rename and change types and number of parameters
     public static MapFragment newInstance(String param1, String param2) {
         MapFragment fragment = new MapFragment();
@@ -60,18 +207,12 @@ public class MapFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_map, container, false);
-        return view;
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
 
-    }
+        // Refresh the state of the +1 button each time the activity receives focus.
+        mPlusOneButton.initialize(PLUS_ONE_URL, PLUS_ONE_REQUEST_CODE);
+    }*/
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -106,7 +247,9 @@ public class MapFragment extends Fragment {
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
-     */
+     *//*
+    */
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
