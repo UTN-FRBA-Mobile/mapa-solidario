@@ -3,6 +3,7 @@ package com.utn.mobile.mapasolidario;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,19 +17,42 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+
+
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.view.Menu;
+import android.view.View;
+import android.widget.TextView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
+import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.plus.PlusOneButton;
+
 
 
 public class MapFragment extends Fragment
@@ -37,6 +61,9 @@ public class MapFragment extends Fragment
 
     private static final int LOCATION_REQUEST_CODE = 1;
 
+    //location
+    private TrackGPS gps;
+    LatLng currentLocation;
     GoogleMap mMap;
     MapView mMapView;
     View mView;
@@ -102,26 +129,55 @@ public class MapFragment extends Fragment
         MapsInitializer.initialize(getContext());
 
         mMap = googleMap;
+        gps = new TrackGPS(getContext());
 
-        LatLng ejemplo1 = new LatLng(-34.6085 , -58.3812);
-        LatLng ejemplo2 = new LatLng(-34.6083 , -58.3732);
-        LatLng ejemplo3 = new LatLng(-34.607 , -58.3712);
+        currentLocation = new LatLng(-34.6183, -58.3732);
+        LatLng ejemplo2 = new LatLng(-34.6083, -58.3732);
+        LatLng ejemplo3 = new LatLng(-34.607, -58.3712);
 
-        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mMap.getUiSettings().setMapToolbarEnabled(false);
 
 
-        // Controles UI
+
+
+        // Custom InfoWindow
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+            // Use default InfoWindow frame
+            @Override
+            public View getInfoWindow(Marker arg0) {
+                return null;
+            }
+
+            // Defines the contents of the InfoWindow
+            @Override
+            public View getInfoContents(Marker arg0) {
+
+                // Getting view from the layout file info_window_layout
+                View v = getActivity().getLayoutInflater().inflate(R.layout.map_infowindow, null);
+
+
+                return v;
+
+            }
+        });
+
+
+
+        // Permisos
         if (ContextCompat.checkSelfPermission(super.getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
+            this.setCurrentLocation();
+
         } else {
             if (ActivityCompat.shouldShowRequestPermissionRationale(super.getActivity(),
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
                 // Mostrar diálogo explicativo
             } else {
                 // Solicitar permiso
-                ActivityCompat.requestPermissions(
-                        super.getActivity(),
+                requestPermissions(
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         LOCATION_REQUEST_CODE);
             }
@@ -133,93 +189,57 @@ public class MapFragment extends Fragment
         //mMap.addMarker(new MarkerOptions().position(ejemplo1).title("Test").icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)).snippet("Prueba de texto"));
         //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ejemplo1, 18));
         mMap.addMarker(new MarkerOptions().position(ejemplo2).title("Test").draggable(true).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ejemplo2, 18));
-        mMap.addMarker(new MarkerOptions().position(ejemplo3).title("Test").snippet("Prueba de texto"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ejemplo3, 18));
+        //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ejemplo2, 18));
+        Marker marker = mMap.addMarker(new MarkerOptions().position(ejemplo3));
+        //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
 
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+
+            @Override
+            public void onMapClick(LatLng point) {
+                // TODO Auto-generated method stub
+                //lstLatLngs.add(point);
+                mMap.clear();
+                mMap.addMarker(new MarkerOptions().position(point));
+            }
+        });
     }
 
-        @Override
-        public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-        @NonNull int[] grantResults) {
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         if (requestCode == LOCATION_REQUEST_CODE) {
-            // ¿Permisos asignados?
-            if (permissions.length > 0 &&
-                    permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION) &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ) {
                 mMap.setMyLocationEnabled(true);
-            } else {
+                this.setCurrentLocation();
+            }
+            else {
                 Toast.makeText(getContext(), "Error de permisos", Toast.LENGTH_LONG).show();
             }
-
         }
     }
 
+    private void setCurrentLocation(){
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        if(gps.canGetLocation()){
+                            Location _l = gps.getLocation();
+                            currentLocation = new LatLng(_l.getLatitude(), _l.getLongitude());
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
+                            mMap.addMarker(new MarkerOptions().position(currentLocation).title("Prueba location").snippet("Prueba de texto"));
 
-
+                        }
+                        else{
+                            gps.showSettingsAlert();
+                        }
+                    }
+                },
+                1000);
+    }
 
     private OnFragmentInteractionListener mListener;
-
-    /*// TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-    // The request code must be 0 or greater.
-    private static final int PLUS_ONE_REQUEST_CODE = 0;
-    // The URL to +1.  Must be a valid URL.
-    private final String PLUS_ONE_URL = "http://developer.android.com";
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-    private PlusOneButton mPlusOneButton;
-
-
-
-    public MapFragment() {
-        // Required empty public constructor
-    }
-
-    *//**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MapFragment.
-     *//*
-    // TODO: Rename and change types and number of parameters
-    public static MapFragment newInstance(String param1, String param2) {
-        MapFragment fragment = new MapFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        // Refresh the state of the +1 button each time the activity receives focus.
-        mPlusOneButton.initialize(PLUS_ONE_URL, PLUS_ONE_REQUEST_CODE);
-    }*/
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
