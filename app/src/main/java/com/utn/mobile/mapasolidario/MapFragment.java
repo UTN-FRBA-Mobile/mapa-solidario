@@ -49,13 +49,13 @@ public class MapFragment extends Fragment
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_map, container, false);
 
-        nuevaNecesidad();
+        nuevaNecesidad(savedInstanceState);
 
         return mView;
 
     }
 
-    public void nuevaNecesidad(){
+    public void nuevaNecesidad(final Bundle savedInstanceState){
 
         botonf = (FloatingActionButton) mView.findViewById(R.id.bpunto);
         botonf.setOnClickListener(new View.OnClickListener() {

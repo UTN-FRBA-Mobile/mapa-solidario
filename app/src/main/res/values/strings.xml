@@ -8,7 +8,9 @@
     <string name="punto_continuar">¿Desea continuar?</string>
     <string name="punto_volver">Volver</string>
     <string name="punto_avanzar">Continuar</string>
-
+    <string name="punto_retro">&lt;</string>
+    <string name="punto_cont">&gt;</string>
+    <string name="punto_ok">&#x2713;</string>
 
     <string name="map_fragment">Map fragment</string>
     <string name="user_fragment">User fragment</string>

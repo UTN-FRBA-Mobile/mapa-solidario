@@ -24,50 +24,24 @@ import android.widget.Button;
  */
 public class PointFragment extends Fragment
         implements View.OnClickListener{
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
-    private Button bcancelar;
-    private Button bcontinuar;
 
     public PointFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment PointFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static PointFragment newInstance(String param1, String param2) {
         PointFragment fragment = new PointFragment();
-/*        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-*/        return fragment;
+        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-/*        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-  */
+
     }
+
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
@@ -75,12 +49,13 @@ public class PointFragment extends Fragment
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_point, container, false);
         accionBotonVolver(view);
+        accionBotonContinuar(view);
         return view;
     }
 
 
     public void  accionBotonVolver(View view){
-        bcancelar = (Button)view.findViewById(R.id.fcancel_boton);
+        Button bcancelar = (Button)view.findViewById(R.id.fcancel_boton);
             bcancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,6 +64,21 @@ public class PointFragment extends Fragment
                 View map = (View) getView().getParent();
                 FloatingActionButton botonf = (FloatingActionButton) map.findViewById(R.id.bpunto);
                 botonf.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    public void  accionBotonContinuar(View view){
+        Button bcontinuar = (Button)view.findViewById(R.id.fcont_boton);
+        bcontinuar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new NavegacionFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.pointcontainer, fragment, "Fragment");
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             }
         });
     }
@@ -102,14 +92,6 @@ public class PointFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
     }
 
-/*
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-*/
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

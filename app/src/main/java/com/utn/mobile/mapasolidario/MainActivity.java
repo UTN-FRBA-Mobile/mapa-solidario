@@ -20,7 +20,8 @@ public class MainActivity extends AppCompatActivity
         implements MapFragment.OnFragmentInteractionListener,
         NewsFragment.OnFragmentInteractionListener,
         UserFragment.OnFragmentInteractionListener,
-        PointFragment.OnFragmentInteractionListener{
+        PointFragment.OnFragmentInteractionListener,
+        NavegacionFragment.OnFragmentInteractionListener{
 
     private TextView mTextMessage;
 
