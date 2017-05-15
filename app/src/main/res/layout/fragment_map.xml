@@ -9,7 +9,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
         android:orientation="vertical"
         >
 
@@ -21,6 +20,7 @@
             android:textSize="20dp"
             android:gravity="center_horizontal"
             android:paddingBottom="10dp"
+            android:background="@color/colorPrimary"
             android:fontFamily="sans-serif-thin"
             />
 

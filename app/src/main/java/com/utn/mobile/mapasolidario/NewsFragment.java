@@ -125,7 +125,7 @@ public class NewsFragment extends BaseFragment implements NewsFragmentView {
 
     @Override
     public void changeItemColor(View itemView) {
-        itemView.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        itemView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
     }
 
     /**
