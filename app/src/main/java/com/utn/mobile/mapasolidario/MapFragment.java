@@ -55,7 +55,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 
 
-public class MapFragment extends Fragment
+public class MapFragment extends BaseFragment
         implements OnMapReadyCallback, View.OnClickListener{
 
 

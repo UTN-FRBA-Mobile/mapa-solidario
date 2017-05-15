@@ -27,7 +27,7 @@ import com.facebook.login.widget.LoginButton;
  * Use the {@link UserFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class UserFragment extends Fragment {
+public class UserFragment extends BaseFragment {
 
     private CallbackManager callbackManager;
     private LoginButton loginButton;
