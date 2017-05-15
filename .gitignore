@@ -96,3 +96,17 @@ atlassian-ide-plugin.xml
 com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
+
+_mac/*
+inspection/*
+IntelliLang.xml
+androidEditors.xml
+androidStudioFirstRun.xml
+colors.scheme.xml
+debugger.renderers.xml
+debugger.xml
+diff.xml
+gradle.run.settings.xml
+ignore.xml
+vcs.xml
+web-browsers.xml	
