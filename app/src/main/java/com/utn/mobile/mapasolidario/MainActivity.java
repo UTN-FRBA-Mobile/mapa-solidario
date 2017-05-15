@@ -40,6 +40,7 @@ public class MainActivity extends RoboFragmentActivity
 
     public static final String TAG = "MainActivity";
     private TextView mTextMessage;
+    private ClaseUsuario usuarioActual;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -59,7 +60,7 @@ public class MainActivity extends RoboFragmentActivity
                     return true;
                 case R.id.navigation_user:
                     getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.content, new UserFragment(), "Fragment")
+                            .replace(R.id.content, new UserFragment(usuarioActual), "Fragment")
                             .commit();
                     return true;
             }
@@ -74,6 +75,8 @@ public class MainActivity extends RoboFragmentActivity
         setContentView(R.layout.activity_main);
 
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        Intent intent = getIntent();
+        usuarioActual = (ClaseUsuario)intent.getSerializableExtra("usuario");
 
         // Get Firebase token
         String token = FirebaseInstanceId.getInstance().getToken();

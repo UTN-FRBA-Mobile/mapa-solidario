@@ -13,9 +13,15 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.internal.Logger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+
+import org.json.JSONObject;
+
+import java.util.Arrays;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -34,21 +40,64 @@ public class LoginActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_login);
         loginButton = (LoginButton)findViewById(R.id.login_button);
+        loginButton.setReadPermissions(Arrays.asList("public_profile", "email"));
 
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
 
         if(accessToken != null){
-            Intent _intent = new Intent(this, MainActivity.class);
-            startActivity(_intent);
-            finish();
+
+            GraphRequest request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
+                @Override
+                public void onCompleted(JSONObject user, GraphResponse graphResponse) {
+
+                    ClaseUsuario usuario = new ClaseUsuario();
+                    usuario.setId(user.optString("id"));
+                    usuario.setNombre(user.optString("first_name"));
+                    usuario.setApellido(user.optString("last_name"));
+                    usuario.setMail(user.optString("email"));
+
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.putExtra("usuario", usuario);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+
+            Bundle parameters = new Bundle();
+            parameters.putString("fields", "id,first_name,last_name,email,picture.type(large)");
+            request.setParameters(parameters);
+            request.executeAsync();
         }
         else {
             loginButton.setVisibility(View.VISIBLE);
             loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                 @Override
                 public void onSuccess(LoginResult loginResult) {
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intent);
+
+                    GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                        @Override
+                        public void onCompleted(JSONObject user, GraphResponse graphResponse) {
+
+                            ClaseUsuario usuario = new ClaseUsuario();
+                            usuario.setId(user.optString("id"));
+                            usuario.setNombre(user.optString("first_name"));
+                            usuario.setApellido(user.optString("last_name"));
+                            usuario.setMail(user.optString("email"));
+
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            intent.putExtra("usuario", usuario);
+                            startActivity(intent);
+                            finish();
+                        }
+                    });
+
+                    Bundle parameters = new Bundle();
+                    parameters.putString("fields", "id,first_name,last_name,email,picture.type(large)");
+                    request.setParameters(parameters);
+                    request.executeAsync();
+
+                    Intent _intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(_intent);
                     finish();
                 }
 
