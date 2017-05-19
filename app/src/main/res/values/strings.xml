@@ -4,13 +4,11 @@
     <string name="title_news">Novedades</string>
     <string name="title_user">Usuario</string>
     <string name="title_login">Mapa Solidario</string>
+
+    <string name="punto_ubicacion">Toque en el mapa el lugar de la nueva necesidad</string>
     <string name="punto_confirmacion">Está por crear una nueva necesidad en:</string>
-    <string name="punto_continuar">¿Desea continuar?</string>
-    <string name="punto_volver">Volver</string>
-    <string name="punto_avanzar">Continuar</string>
-    <string name="punto_retro">&lt;</string>
-    <string name="punto_cont">&gt;</string>
-    <string name="punto_ok">&#x2713;</string>
+    <string name="punto_volver">Cancelar</string>
+    <string name="punto_avanzar">Confirmar</string>
 
     <string name="map_fragment">Map fragment</string>
     <string name="user_fragment">User fragment</string>

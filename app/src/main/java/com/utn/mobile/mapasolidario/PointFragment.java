@@ -60,10 +60,6 @@ public class PointFragment extends Fragment
             @Override
             public void onClick(View view) {
                 getFragmentManager().popBackStack();
-                //volver a mostrar el botón +
-                View map = (View) getView().getParent();
-                FloatingActionButton botonf = (FloatingActionButton) map.findViewById(R.id.bpunto);
-                botonf.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -73,12 +69,7 @@ public class PointFragment extends Fragment
         bcontinuar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment = new NavegacionFragment();
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.pointcontainer, fragment, "Fragment");
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
+                getFragmentManager().popBackStack();
             }
         });
     }

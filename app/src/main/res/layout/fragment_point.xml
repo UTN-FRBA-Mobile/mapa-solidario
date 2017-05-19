@@ -1,7 +1,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="300dp"
-    android:layout_height="300dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_centerInParent="true"
     android:layout_gravity="center"
     android:background="@color/white"
@@ -9,10 +9,23 @@
     tools:context="com.utn.mobile.mapasolidario.PointFragment">
 
     <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Detalle Punto de necesidad"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        android:gravity="center_horizontal"
+        android:paddingBottom="10dp"
+        android:background="@color/colorPrimary"
+        android:fontFamily="sans-serif-thin"
+        />
+
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="60dp"
         android:text="@string/punto_confirmacion" />
 
     <TextView
@@ -28,8 +41,6 @@
         android:layout_height="60dp"
         android:layout_gravity="bottom|left"
         android:text="@string/punto_volver"
-        android:textColor="@color/white"
-        android:background="@drawable/com_facebook_tooltip_blue_background"
         />
 
     <Button
@@ -38,8 +49,6 @@
         android:layout_height="60dp"
         android:layout_gravity="bottom|right"
         android:text="@string/punto_avanzar"
-        android:textColor="@color/white"
-        android:background="@drawable/com_facebook_tooltip_blue_background"
         />
 
 

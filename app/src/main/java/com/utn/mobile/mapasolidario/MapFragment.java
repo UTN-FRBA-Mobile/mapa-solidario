@@ -68,7 +68,9 @@ public class MapFragment extends BaseFragment
     MapView mMapView;
     View mView;
     FloatingActionButton botonf;
-
+    private Button bcancel;
+    private Button bcontinuar;
+    TextView texto;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,29 +78,65 @@ public class MapFragment extends BaseFragment
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_map, container, false);
 
+        texto = (TextView) mView.findViewById(R.id.mtexto);
+        botonf = (FloatingActionButton) mView.findViewById(R.id.bpunto);
+        bcontinuar = (Button) mView.findViewById(R.id.mcont_boton);
+        bcancel = (Button) mView.findViewById(R.id.mcancel_boton);
+
+        ocultar();
         nuevaNecesidad();
+        confirmarPunto();
+        cancelarPunto();
 
         return mView;
-
     }
 
     public void nuevaNecesidad(){
-
-        botonf = (FloatingActionButton) mView.findViewById(R.id.bpunto);
         botonf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //TODO: implementar acá que se muestre el marker de seleccion de lugar
 
-                Fragment fragment = new PointFragment();
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.mapcontainer, fragment, "Fragment");
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-                botonf.setVisibility(View.GONE);
+                //muestro los botones
+                botonf.setVisibility(View.INVISIBLE);
+                texto.setVisibility(View.VISIBLE);
+                bcancel.setVisibility(View.VISIBLE);
+                bcontinuar.setVisibility(View.VISIBLE);
             }
         });
     }
+
+    public void confirmarPunto(){
+        bcontinuar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            Fragment fragment = new PointFragment();
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.mapcontainer, fragment, "Fragment");
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+            ocultar();
+            }
+        });
+    }
+
+    public void cancelarPunto(){
+        bcancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+        ocultar();    }
+        });
+    }
+
+    public void ocultar(){
+        //TODO: implementar acá que se oculte el marker de seleccion de lugar
+        botonf.setVisibility(View.VISIBLE);
+        texto.setVisibility(View.INVISIBLE);
+        bcancel.setVisibility(View.INVISIBLE);
+        bcontinuar.setVisibility(View.INVISIBLE);
+    }
+
 
     @Override
         public void onClick(View v) {
@@ -115,10 +153,6 @@ public class MapFragment extends BaseFragment
                     mMapView.onResume();
                     mMapView.getMapAsync(this);
                 }
-
-         if (botonf.getVisibility()==View.GONE){
-             botonf.setVisibility(View.VISIBLE);
-         }
     }
 
 
