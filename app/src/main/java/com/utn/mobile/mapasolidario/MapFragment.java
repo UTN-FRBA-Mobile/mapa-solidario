@@ -53,6 +53,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import roboguice.fragment.RoboFragment;
+import roboguice.inject.InjectView;
 
 
 public class MapFragment extends BaseFragment
@@ -69,10 +71,10 @@ public class MapFragment extends BaseFragment
     MapView mMapView;
     View mView;
 
-    FloatingActionButton botonf;
-    private Button bcancel;
-    private Button bcontinuar;
-    TextView texto;
+    @InjectView(R.id.bpunto)     private FloatingActionButton botonf;
+    @InjectView(R.id.mcancel_boton)     private Button bcancel;
+    @InjectView(R.id.mcont_boton)     private Button bcontinuar;
+    @InjectView(R.id.mtexto)     private TextView texto;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -169,22 +171,16 @@ public class MapFragment extends BaseFragment
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
-
-
+/*
         texto = (TextView) mView.findViewById(R.id.mtexto);
         botonf = (FloatingActionButton) mView.findViewById(R.id.bpunto);
         bcontinuar = (Button) mView.findViewById(R.id.mcont_boton);
         bcancel = (Button) mView.findViewById(R.id.mcancel_boton);
-
+*/
         ocultar();
         nuevaNecesidad();
         confirmarPunto();
         cancelarPunto();
-
-
-
-
 
         MapsInitializer.initialize(getContext());
 
