@@ -64,9 +64,11 @@ public class MapFragment extends BaseFragment
     //location
     private TrackGPS gps;
     LatLng currentLocation;
+
     GoogleMap mMap;
     MapView mMapView;
     View mView;
+
     FloatingActionButton botonf;
     private Button bcancel;
     private Button bcontinuar;
@@ -77,16 +79,6 @@ public class MapFragment extends BaseFragment
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_map, container, false);
-
-        texto = (TextView) mView.findViewById(R.id.mtexto);
-        botonf = (FloatingActionButton) mView.findViewById(R.id.bpunto);
-        bcontinuar = (Button) mView.findViewById(R.id.mcont_boton);
-        bcancel = (Button) mView.findViewById(R.id.mcancel_boton);
-
-        ocultar();
-        nuevaNecesidad();
-        confirmarPunto();
-        cancelarPunto();
 
         return mView;
     }
@@ -102,6 +94,23 @@ public class MapFragment extends BaseFragment
                 texto.setVisibility(View.VISIBLE);
                 bcancel.setVisibility(View.VISIBLE);
                 bcontinuar.setVisibility(View.VISIBLE);
+
+                mMap.clear();
+
+                mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+
+                    @Override
+                    public void onMapClick(LatLng point) {
+                        // TODO Auto-generated method stub
+                        //lstLatLngs.add(point);
+                        mMap.clear();
+                        mMap.addMarker(new MarkerOptions().position(point));
+                    }
+                });
+
+
+                mMap.addMarker(new MarkerOptions().position(currentLocation));
+
             }
         });
     }
@@ -135,6 +144,8 @@ public class MapFragment extends BaseFragment
         texto.setVisibility(View.INVISIBLE);
         bcancel.setVisibility(View.INVISIBLE);
         bcontinuar.setVisibility(View.INVISIBLE);
+
+        //mMap.clear();
     }
 
 
@@ -158,6 +169,21 @@ public class MapFragment extends BaseFragment
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
+
+
+        texto = (TextView) mView.findViewById(R.id.mtexto);
+        botonf = (FloatingActionButton) mView.findViewById(R.id.bpunto);
+        bcontinuar = (Button) mView.findViewById(R.id.mcont_boton);
+        bcancel = (Button) mView.findViewById(R.id.mcancel_boton);
+
+        ocultar();
+        nuevaNecesidad();
+        confirmarPunto();
+        cancelarPunto();
+
+
+
 
 
         MapsInitializer.initialize(getContext());
@@ -224,20 +250,11 @@ public class MapFragment extends BaseFragment
         //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ejemplo1, 18));
         mMap.addMarker(new MarkerOptions().position(ejemplo2).title("Test").draggable(true).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
         //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ejemplo2, 18));
-        Marker marker = mMap.addMarker(new MarkerOptions().position(ejemplo3));
+        mMap.addMarker(new MarkerOptions().position(ejemplo3));
         //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
 
 
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
-            @Override
-            public void onMapClick(LatLng point) {
-                // TODO Auto-generated method stub
-                //lstLatLngs.add(point);
-                mMap.clear();
-                mMap.addMarker(new MarkerOptions().position(point));
-            }
-        });
     }
 
     @Override
@@ -262,7 +279,7 @@ public class MapFragment extends BaseFragment
                             Location _l = gps.getLocation();
                             currentLocation = new LatLng(_l.getLatitude(), _l.getLongitude());
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
-                            mMap.addMarker(new MarkerOptions().position(currentLocation).title("Prueba location").snippet("Prueba de texto"));
+                            //mMap.addMarker(new MarkerOptions().position(currentLocation).title("Prueba location").snippet("Prueba de texto"));
 
                         }
                         else{
