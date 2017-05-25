@@ -18,6 +18,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
+import com.google.inject.Inject;
+import com.utn.mobile.mapasolidario.event.HideProgressDialogEvent;
+import com.utn.mobile.mapasolidario.event.ShowProgressDialogEvent;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -28,6 +31,7 @@ import com.utn.mobile.mapasolidario.event.ShowProgressDialogEvent;
 import org.greenrobot.eventbus.Subscribe;
 
 import roboguice.activity.RoboFragmentActivity;
+
 public class MainActivity extends RoboFragmentActivity
         implements MapFragment.OnFragmentInteractionListener,
         NewsFragment.OnFragmentInteractionListener,
@@ -128,5 +132,4 @@ public class MainActivity extends RoboFragmentActivity
             progressDialog.show();
         }
     }
-
 }

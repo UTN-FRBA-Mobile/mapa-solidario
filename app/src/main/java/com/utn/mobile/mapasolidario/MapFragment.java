@@ -101,24 +101,24 @@ public class MapFragment extends BaseFragment
     }
 
     @Override
-        public void onClick(View v) {
+    public void onClick(View v) {
 
-        }
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstance) {
         super.onViewCreated(view, savedInstance);
 
         mMapView = (MapView) mView.findViewById(R.id.map);
-                if (mMapView != null){
-                    mMapView.onCreate(null);
-                    mMapView.onResume();
-                    mMapView.getMapAsync(this);
-                }
+        if (mMapView != null){
+            mMapView.onCreate(null);
+            mMapView.onResume();
+            mMapView.getMapAsync(this);
+        }
 
-         if (botonf.getVisibility()==View.GONE){
-             botonf.setVisibility(View.VISIBLE);
-         }
+        if (botonf.getVisibility()==View.GONE){
+            botonf.setVisibility(View.VISIBLE);
+        }
     }
 
 
