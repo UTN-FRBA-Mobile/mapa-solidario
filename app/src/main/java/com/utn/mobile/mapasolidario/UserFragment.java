@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
@@ -18,6 +20,13 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import org.json.JSONException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,23 +42,26 @@ public class UserFragment extends Fragment {
     private LoginButton loginButton;
     private AccessToken accessToken;
     private AccessTokenTracker accessTokenTracker;
-
     private final String TAG = "UserFragment";
+    private ClaseUsuario usuarioActualf;
 
 
     private OnFragmentInteractionListener mListener;
 
     public UserFragment() {
-        // Required empty public constructor
+
     }
 
+    public UserFragment(ClaseUsuario usuarioActual) {
+        usuarioActualf = usuarioActual;
+    }
 
-    public static UserFragment newInstance() {
+   /* public static UserFragment newInstance() {
         UserFragment fragment = new UserFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
-    }
+    }*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,12 +69,12 @@ public class UserFragment extends Fragment {
 
         callbackManager = CallbackManager.Factory.create();
 
+
         accessTokenTracker = new AccessTokenTracker() {
             @Override
             protected void onCurrentAccessTokenChanged(
                     AccessToken oldAccessToken,
                     AccessToken currentAccessToken) {
-
                 if (currentAccessToken == null) {
                     Log.d(TAG, "Logout");
                     Intent intent = new Intent(getActivity() , MainActivity.class);
@@ -76,8 +88,18 @@ public class UserFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_user, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_user, container, false);
+
+        if (usuarioActualf != null){
+
+            ((TextView)view.findViewById(R.id.tv_apellido)).setText(usuarioActualf.getApellido());
+            ((TextView)view.findViewById(R.id.tv_nombre)).setText(usuarioActualf.getNombre());
+            ((TextView)view.findViewById(R.id.tv_email)).setText(usuarioActualf.getMail());
+            // ((ImageView) view.findViewById(R.id.iv_usuario)).setImageBitmap(usuarioActualf.getImagen());
+        }
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

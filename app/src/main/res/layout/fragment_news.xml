@@ -4,10 +4,27 @@
     android:layout_height="match_parent"
     tools:context="com.utn.mobile.mapasolidario.NewsFragment">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/newsRecyclerView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Novedades"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:gravity="center_horizontal"
+            android:paddingBottom="10dp"
+            android:background="@color/colorPrimary"
+            android:fontFamily="sans-serif-thin"
+            />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/newsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical" />
+    </LinearLayout>
 </FrameLayout>

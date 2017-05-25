@@ -1,0 +1,56 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="300dp"
+    android:layout_height="300dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_centerInParent="true"
+    android:layout_gravity="center"
+    android:background="@color/white"
+    android:id="@+id/pointnavcontainer"
+    tools:context="com.utn.mobile.mapasolidario.NavegacionFragment">
+
+    <TextView
+        android:id="@+id/section_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <Button
+        android:id="@+id/favanza_boton"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center|right"
+        android:text="@string/punto_cont"
+        android:background="@color/white"
+        />
+
+    <Button
+        android:id="@+id/fretro_boton"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center|left"
+        android:text="@string/punto_retro"
+        android:background="@color/white"
+        />
+
+    <Button
+        android:id="@+id/bpunto"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:text="@string/punto_ok"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:layout_alignParentBottom="true"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:background="@drawable/messenger_button_send_round_shadow"
+        />
+
+</FrameLayout>

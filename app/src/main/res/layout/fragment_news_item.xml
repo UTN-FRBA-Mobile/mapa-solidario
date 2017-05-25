@@ -3,7 +3,8 @@
     android:id="@+id/lay_newsIsImportant"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="top">
+    android:gravity="top"
+    android:padding="5dp">
 
     <ImageView
         android:id="@+id/img_newsUser"
