@@ -217,7 +217,6 @@ public class MapFragment extends BaseFragment
                 // Getting view from the layout file info_window_layout
                 View v = getActivity().getLayoutInflater().inflate(R.layout.map_infowindow, null);
 
-
                 return v;
 
             }
@@ -278,7 +277,7 @@ public class MapFragment extends BaseFragment
                         if(gps.canGetLocation()){
                             Location _l = gps.getLocation();
                             currentLocation = new LatLng(_l.getLatitude(), _l.getLongitude());
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 19));
                             //mMap.addMarker(new MarkerOptions().position(currentLocation).title("Prueba location").snippet("Prueba de texto"));
 
                         }
