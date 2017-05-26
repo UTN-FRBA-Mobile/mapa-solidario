@@ -32,8 +32,7 @@ public class MainActivity extends RoboFragmentActivity
         implements MapFragment.OnFragmentInteractionListener,
         NewsFragment.OnFragmentInteractionListener,
         UserFragment.OnFragmentInteractionListener,
-        PointFragment.OnFragmentInteractionListener,
-        NavegacionFragment.OnFragmentInteractionListener{
+        PointFragment.OnFragmentInteractionListener{
 
     @Inject
     private ProgressDialog progressDialog;

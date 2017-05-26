@@ -18,41 +18,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
-
-
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.view.Menu;
-import android.view.View;
-import android.widget.TextView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
-import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.utn.mobile.mapasolidario.util.PointActions;
 
+import roboguice.inject.InjectView;
 
 
 public class MapFragment extends BaseFragment
@@ -64,11 +44,17 @@ public class MapFragment extends BaseFragment
     //location
     private TrackGPS gps;
     LatLng currentLocation;
+
     GoogleMap mMap;
     MapView mMapView;
     View mView;
-    FloatingActionButton botonf;
 
+    @InjectView(R.id.bpunto)     private FloatingActionButton botonf;
+    @InjectView(R.id.mcancel_boton)     private Button bcancel;
+    @InjectView(R.id.mcont_boton)     private Button bcontinuar;
+    @InjectView(R.id.mtexto)     private TextView texto;
+
+    public static final String PUNTO_MESSAGE = "mensaje.al.fragment";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,29 +62,89 @@ public class MapFragment extends BaseFragment
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_map, container, false);
 
-        nuevaNecesidad();
-
         return mView;
-
     }
 
     public void nuevaNecesidad(){
-
-        botonf = (FloatingActionButton) mView.findViewById(R.id.bpunto);
         botonf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //TODO: implementar acá que se muestre el marker de seleccion de lugar
 
-                Fragment fragment = new PointFragment();
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.mapcontainer, fragment, "Fragment");
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-                botonf.setVisibility(View.GONE);
+                //muestro los botones
+                botonf.setVisibility(View.INVISIBLE);
+                texto.setVisibility(View.VISIBLE);
+                bcancel.setVisibility(View.VISIBLE);
+                bcontinuar.setVisibility(View.VISIBLE);
+
+                mMap.clear();
+
+                mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+
+                    @Override
+                    public void onMapClick(LatLng point) {
+                        // TODO Auto-generated method stub
+                        //lstLatLngs.add(point);
+                        mMap.clear();
+                        mMap.addMarker(new MarkerOptions().position(point));
+                    }
+                });
+
+
+                mMap.addMarker(new MarkerOptions().position(currentLocation));
+
             }
         });
     }
+
+    public void confirmarPunto(){
+        bcontinuar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                BasePoint claseEnvio = new BasePoint();
+                claseEnvio.setUbicacion(currentLocation); //Acá le seteo la ubicación al fragment de creación
+                claseEnvio.setAccion(PointActions.ALTA);
+                enviarPunto(claseEnvio);
+                ocultar();
+            }
+        });
+    }
+
+
+    //Usar este método para llamar al ABM del punto pasando por parametro el punto en cuestión
+    public void enviarPunto(BasePoint claseEnvio){
+
+        Fragment fragment = new PointFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(PUNTO_MESSAGE,claseEnvio);
+        fragment.setArguments(args);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.mapcontainer, fragment, "Fragment");
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    public void cancelarPunto(){
+        bcancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+        ocultar();    }
+        });
+    }
+
+    public void ocultar(){
+        //TODO: implementar acá que se oculte el marker de seleccion de lugar
+        botonf.setVisibility(View.VISIBLE);
+        texto.setVisibility(View.INVISIBLE);
+        bcancel.setVisibility(View.INVISIBLE);
+        bcontinuar.setVisibility(View.INVISIBLE);
+
+        //mMap.clear();
+    }
+
 
     @Override
         public void onClick(View v) {
@@ -115,16 +161,21 @@ public class MapFragment extends BaseFragment
                     mMapView.onResume();
                     mMapView.getMapAsync(this);
                 }
-
-         if (botonf.getVisibility()==View.GONE){
-             botonf.setVisibility(View.VISIBLE);
-         }
     }
 
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
+/*
+        texto = (TextView) mView.findViewById(R.id.mtexto);
+        botonf = (FloatingActionButton) mView.findViewById(R.id.bpunto);
+        bcontinuar = (Button) mView.findViewById(R.id.mcont_boton);
+        bcancel = (Button) mView.findViewById(R.id.mcancel_boton);
+*/
+        ocultar();
+        nuevaNecesidad();
+        confirmarPunto();
+        cancelarPunto();
 
         MapsInitializer.initialize(getContext());
 
@@ -156,7 +207,6 @@ public class MapFragment extends BaseFragment
 
                 // Getting view from the layout file info_window_layout
                 View v = getActivity().getLayoutInflater().inflate(R.layout.map_infowindow, null);
-
 
                 return v;
 
@@ -190,20 +240,11 @@ public class MapFragment extends BaseFragment
         //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ejemplo1, 18));
         mMap.addMarker(new MarkerOptions().position(ejemplo2).title("Test").draggable(true).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
         //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ejemplo2, 18));
-        Marker marker = mMap.addMarker(new MarkerOptions().position(ejemplo3));
+        mMap.addMarker(new MarkerOptions().position(ejemplo3));
         //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
 
 
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
-            @Override
-            public void onMapClick(LatLng point) {
-                // TODO Auto-generated method stub
-                //lstLatLngs.add(point);
-                mMap.clear();
-                mMap.addMarker(new MarkerOptions().position(point));
-            }
-        });
     }
 
     @Override
@@ -227,8 +268,8 @@ public class MapFragment extends BaseFragment
                         if(gps.canGetLocation()){
                             Location _l = gps.getLocation();
                             currentLocation = new LatLng(_l.getLatitude(), _l.getLongitude());
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
-                            mMap.addMarker(new MarkerOptions().position(currentLocation).title("Prueba location").snippet("Prueba de texto"));
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 19));
+                            //mMap.addMarker(new MarkerOptions().position(currentLocation).title("Prueba location").snippet("Prueba de texto"));
 
                         }
                         else{

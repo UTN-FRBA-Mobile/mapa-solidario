@@ -6,15 +6,10 @@
     android:id="@+id/mapcontainer"
     tools:context=".MapFragment">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
-
         <TextView
+            android:id="@+id/tmapa"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:text="Mapa de necesidades"
             android:textColor="@color/white"
             android:textSize="20dp"
@@ -28,20 +23,59 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/map"
+            android:layout_below="@id/tmapa"
             />
-    </LinearLayout>
+
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/bpunto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="5dp"
         android:layout_alignParentBottom="true"
         android:src="@android:drawable/ic_input_add"
         app:backgroundTint="@color/colorPrimary"
-        android:tint="@color/white"
-        android:layout_alignParentStart="true" />
+        android:tint="@color/white" />
+
+    <TextView
+        android:id="@+id/mtexto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="80dp"
+        android:paddingBottom="20dp"
+        android:paddingTop="10dp"
+        android:paddingLeft="10dp"
+        android:background="@color/white"
+        android:text="@string/punto_ubicacion"
+        android:textSize="12dp"
+        />
+
+    <Button
+        android:id="@+id/mcont_boton"
+        android:layout_width="45dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="&#x2713;"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        />
+
+    <Button
+        android:id="@+id/mcancel_boton"
+        android:layout_width="45dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="X"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        />
+
+
 
 </RelativeLayout>

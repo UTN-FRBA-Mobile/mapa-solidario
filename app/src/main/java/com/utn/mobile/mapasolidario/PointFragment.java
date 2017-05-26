@@ -1,31 +1,28 @@
 package com.utn.mobile.mapasolidario;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import roboguice.inject.InjectView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link PointFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link PointFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class PointFragment extends Fragment
-        implements View.OnClickListener{
+import static com.utn.mobile.mapasolidario.MapFragment.PUNTO_MESSAGE;
 
+
+public class PointFragment extends BaseFragment
+        implements View.OnClickListener, PointFragmentView {
     private OnFragmentInteractionListener mListener;
+
+//    @InjectView(R.id.pointcontainer) private FrameLayout view;
+
+    @InjectView(R.id.fcancel_boton) private Button bcancelar;
+    @InjectView(R.id.fcont_boton) private Button bcontinuar;
+
+//    @Inject   private PointFragmentPresenter presenter;
 
     public PointFragment() {
         // Required empty public constructor
@@ -40,47 +37,38 @@ public class PointFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+//        presenter.onCreate(this);
     }
 
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        if(getArguments()!=null)
+        {
+            BasePoint claseEnvio = (BasePoint) getArguments().getSerializable(PUNTO_MESSAGE);
+            revisarAccion(claseEnvio);
+        }
+
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_point, container, false);
-        accionBotonVolver(view);
-        accionBotonContinuar(view);
-        return view;
+        return inflater.inflate(R.layout.fragment_point, container, false);
     }
 
+    public void revisarAccion (BasePoint claseEnvio){
 
-    public void  accionBotonVolver(View view){
-        Button bcancelar = (Button)view.findViewById(R.id.fcancel_boton);
-            bcancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getFragmentManager().popBackStack();
-                //volver a mostrar el botón +
-                View map = (View) getView().getParent();
-                FloatingActionButton botonf = (FloatingActionButton) map.findViewById(R.id.bpunto);
-                botonf.setVisibility(View.VISIBLE);
-            }
-        });
-    }
+        switch (claseEnvio.accion){
+            case ALTA:
+//                algo();
+                break;
+            case CONSULTA:
+  //              otro();
+                break;
+            case MODIFICACION:
+    //            otro();
+                break;
+        }
 
-    public void  accionBotonContinuar(View view){
-        Button bcontinuar = (Button)view.findViewById(R.id.fcont_boton);
-        bcontinuar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Fragment fragment = new NavegacionFragment();
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.pointcontainer, fragment, "Fragment");
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-            }
-        });
     }
 
     @Override
@@ -90,11 +78,31 @@ public class PointFragment extends Fragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        //accionBotonVolver();
+        bcancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getFragmentManager().popBackStack();
+            }
+        });
+
+        accionBotonContinuar();
+    }
+
+    public void  accionBotonContinuar(){
+        bcontinuar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getFragmentManager().popBackStack();
+            }
+        });
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
