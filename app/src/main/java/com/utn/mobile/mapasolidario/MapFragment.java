@@ -18,42 +18,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
-
-
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.view.Menu;
-import android.view.View;
-import android.widget.TextView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
-import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.utn.mobile.mapasolidario.util.PointActions;
 
-import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectView;
 
 
@@ -75,6 +53,8 @@ public class MapFragment extends BaseFragment
     @InjectView(R.id.mcancel_boton)     private Button bcancel;
     @InjectView(R.id.mcont_boton)     private Button bcontinuar;
     @InjectView(R.id.mtexto)     private TextView texto;
+
+    public static final String PUNTO_MESSAGE = "mensaje.al.fragment";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -121,15 +101,30 @@ public class MapFragment extends BaseFragment
         bcontinuar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            Fragment fragment = new PointFragment();
-            FragmentManager fragmentManager = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.mapcontainer, fragment, "Fragment");
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
-            ocultar();
+
+                BasePoint claseEnvio = new BasePoint();
+                claseEnvio.setUbicacion(currentLocation); //Acá le seteo la ubicación al fragment de creación
+                claseEnvio.setAccion(PointActions.ALTA);
+                enviarPunto(claseEnvio);
+                ocultar();
             }
         });
+    }
+
+
+    //Usar este método para llamar al ABM del punto pasando por parametro el punto en cuestión
+    public void enviarPunto(BasePoint claseEnvio){
+
+        Fragment fragment = new PointFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(PUNTO_MESSAGE,claseEnvio);
+        fragment.setArguments(args);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.mapcontainer, fragment, "Fragment");
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     public void cancelarPunto(){
