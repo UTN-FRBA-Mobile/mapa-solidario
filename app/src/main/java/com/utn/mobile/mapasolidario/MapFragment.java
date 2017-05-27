@@ -17,7 +17,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -32,6 +33,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.utn.mobile.mapasolidario.util.PointActions;
 
+import roboguice.inject.InjectFragment;
 import roboguice.inject.InjectView;
 
 
@@ -52,7 +54,9 @@ public class MapFragment extends BaseFragment
     @InjectView(R.id.bpunto)     private FloatingActionButton botonf;
     @InjectView(R.id.mcancel_boton)     private Button bcancel;
     @InjectView(R.id.mcont_boton)     private Button bcontinuar;
-    @InjectView(R.id.mtexto)     private TextView texto;
+//    @InjectView(R.id.mtexto)     private TextView texto;
+
+    @InjectView(R.id.lnuevo) private FrameLayout layout_nuevo;
 
     public static final String PUNTO_MESSAGE = "mensaje.al.fragment";
 
@@ -73,9 +77,11 @@ public class MapFragment extends BaseFragment
 
                 //muestro los botones
                 botonf.setVisibility(View.INVISIBLE);
-                texto.setVisibility(View.VISIBLE);
-                bcancel.setVisibility(View.VISIBLE);
-                bcontinuar.setVisibility(View.VISIBLE);
+                layout_nuevo.setVisibility(View.VISIBLE);
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mMapView.getLayoutParams();
+                params.addRule(RelativeLayout.ABOVE, R.id.lnuevo);
+                mMapView.setLayoutParams(params);
+
 
                 mMap.clear();
 
@@ -138,9 +144,11 @@ public class MapFragment extends BaseFragment
     public void ocultar(){
         //TODO: implementar acá que se oculte el marker de seleccion de lugar
         botonf.setVisibility(View.VISIBLE);
-        texto.setVisibility(View.INVISIBLE);
-        bcancel.setVisibility(View.INVISIBLE);
-        bcontinuar.setVisibility(View.INVISIBLE);
+        layout_nuevo.setVisibility(View.INVISIBLE);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mMapView.getLayoutParams();
+        params.removeRule(RelativeLayout.ABOVE);
+        mMapView.setLayoutParams(params);
+
 
         //mMap.clear();
     }
@@ -166,12 +174,7 @@ public class MapFragment extends BaseFragment
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-/*
-        texto = (TextView) mView.findViewById(R.id.mtexto);
-        botonf = (FloatingActionButton) mView.findViewById(R.id.bpunto);
-        bcontinuar = (Button) mView.findViewById(R.id.mcont_boton);
-        bcancel = (Button) mView.findViewById(R.id.mcancel_boton);
-*/
+
         ocultar();
         nuevaNecesidad();
         confirmarPunto();

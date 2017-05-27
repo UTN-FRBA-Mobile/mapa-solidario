@@ -31,12 +31,14 @@ public class BasePoint implements Serializable {
     }
     public void setId (int iden){ id = iden; }
     public void setAccion (PointActions valor){ accion = valor; }
+    public void setFechaModificacion (Date fecha){ fechaCreacion = fecha;}
 
-    public void savePoint (String newtitulo, String newdescripcion, String newtipo, Date fecha){
+    public void setTipo (String newtipo){        tipo = newtipo;}
+    public void savePoint (String newtitulo, String newdescripcion, String newtipo, String user){
         titulo = newtitulo;
         descripcion = newdescripcion;
         tipo = newtipo;
-        fechaCreacion = fecha;
+        usuario = user;
     }
 
 /*    public BasePoint getPoint(int newid) {

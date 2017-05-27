@@ -19,12 +19,54 @@
             android:fontFamily="sans-serif-thin"
             />
 
-        <com.google.android.gms.maps.MapView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/map"
-            android:layout_below="@id/tmapa"
+    <FrameLayout
+        android:id="@+id/lnuevo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/mtexto"
+            android:layout_width="270dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_gravity="center_vertical"
+            android:text="@string/punto_ubicacion"
+            android:textSize="14dp"
             />
+
+        <Button
+            android:id="@+id/mcont_boton"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:text="&#x2713;"
+            android:layout_gravity="right"
+            android:layout_marginRight="45dp"
+            android:background="@color/colorPrimary"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            />
+
+        <Button
+            android:id="@+id/mcancel_boton"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="X"
+            android:background="@color/colorPrimary"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            />
+
+    </FrameLayout>
+
+    <com.google.android.gms.maps.MapView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/map"
+        android:layout_below="@id/tmapa"
+        />
 
 
     <android.support.design.widget.FloatingActionButton
@@ -36,45 +78,6 @@
         android:src="@android:drawable/ic_input_add"
         app:backgroundTint="@color/colorPrimary"
         android:tint="@color/white" />
-
-    <TextView
-        android:id="@+id/mtexto"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginRight="80dp"
-        android:paddingBottom="20dp"
-        android:paddingTop="10dp"
-        android:paddingLeft="10dp"
-        android:background="@color/white"
-        android:text="@string/punto_ubicacion"
-        android:textSize="12dp"
-        />
-
-    <Button
-        android:id="@+id/mcont_boton"
-        android:layout_width="45dp"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="40dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:text="&#x2713;"
-        android:background="@color/colorPrimary"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        />
-
-    <Button
-        android:id="@+id/mcancel_boton"
-        android:layout_width="45dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:text="X"
-        android:background="@color/colorPrimary"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        />
 
 
 
