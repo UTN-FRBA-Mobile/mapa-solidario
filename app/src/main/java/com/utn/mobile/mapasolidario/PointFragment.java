@@ -6,7 +6,10 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 
 import roboguice.inject.InjectView;
 
@@ -14,14 +17,16 @@ import static com.utn.mobile.mapasolidario.MapFragment.PUNTO_MESSAGE;
 
 
 public class PointFragment extends BaseFragment
-        implements View.OnClickListener, PointFragmentView {
+        implements View.OnClickListener, PointFragmentView, AdapterView.OnItemSelectedListener {
     private OnFragmentInteractionListener mListener;
 
 //    @InjectView(R.id.pointcontainer) private FrameLayout view;
 
     @InjectView(R.id.fcancel_boton) private Button bcancelar;
     @InjectView(R.id.fcont_boton) private Button bcontinuar;
+    @InjectView(R.id.tipos_spinner) private Spinner spinner;
 
+    BasePoint claseEnvio = new BasePoint();
 //    @Inject   private PointFragmentPresenter presenter;
 
     public PointFragment() {
@@ -47,19 +52,20 @@ public class PointFragment extends BaseFragment
 
         if(getArguments()!=null)
         {
-            BasePoint claseEnvio = (BasePoint) getArguments().getSerializable(PUNTO_MESSAGE);
-            revisarAccion(claseEnvio);
+            claseEnvio = (BasePoint) getArguments().getSerializable(PUNTO_MESSAGE);
+            revisarAccion();
         }
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_point, container, false);
     }
 
-    public void revisarAccion (BasePoint claseEnvio){
+    public void revisarAccion (){
 
         switch (claseEnvio.accion){
             case ALTA:
 //                algo();
+
                 break;
             case CONSULTA:
   //              otro();
@@ -71,6 +77,17 @@ public class PointFragment extends BaseFragment
 
     }
 
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int pos, long id) {
+        // An item was selected. You can retrieve the selected item using
+        claseEnvio.setTipo(parent.getItemAtPosition(pos).toString());
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Another interface callback
+    }
+
+
     @Override
     public void onClick(View v) {
     }
@@ -79,7 +96,13 @@ public class PointFragment extends BaseFragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //accionBotonVolver();
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.tipos_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+
         bcancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,6 +125,7 @@ public class PointFragment extends BaseFragment
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
 
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;

@@ -6,9 +6,15 @@
     <string name="title_login">Mapa Solidario</string>
 
     <string name="punto_ubicacion">Toque en el mapa el lugar de la nueva necesidad</string>
-    <string name="punto_confirmacion">Está por crear una nueva necesidad en:</string>
+    <string name="punto_confirmacion">Ubicación:</string>
     <string name="punto_volver">Cancelar</string>
     <string name="punto_avanzar">Confirmar</string>
+    <string-array name="tipos_array">
+            <item>Individuo</item>
+            <item>Heladera Solidaria</item>
+            <item>Ropero Solidario</item>
+            <item>Emergencia</item>
+    </string-array>
 
     <string name="map_fragment">Map fragment</string>
     <string name="user_fragment">User fragment</string>
