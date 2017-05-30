@@ -55,6 +55,7 @@ public class LoginActivity extends AppCompatActivity {
                     usuario.setNombre(user.optString("first_name"));
                     usuario.setApellido(user.optString("last_name"));
                     usuario.setMail(user.optString("email"));
+                    usuario.setUrl("http://graph.facebook.com/" + user.optString("id") + "/picture?type=large");
 
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("usuario", usuario);
@@ -83,6 +84,7 @@ public class LoginActivity extends AppCompatActivity {
                             usuario.setNombre(user.optString("first_name"));
                             usuario.setApellido(user.optString("last_name"));
                             usuario.setMail(user.optString("email"));
+                            usuario.setUrl("https://graph.facebook.com/" + user.optString("id") + "/picture?type=large");
 
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             intent.putExtra("usuario", usuario);
