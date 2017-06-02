@@ -7,8 +7,8 @@
 
     <string name="punto_ubicacion">Toque en el mapa el lugar de la nueva necesidad</string>
     <string name="punto_confirmacion">Ubicación:</string>
-    <string name="punto_volver">Cancelar</string>
-    <string name="punto_avanzar">Confirmar</string>
+    <string name="punto_volver">Volver</string>
+    <string name="punto_avanzar">Guardar</string>
     <string-array name="tipos_array">
             <item>Individuo</item>
             <item>Heladera Solidaria</item>

@@ -1,6 +1,11 @@
 package com.utn.mobile.mapasolidario;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -9,7 +14,21 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.Spinner;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import roboguice.inject.InjectView;
 
@@ -17,7 +36,8 @@ import static com.utn.mobile.mapasolidario.MapFragment.PUNTO_MESSAGE;
 
 
 public class PointFragment extends BaseFragment
-        implements View.OnClickListener, PointFragmentView, AdapterView.OnItemSelectedListener {
+        implements View.OnClickListener, PointFragmentView,
+        AdapterView.OnItemSelectedListener, DatePickerDialog.OnDateSetListener {
     private OnFragmentInteractionListener mListener;
 
 //    @InjectView(R.id.pointcontainer) private FrameLayout view;
@@ -25,6 +45,10 @@ public class PointFragment extends BaseFragment
     @InjectView(R.id.fcancel_boton) private Button bcancelar;
     @InjectView(R.id.fcont_boton) private Button bcontinuar;
     @InjectView(R.id.tipos_spinner) private Spinner spinner;
+    @InjectView(R.id.fvencimiento) private EditText fechaVencimiento;
+
+    @InjectView(R.id.pmap)    MapView mMapView;
+    GoogleMap googleMap;
 
     BasePoint claseEnvio = new BasePoint();
 //    @Inject   private PointFragmentPresenter presenter;
@@ -33,15 +57,10 @@ public class PointFragment extends BaseFragment
         // Required empty public constructor
     }
 
-    public static PointFragment newInstance(String param1, String param2) {
-        PointFragment fragment = new PointFragment();
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 //        presenter.onCreate(this);
     }
 
@@ -50,15 +69,60 @@ public class PointFragment extends BaseFragment
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        if(getArguments()!=null)
-        {
-            claseEnvio = (BasePoint) getArguments().getSerializable(PUNTO_MESSAGE);
-            revisarAccion();
-        }
-
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_point, container, false);
     }
+
+    void cargarMapa(){
+
+        try {
+            MapsInitializer.initialize(getContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        mMapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap mMap) {
+                googleMap = mMap;
+
+
+                googleMap.addMarker(new MarkerOptions().position(claseEnvio.ubicacion));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(claseEnvio.ubicacion,15));
+
+                googleMap.getUiSettings().setZoomControlsEnabled(false);
+                googleMap.getUiSettings().setCompassEnabled(false);
+                googleMap.getUiSettings().setZoomGesturesEnabled(false);
+                googleMap.getUiSettings().setScrollGesturesEnabled(false);
+            }
+        });
+          mMapView.setClickable(false);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mMapView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mMapView.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mMapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mMapView.onLowMemory();
+    }
+
 
     public void revisarAccion (){
 
@@ -103,6 +167,7 @@ public class PointFragment extends BaseFragment
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
+
         bcancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -110,7 +175,41 @@ public class PointFragment extends BaseFragment
             }
         });
 
+        if(getArguments()!=null)        {
+            claseEnvio = (BasePoint) getArguments().getSerializable(PUNTO_MESSAGE);
+            revisarAccion();
+        }
+        if (mMapView != null){
+            mMapView.onCreate(savedInstanceState);
+            mMapView.onResume();
+            cargarMapa();
+        }
+//        datepickerAction();
         accionBotonContinuar();
+    }
+
+/*    public void datepickerAction(){
+
+        fechaVencimiento.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+
+                DatePickerDialog dialog = new DatePickerDialog(getContext(), this,
+                        calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH));
+                dialog.show();
+            }
+        });
+    }
+
+*/
+    @Override
+    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+  /*      _birthYear = year;
+        _month = monthOfYear;
+        _day = dayOfMonth;
+        updateDisplay();*/
     }
 
     public void  accionBotonContinuar(){
@@ -121,6 +220,7 @@ public class PointFragment extends BaseFragment
             }
         });
     }
+
 
     @Override
     public void onAttach(Context context) {
@@ -141,16 +241,6 @@ public class PointFragment extends BaseFragment
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         void goBack ();
     }

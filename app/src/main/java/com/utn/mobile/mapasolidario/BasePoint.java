@@ -1,18 +1,24 @@
 package com.utn.mobile.mapasolidario;
 
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.view.View;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.utn.mobile.mapasolidario.util.PointActions;
 
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
+
 
 /**
  * Created by dany on 25/05/2017.
  */
 
-public class BasePoint implements Serializable {
+public class BasePoint
+        implements Serializable {
     LatLng ubicacion = new LatLng(-34.6183, -58.3732);
     String titulo = "";
     String descripcion = "";
@@ -31,23 +37,12 @@ public class BasePoint implements Serializable {
     }
     public void setId (int iden){ id = iden; }
     public void setAccion (PointActions valor){ accion = valor; }
-    public void setFechaModificacion (Date fecha){ fechaCreacion = fecha;}
+    public void setFechaModificacion (Date fecha){ fechaModificacion = fecha;}
+    public void setTipo (String newtipo){   tipo = newtipo;}
+    public void setTitulo (String newtitulo) {titulo = newtitulo;}
+    public void setDescripcion (String newdescripcion ){descripcion = newdescripcion;}
+    public void setUsuario (String user){usuario = user;}
+    public void setFechaCreacion (Date fecha){ fechaCreacion = fecha;}
 
-    public void setTipo (String newtipo){        tipo = newtipo;}
-    public void savePoint (String newtitulo, String newdescripcion, String newtipo, String user){
-        titulo = newtitulo;
-        descripcion = newdescripcion;
-        tipo = newtipo;
-        usuario = user;
-    }
 
-/*    public BasePoint getPoint(int newid) {
-        BasePoint datosPunto = new BasePoint();
-        datosPunto.ubicacion = obtenerUbicacion(newid);
-        datosPunto.titulo = obtenerTitulo(newid);
-        datosPunto.descripcion = obtenerDatosPunto(newid);
-
-        return datosPunto;
-    }
-*/
 }
