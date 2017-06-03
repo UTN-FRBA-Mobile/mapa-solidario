@@ -37,21 +37,21 @@
             android:layout_width="wrap_content"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:textSize="16dp"
             android:text="@string/punto_confirmacion" />
         <TextView
             android:id="@+id/tubicacion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:text="mostrar ubicación en la salada de aca a la vuelta y en la esquina de la casa de mi novio , adrogue fulano y sultano"/>
-
+            android:textSize="16dp" />
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin">
+            android:layout_marginTop="20dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -73,6 +73,7 @@
             android:layout_width="wrap_content"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:textSize="16dp"
             android:text="Título" />
 
         <EditText
@@ -80,10 +81,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="Ingrese el Título"
-            android:ems="10"
+            android:ems="17"
             android:inputType="textCapSentences"
             android:layout_marginTop="5dp"
             android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
             />
 
         <TextView
@@ -91,6 +93,7 @@
             android:layout_width="wrap_content"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:textSize="16dp"
             android:text="Fecha Vencimiento" />
 
         <EditText
@@ -109,6 +112,7 @@
             android:layout_width="wrap_content"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:textSize="16dp"
             android:text="Descripción" />
 
         <ScrollView

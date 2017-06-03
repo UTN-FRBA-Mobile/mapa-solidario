@@ -25,6 +25,7 @@ public class BasePoint
     String tipo = "";
     String usuario = "";
     Date fechaCreacion = new Date();
+    Date fechaVto = new Date();
     Date fechaModificacion =  new Date();
     int id = 0;
     PointActions accion = PointActions.CONSULTA;
@@ -43,6 +44,6 @@ public class BasePoint
     public void setDescripcion (String newdescripcion ){descripcion = newdescripcion;}
     public void setUsuario (String user){usuario = user;}
     public void setFechaCreacion (Date fecha){ fechaCreacion = fecha;}
-
+    public void setFechaVto(Date fecha){ fechaVto = fecha;}
 
 }
