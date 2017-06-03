@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.utn.mobile.mapasolidario.PointFragment"
+    android:id="@+id/scrollVista"
     android:fillViewport="true">
 
     <LinearLayout
@@ -75,6 +76,7 @@
             android:text="Título" />
 
         <EditText
+            android:id="@+id/editTitulo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="Ingrese el Título"
@@ -98,10 +100,9 @@
             android:layout_marginTop="5dp"
             android:layout_marginStart="20dp"
             android:ems="10"
-            android:hint="Ingrese Fecha vencimiento"
+            android:hint="Fecha vencimiento"
             android:focusable="false"
-            android:longClickable="false"
-            android:inputType="date"/>
+            android:longClickable="false"/>
 
         <TextView
             android:layout_height="wrap_content"

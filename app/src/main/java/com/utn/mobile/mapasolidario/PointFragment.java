@@ -2,21 +2,19 @@ package com.utn.mobile.mapasolidario;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,39 +22,36 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.utn.mobile.mapasolidario.util.PointActions;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import roboguice.inject.InjectView;
-
-import static com.utn.mobile.mapasolidario.MapFragment.PUNTO_MESSAGE;
 
 
 public class PointFragment extends BaseFragment
         implements View.OnClickListener, PointFragmentView,
-        AdapterView.OnItemSelectedListener, DatePickerDialog.OnDateSetListener {
+        AdapterView.OnItemSelectedListener {
     private OnFragmentInteractionListener mListener;
 
 //    @InjectView(R.id.pointcontainer) private FrameLayout view;
+//    @Inject   private PointFragmentPresenter presenter;
 
     @InjectView(R.id.fcancel_boton) private Button bcancelar;
     @InjectView(R.id.fcont_boton) private Button bcontinuar;
     @InjectView(R.id.tipos_spinner) private Spinner spinner;
     @InjectView(R.id.fvencimiento) private EditText fechaVencimiento;
-
     @InjectView(R.id.pmap)    MapView mMapView;
-    GoogleMap googleMap;
 
+    static String PUNTO_MESSAGE = "mensaje.al.fragment";
+    GoogleMap googleMap;
     BasePoint claseEnvio = new BasePoint();
-//    @Inject   private PointFragmentPresenter presenter;
 
     public PointFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,13 +59,88 @@ public class PointFragment extends BaseFragment
 //        presenter.onCreate(this);
     }
 
-
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_point, container, false);
+    }
+
+    @Override
+    public void onClick(View v) {
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        //Levanto el objeto que me mandan
+        if(getArguments()!=null)        {
+            claseEnvio = (BasePoint) getArguments().getSerializable(PUNTO_MESSAGE);
+            revisarAccion(view);
+        }
+
+        //Muestro el mapa
+        if (mMapView != null){
+            mMapView.onCreate(savedInstanceState);
+            mMapView.onResume();
+            cargarMapa();
+        }
+
+        View scroll = view.findViewById(R.id.scrollVista);
+        scroll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ocultarTeclado();
+            }
+        });
+
+        configurarLayout();
+
+        accionBotonContinuar();
+        //accion botón cancelar
+        bcancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ocultarTeclado();
+                getFragmentManager().popBackStack();
+            }
+        });
+
+    }
+
+
+    public void revisarAccion (View view){
+
+        if (claseEnvio.accion == PointActions.CONSULTA || claseEnvio.accion == PointActions.MODIFICACION ){
+            //TODO: hacer un GET a la base
+            //TODO: llenar el layout con los datos devueltos
+        }
+
+        switch (claseEnvio.accion){
+            case ALTA:
+//                algo();
+
+                break;
+            case CONSULTA:
+                bcontinuar.setVisibility(View.INVISIBLE);
+                EditText editTitulo= (EditText) view.findViewById(R.id.editTitulo);
+                EditText editDescripcion= (EditText) view.findViewById(R.id.editText);
+                editTitulo.setEnabled(false);
+                editDescripcion.setEnabled(false);
+                fechaVencimiento.setEnabled(false);
+                spinner.setEnabled(false);
+
+                break;
+            case MODIFICACION:
+                //TODO: hacer un GET a la base
+                //TODO: llenar el layout con los datos devueltos
+
+                //            otro();
+                break;
+        }
+
     }
 
     void cargarMapa(){
@@ -86,7 +156,6 @@ public class PointFragment extends BaseFragment
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
 
-
                 googleMap.addMarker(new MarkerOptions().position(claseEnvio.ubicacion));
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(claseEnvio.ubicacion,15));
 
@@ -96,7 +165,110 @@ public class PointFragment extends BaseFragment
                 googleMap.getUiSettings().setScrollGesturesEnabled(false);
             }
         });
-          mMapView.setClickable(false);
+        mMapView.setClickable(false);
+    }
+
+    public void configurarLayout(){
+
+        //Mostrar dirección del punto
+
+
+        // Lleno el combo de tipo de necesidad
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.tipos_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+
+        //Oculto el teclado cuando sale del foco
+        ocultarTeclado();
+
+        //Cargo el datePicker de la fecha vencimiento
+        llenarDatepicker();
+
+    }
+
+    public void ocultarTeclado(){
+        //Oculto el teclado cuando sale del foco
+        View foco = getActivity().getCurrentFocus();
+        if (foco != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(foco.getWindowToken(), imm.HIDE_IMPLICIT_ONLY );
+        }
+
+    }
+
+    public void llenarDatepicker(){
+
+        final Calendar myCalendar = Calendar.getInstance();
+        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                //Mostrarlo en el text view
+                String myFormat = "dd/MM/yyyy";
+                SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+                fechaVencimiento.setText(sdf.format(myCalendar.getTime()));
+
+            }
+        };
+
+        fechaVencimiento.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                new DatePickerDialog(getContext(), date, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+    }
+
+    public void  accionBotonContinuar(){
+        bcontinuar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //TODO: Persistir los datos en la base de datos
+                ocultarTeclado();
+                getFragmentManager().popBackStack();
+            }
+        });
+    }
+
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int pos, long id) {
+        // An item was selected. You can retrieve the selected item using
+        claseEnvio.setTipo(parent.getItemAtPosition(pos).toString());
+        ocultarTeclado();
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Another interface callback
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
     }
 
     @Override
@@ -121,124 +293,6 @@ public class PointFragment extends BaseFragment
     public void onLowMemory() {
         super.onLowMemory();
         mMapView.onLowMemory();
-    }
-
-
-    public void revisarAccion (){
-
-        switch (claseEnvio.accion){
-            case ALTA:
-//                algo();
-
-                break;
-            case CONSULTA:
-  //              otro();
-                break;
-            case MODIFICACION:
-    //            otro();
-                break;
-        }
-
-    }
-
-    public void onItemSelected(AdapterView<?> parent, View view,
-                               int pos, long id) {
-        // An item was selected. You can retrieve the selected item using
-        claseEnvio.setTipo(parent.getItemAtPosition(pos).toString());
-    }
-
-    public void onNothingSelected(AdapterView<?> parent) {
-        // Another interface callback
-    }
-
-
-    @Override
-    public void onClick(View v) {
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.tipos_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
-
-
-        bcancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getFragmentManager().popBackStack();
-            }
-        });
-
-        if(getArguments()!=null)        {
-            claseEnvio = (BasePoint) getArguments().getSerializable(PUNTO_MESSAGE);
-            revisarAccion();
-        }
-        if (mMapView != null){
-            mMapView.onCreate(savedInstanceState);
-            mMapView.onResume();
-            cargarMapa();
-        }
-//        datepickerAction();
-        accionBotonContinuar();
-    }
-
-/*    public void datepickerAction(){
-
-        fechaVencimiento.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
-
-                DatePickerDialog dialog = new DatePickerDialog(getContext(), this,
-                        calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-                        calendar.get(Calendar.DAY_OF_MONTH));
-                dialog.show();
-            }
-        });
-    }
-
-*/
-    @Override
-    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-  /*      _birthYear = year;
-        _month = monthOfYear;
-        _day = dayOfMonth;
-        updateDisplay();*/
-    }
-
-    public void  accionBotonContinuar(){
-        bcontinuar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getFragmentManager().popBackStack();
-            }
-        });
-    }
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
     }
 
     public interface OnFragmentInteractionListener {

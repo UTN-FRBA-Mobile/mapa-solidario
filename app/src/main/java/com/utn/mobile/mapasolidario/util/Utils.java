@@ -5,14 +5,23 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.widget.TextView;
 
+import com.utn.mobile.mapasolidario.BasePoint;
 import com.utn.mobile.mapasolidario.Constants;
+import com.utn.mobile.mapasolidario.PointFragment;
+import com.utn.mobile.mapasolidario.R;
 
 import org.apache.commons.lang.StringUtils;
+
+//import static com.utn.mobile.mapasolidario.MapFragment.PUNTO_MESSAGE;
 
 /**
  * Created by svillarreal on 08/05/17.
@@ -56,6 +65,20 @@ public class Utils {
         TextView messageText = (TextView) dialog.findViewById(android.R.id.message);
         messageText.setGravity(Gravity.CENTER);
         dialog.show();
+    }
+
+    public static void  consultarPunto(BasePoint claseEnvio,FragmentManager fragmentManager){
+
+        Fragment fragment = new PointFragment();
+        Bundle args = new Bundle();
+        String PUNTO_MESSAGE = "mensaje.al.fragment";
+        args.putSerializable(PUNTO_MESSAGE,claseEnvio);
+        fragment.setArguments(args);
+
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.mapcontainer, fragment, "Fragment");
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
 
