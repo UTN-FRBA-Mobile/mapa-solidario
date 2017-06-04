@@ -36,6 +36,8 @@ import com.utn.mobile.mapasolidario.util.PointActions;
 import roboguice.inject.InjectFragment;
 import roboguice.inject.InjectView;
 
+import static com.utn.mobile.mapasolidario.util.Utils.consultarPunto;
+
 
 public class MapFragment extends BaseFragment
         implements OnMapReadyCallback, View.OnClickListener{
@@ -46,6 +48,7 @@ public class MapFragment extends BaseFragment
     //location
     private TrackGPS gps;
     LatLng currentLocation;
+    BasePoint claseEnvio = new BasePoint();
 
     GoogleMap mMap;
     MapView mMapView;
@@ -57,8 +60,6 @@ public class MapFragment extends BaseFragment
 //    @InjectView(R.id.mtexto)     private TextView texto;
 
     @InjectView(R.id.lnuevo) private FrameLayout layout_nuevo;
-
-    public static final String PUNTO_MESSAGE = "mensaje.al.fragment";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,6 +94,7 @@ public class MapFragment extends BaseFragment
                         //lstLatLngs.add(point);
                         mMap.clear();
                         mMap.addMarker(new MarkerOptions().position(point));
+                        claseEnvio.setUbicacion(point); //Acá le seteo la ubicación al fragment de creación
                     }
                 });
 
@@ -107,30 +109,12 @@ public class MapFragment extends BaseFragment
         bcontinuar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                BasePoint claseEnvio = new BasePoint();
-                claseEnvio.setUbicacion(currentLocation); //Acá le seteo la ubicación al fragment de creación
                 claseEnvio.setAccion(PointActions.ALTA);
-                enviarPunto(claseEnvio);
+                FragmentManager fragmentManager = getFragmentManager();
+                consultarPunto(claseEnvio,fragmentManager);
                 ocultar();
             }
         });
-    }
-
-
-    //Usar este método para llamar al ABM del punto pasando por parametro el punto en cuestión
-    public void enviarPunto(BasePoint claseEnvio){
-
-        Fragment fragment = new PointFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(PUNTO_MESSAGE,claseEnvio);
-        fragment.setArguments(args);
-
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.mapcontainer, fragment, "Fragment");
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
     }
 
     public void cancelarPunto(){
