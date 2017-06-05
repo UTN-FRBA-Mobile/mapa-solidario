@@ -1,6 +1,7 @@
 package com.utn.mobile.mapasolidario;
 
 import com.utn.mobile.mapasolidario.dto.NovedadResponse;
+import com.utn.mobile.mapasolidario.dto.PuntoResponse;
 
 import java.util.List;
 
@@ -12,4 +13,5 @@ public interface IRemoteService {
 
     List<NovedadResponse> fetchNewsService();
 
+    List<PuntoResponse> fetchPuntosService();
 }

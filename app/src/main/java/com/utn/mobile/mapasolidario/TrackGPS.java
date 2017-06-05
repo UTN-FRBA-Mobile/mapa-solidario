@@ -144,12 +144,12 @@ public class TrackGPS extends Service implements LocationListener {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
 
 
-        alertDialog.setTitle("GPS Not Enabled");
+        alertDialog.setTitle("Localización Desactivada");
 
-        alertDialog.setMessage("Do you wants to turn On GPS");
+        alertDialog.setMessage("Desea activar la Localización?");
 
 
-        alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 mContext.startActivity(intent);

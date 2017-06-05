@@ -1,6 +1,7 @@
 package com.utn.mobile.mapasolidario;
 
 import com.utn.mobile.mapasolidario.dto.NovedadResponse;
+import com.utn.mobile.mapasolidario.dto.PuntoResponse;
 
 import java.util.List;
 
@@ -15,4 +16,7 @@ public interface MapaSolidarioRetrofitService {
 
     @GET("news")
     Call<List<NovedadResponse>> fetchNews();
+
+    @GET("points")
+    Call<List<PuntoResponse>> fetchPuntos();
 }

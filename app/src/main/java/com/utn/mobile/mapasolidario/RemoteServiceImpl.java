@@ -2,6 +2,7 @@ package com.utn.mobile.mapasolidario;
 
 import com.google.gson.Gson;
 import com.utn.mobile.mapasolidario.dto.NovedadResponse;
+import com.utn.mobile.mapasolidario.dto.PuntoResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,5 +37,24 @@ public class RemoteServiceImpl implements IRemoteService {
         }
 
         return fetchNovedadResponseList;
+    }
+
+    @Override
+    public List<PuntoResponse> fetchPuntosService() {
+        List<PuntoResponse> fetchPuntosResponseList = new ArrayList<PuntoResponse>();
+        MapaSolidarioRetrofitService retrofitService = null;
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://morning-peak-11897.herokuapp.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        MapaSolidarioRetrofitService service = retrofit.create(MapaSolidarioRetrofitService.class);
+        try {
+            Response<List<PuntoResponse>> puntosResponse = service.fetchPuntos().execute();
+            fetchPuntosResponseList = puntosResponse.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return fetchPuntosResponseList;
     }
 }
