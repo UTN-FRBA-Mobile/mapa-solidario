@@ -36,6 +36,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.inject.Inject;
 import com.utn.mobile.mapasolidario.dto.PuntoResponse;
+import com.utn.mobile.mapasolidario.util.FetchPuntosErrors;
 import com.utn.mobile.mapasolidario.util.PointActions;
 
 import org.json.JSONArray;
@@ -70,6 +71,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
+import org.greenrobot.eventbus.EventBus;
+
+
 import static com.utn.mobile.mapasolidario.util.Utils.consultarPunto;
 
 
@@ -99,6 +103,13 @@ public class MapFragment extends BaseFragment
 //    @InjectView(R.id.mtexto)     private TextView texto;
 
     @InjectView(R.id.lnuevo) private FrameLayout layout_nuevo;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        presenter.onCreate(this);
+        presenter.fetchPuntos(getContext());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -273,8 +284,6 @@ public class MapFragment extends BaseFragment
 
         // Marcadores
 
-        //presenter.fetchPuntos(getContext());
-
         mMap.addMarker(new MarkerOptions().title("Título 1").snippet("Haga click para Detalles").position(ejemplo1).icon(BitmapDescriptorFactory.fromResource(R.drawable.individuo_marker)));
         mMap.addMarker(new MarkerOptions().title("Título 2").snippet("Haga click para Detalles").position(ejemplo2).icon(BitmapDescriptorFactory.fromResource(R.drawable.heladera_marker)));
         mMap.addMarker(new MarkerOptions().title("Título 3").snippet("Haga click para Detalles").position(ejemplo3).icon(BitmapDescriptorFactory.fromResource(R.drawable.ropero_marker)));
@@ -414,6 +423,24 @@ public class MapFragment extends BaseFragment
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void showMessageError(FetchPuntosErrors error) {
+        String msjError = "";
+        String title = getString(R.string.POPUP_TITLE_SERVIDOR);
+        switch (error) {
+            case PROBLEMA_SERVIDOR:
+                msjError = getString(R.string.sin_comunicacion);
+                break;
+            case PROBLEMA_BUSQUEDA:
+                title = getString(R.string.POPUP_TITLE_SIN_NOVEDADES);
+                msjError = getString(R.string.POPUP_MENSAJE_SIN_NOVEDADES);
+                break;
+            case TIME_OUT:
+                msjError = getString(R.string.sin_comunicacion);
+                break;
+        }
     }
 
 }

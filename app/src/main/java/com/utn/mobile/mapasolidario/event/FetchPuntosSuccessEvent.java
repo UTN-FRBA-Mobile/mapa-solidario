@@ -9,6 +9,7 @@ import java.util.List;
  */
 
 public class FetchPuntosSuccessEvent {
+
     private List<PuntoResponse> resultadoDTO;
 
     public List<PuntoResponse> getResultadoDTO() {
