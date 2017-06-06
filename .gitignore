@@ -107,4 +107,6 @@ ignore.xml
 vcs.xml
 web-browsers.xml
 
+.gradle/
+build/android-profile/
 build/intermediates/
