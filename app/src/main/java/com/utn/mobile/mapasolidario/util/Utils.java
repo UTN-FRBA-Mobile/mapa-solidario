@@ -76,7 +76,7 @@ public class Utils {
         fragment.setArguments(args);
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.mapcontainer, fragment, "Fragment");
+        fragmentTransaction.replace(R.id.content, fragment, "Fragment");
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }

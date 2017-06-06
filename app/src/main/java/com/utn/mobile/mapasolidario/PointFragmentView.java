@@ -2,7 +2,11 @@ package com.utn.mobile.mapasolidario;
 
 import android.view.View;
 
+import com.utn.mobile.mapasolidario.dto.PuntoResponse;
 import com.utn.mobile.mapasolidario.util.BaseView;
+import com.utn.mobile.mapasolidario.util.FetchPuntosErrors;
+
+import java.util.List;
 
 
 /**
@@ -11,6 +15,8 @@ import com.utn.mobile.mapasolidario.util.BaseView;
 
 interface PointFragmentView extends BaseView {
 
-//    void showMessageError(PointErrors error);
+    void showMessageError(FetchPuntosErrors error);
+
+    void loadPoint(BasePoint resultadoDTO);
 
 }

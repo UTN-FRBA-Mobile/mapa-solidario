@@ -19,4 +19,7 @@ public interface MapaSolidarioRetrofitService {
 
     @GET("points")
     Call<List<PuntoResponse>> fetchPuntos();
+
+    @GET("point")
+    Call<BasePoint> getPunto();
 }

@@ -26,6 +26,8 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.inject.Inject;
+import com.utn.mobile.mapasolidario.util.FetchPuntosErrors;
 import com.utn.mobile.mapasolidario.util.PointActions;
 
 import java.io.IOException;
@@ -43,8 +45,7 @@ public class PointFragment extends BaseFragment
         AdapterView.OnItemSelectedListener {
     private OnFragmentInteractionListener mListener;
 
-//    @InjectView(R.id.pointcontainer) private FrameLayout view;
-//    @Inject   private PointFragmentPresenter presenter;
+    @Inject    private PointFragmentPresenter presenter;
 
     @InjectView(R.id.tubicacion) private TextView ubicacion;
     @InjectView(R.id.fcancel_boton) private Button bcancelar;
@@ -64,7 +65,7 @@ public class PointFragment extends BaseFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        presenter.onCreate(this);
+        presenter.onCreate(this);
     }
 
     @Override
@@ -86,27 +87,12 @@ public class PointFragment extends BaseFragment
         //Levanto el objeto que me mandan
         if(getArguments()!=null)        {
             claseEnvio = (BasePoint) getArguments().getSerializable(PUNTO_MESSAGE);
-//            claseEnvio.setAccion(PointActions.MODIFICACION);//valor para probar... sacarlo desp TODO
+            claseEnvio.setAccion(PointActions.CONSULTA);//valor para probar... sacarlo desp TODO
         }
-
-        //Muestro el mapa
-        if (mMapView != null){
-            mMapView.onCreate(savedInstanceState);
-            mMapView.onResume();
-            cargarMapa();
-        }
-
-        View scroll = view.findViewById(R.id.scrollVista);
-        scroll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ocultarTeclado();
-            }
-        });
-
-        configurarLayout();
 
         revisarAccion(view);
+
+        configurarLayout();
 
         accionBotonContinuar();
         //accion botón cancelar
@@ -119,6 +105,13 @@ public class PointFragment extends BaseFragment
             }
         });
 
+        //Muestro el mapa
+        if (mMapView != null){
+            mMapView.onCreate(savedInstanceState);
+            mMapView.onResume();
+            cargarMapa();
+        }
+
     }
 
 
@@ -128,8 +121,11 @@ public class PointFragment extends BaseFragment
         EditText editDescripcion= (EditText) view.findViewById(R.id.editText);
 
         if (claseEnvio.accion == PointActions.CONSULTA || claseEnvio.accion == PointActions.MODIFICACION ){
-            //TODO: hacer un GET a la base
-            claseEnvio.setUbicacion(new LatLng(-34.6183, -58.3732));
+            //TODO: probar el GET a la base
+            presenter.obtenerPunto(getContext(),claseEnvio.id);
+/*
+            claseEnvio.setLatitud(-34.6183);
+            claseEnvio.setLongitud(-58.3732);
             claseEnvio.setTipo("Heladera Solidaria");
             claseEnvio.setDescripcion("Robbins - 06 Decision:\n" +
                     "\n" +
@@ -146,17 +142,16 @@ public class PointFragment extends BaseFragment
                     "8: Evaluacion de la efectividad\n");
             claseEnvio.setTitulo("Decisiones racionales: son elecciones logicas y consistentes para maximizar valor.");
             claseEnvio.setFechaVto(new Date());
-
+*/
             //lleno el layout con los datos devueltos
-            editTitulo.setText(claseEnvio.titulo);editDescripcion.setText(claseEnvio.descripcion);
+            editTitulo.setText(claseEnvio.titulo);
+            editDescripcion.setText(claseEnvio.descripcion);
 
 
             //Mostrarlo en el text view
             String myFormat = "dd/MM/yyyy";
             SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
             fechaVencimiento.setText(sdf.format(claseEnvio.fechaVto.getTime()));
-
-//            fechaVencimiento.setText(claseEnvio.fechaVto.toString());
 
             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
                     R.array.tipos_array, android.R.layout.simple_spinner_item);
@@ -189,8 +184,9 @@ public class PointFragment extends BaseFragment
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
 
-                googleMap.addMarker(new MarkerOptions().position(claseEnvio.ubicacion));
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(claseEnvio.ubicacion,15));
+                    LatLng ubicacion = new LatLng(claseEnvio.latitud, claseEnvio.longitud);
+                googleMap.addMarker(new MarkerOptions().position(ubicacion));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacion,15));
 
                 googleMap.getUiSettings().setZoomControlsEnabled(false);
                 googleMap.getUiSettings().setCompassEnabled(false);
@@ -204,7 +200,7 @@ public class PointFragment extends BaseFragment
     public void configurarLayout(){
 
         //Mostrar dirección del punto
-        ubicacion.setText(getCompleteAddressString(claseEnvio.ubicacion.latitude, claseEnvio.ubicacion.longitude));
+        ubicacion.setText(getCompleteAddressString(claseEnvio.latitud, claseEnvio.longitud));
 
         // Lleno el combo de tipo de necesidad
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
@@ -252,7 +248,7 @@ public class PointFragment extends BaseFragment
         View foco = getActivity().getCurrentFocus();
         if (foco != null) {
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(foco.getWindowToken(), imm.HIDE_IMPLICIT_ONLY );
+            imm.hideSoftInputFromWindow(foco.getWindowToken(), imm.HIDE_NOT_ALWAYS );
         }
 
     }
@@ -292,15 +288,15 @@ public class PointFragment extends BaseFragment
             @Override
             public void onClick(View view) {
 
-                //TODO: Persistir los datos en la base de datos
-                claseEnvio.setFechaModificacion(new Date()); //confirmar si new date devuelve la fecha actual
+                claseEnvio.setFechaModificacion(new Date());
 
                 if (claseEnvio.id == 0){
+                    claseEnvio.setId_usuario(22);
                     claseEnvio.setUsuario("Dani Chacur");
-                    claseEnvio.setFechaCreacion(new Date());
-                    claseEnvio.setId(123); //Guardar el que me devuelve al guardar en la base
                 }
 
+                //TODO: Persistir los datos en la base de datos
+                presenter.guardarNecesidad(getContext());
                 ocultarTeclado();
                 getFragmentManager().popBackStack();
             }
@@ -316,6 +312,38 @@ public class PointFragment extends BaseFragment
 
     public void onNothingSelected(AdapterView<?> parent) {
         // Another interface callback
+    }
+
+
+    @Override
+    public void loadPoint(BasePoint punto) {
+
+            if(punto != null){
+                claseEnvio = punto;
+                Toast.makeText(getContext(), "Punto no es null =)", Toast.LENGTH_LONG ).show();
+            }else{
+                Toast.makeText(getContext(), "Sin error pero punto era null", Toast.LENGTH_LONG ).show();
+            }
+    }
+
+    @Override
+    public void showMessageError(FetchPuntosErrors error) {
+        Toast.makeText(getContext(), "Error al consultar el servidor", Toast.LENGTH_LONG ).show();
+/*        String msjError = "";
+        String title = getString(R.string.POPUP_TITLE_SERVIDOR);
+        switch (error) {
+            case PROBLEMA_SERVIDOR:
+                msjError = getString(R.string.sin_comunicacion);
+                break;
+            case PROBLEMA_BUSQUEDA:
+                Toast.makeText(getContext(), "Error al consultar el servidor", Toast.LENGTH_LONG );
+                title = getString(R.string.POPUP_TITLE_SIN_NOVEDADES);
+                msjError = getString(R.string.POPUP_MENSAJE_SIN_NOVEDADES);
+                break;
+            case TIME_OUT:
+                msjError = getString(R.string.sin_comunicacion);
+                break;
+        }*/
     }
 
     @Override

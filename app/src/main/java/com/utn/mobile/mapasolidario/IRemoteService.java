@@ -14,4 +14,6 @@ public interface IRemoteService {
     List<NovedadResponse> fetchNewsService();
 
     List<PuntoResponse> fetchPuntosService();
+
+    BasePoint getPuntoService();
 }
