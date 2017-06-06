@@ -161,7 +161,7 @@ public class MapFragment extends BaseFragment
             @Override
             public void onClick(View v) {
                 claseEnvio.setAccion(PointActions.ALTA);
-                FragmentManager fragmentManager = getFragmentManager();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 consultarPunto(claseEnvio,fragmentManager);
                 ocultar();
             }
@@ -368,40 +368,42 @@ public class MapFragment extends BaseFragment
     public void loadPointsInMap(List<PuntoResponse> resultadoDTO) {
         for(PuntoResponse punto : resultadoDTO){
 
-            if (punto.getTipo().equals("heladera")){
-                // creo punto de tipo heladera
-                mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet("Haga click para Detalles").position(new LatLng(
-                        punto.getLatitud(),
-                        punto.getLongitud()
-                )).icon(BitmapDescriptorFactory.fromResource(R.drawable.heladera_marker)));
+            if(punto.getTipo() != null){
+                if (punto.getTipo().equals("heladera")){
+                    // creo punto de tipo heladera
+                    mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet("Haga click para Detalles").position(new LatLng(
+                            punto.getLatitud(),
+                            punto.getLongitud()
+                    )).icon(BitmapDescriptorFactory.fromResource(R.drawable.heladera_marker)));
 
-            }
+                }
 
-            if (punto.getTipo().equals("ropero")){
-                // creo punto de tipo ropero
-                mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet("Haga click para Detalles").position(new LatLng(
-                        punto.getLatitud(),
-                        punto.getLongitud()
-                )).icon(BitmapDescriptorFactory.fromResource(R.drawable.ropero_marker)));
+                if (punto.getTipo().equals("ropero")){
+                    // creo punto de tipo ropero
+                    mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet("Haga click para Detalles").position(new LatLng(
+                            punto.getLatitud(),
+                            punto.getLongitud()
+                    )).icon(BitmapDescriptorFactory.fromResource(R.drawable.ropero_marker)));
 
-            }
+                }
 
-            if (punto.getTipo().equals("individuo")){
-                // creo punto de tipo individuo
-                mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet("Haga click para Detalles").position(new LatLng(
-                        punto.getLatitud(),
-                        punto.getLongitud()
-                )).icon(BitmapDescriptorFactory.fromResource(R.drawable.individuo_marker)));
+                if (punto.getTipo().equals("individuo")){
+                    // creo punto de tipo individuo
+                    mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet("Haga click para Detalles").position(new LatLng(
+                            punto.getLatitud(),
+                            punto.getLongitud()
+                    )).icon(BitmapDescriptorFactory.fromResource(R.drawable.individuo_marker)));
 
-            }
+                }
 
-            if (punto.getTipo().equals("emergencia")){
-                // creo punto de tipo emergencia
-                mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet("Haga click para Detalles").position(new LatLng(
-                        punto.getLatitud(),
-                        punto.getLongitud()
-                )).icon(BitmapDescriptorFactory.fromResource(R.drawable.emergencia_marker)));
+                if (punto.getTipo().equals("emergencia")){
+                    // creo punto de tipo emergencia
+                    mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet("Haga click para Detalles").position(new LatLng(
+                            punto.getLatitud(),
+                            punto.getLongitud()
+                    )).icon(BitmapDescriptorFactory.fromResource(R.drawable.emergencia_marker)));
 
+                }
             }
 
         }

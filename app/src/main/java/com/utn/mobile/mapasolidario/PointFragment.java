@@ -252,7 +252,7 @@ public class PointFragment extends BaseFragment
         View foco = getActivity().getCurrentFocus();
         if (foco != null) {
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(foco.getWindowToken(), imm.HIDE_IMPLICIT_ONLY );
+            imm.hideSoftInputFromWindow(foco.getWindowToken(), imm.HIDE_NOT_ALWAYS );
         }
 
     }
