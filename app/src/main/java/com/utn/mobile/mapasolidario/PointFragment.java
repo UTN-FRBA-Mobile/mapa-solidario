@@ -26,6 +26,7 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.utn.mobile.mapasolidario.util.FetchPuntosErrors;
 import com.utn.mobile.mapasolidario.util.PointActions;
@@ -54,9 +55,11 @@ public class PointFragment extends BaseFragment
     @InjectView(R.id.fvencimiento) private EditText fechaVencimiento;
     @InjectView(R.id.pmap)    MapView mMapView;
 
+    @Inject public BasePoint claseEnvio;
+
     static String PUNTO_MESSAGE = "mensaje.al.fragment";
     GoogleMap googleMap;
-    BasePoint claseEnvio = new BasePoint();
+    @Inject private static Gson gson;
 
     public PointFragment() {
         // Required empty public constructor
@@ -290,13 +293,21 @@ public class PointFragment extends BaseFragment
 
                 claseEnvio.setFechaModificacion(new Date());
 
-                if (claseEnvio.id == 0){
+                if (claseEnvio.id == ""){
                     claseEnvio.setId_usuario(22);
                     claseEnvio.setUsuario("Dani Chacur");
                 }
 
                 //TODO: Persistir los datos en la base de datos
-                presenter.guardarNecesidad(getContext());
+//                Gson gson = new Gson();
+                if (equals(claseEnvio.accion==PointActions.ALTA)){
+                    //TODO: ojo que no le tengo que mandar ni el id ni el contador en este caso
+                    presenter.guardarPunto(getContext(),gson.toJson(claseEnvio));
+                }
+                if (equals(claseEnvio.accion==PointActions.MODIFICACION)){
+                    presenter.actualizarPunto(getContext(),claseEnvio.id,gson.toJson(claseEnvio));
+                }
+
                 ocultarTeclado();
                 getFragmentManager().popBackStack();
             }
