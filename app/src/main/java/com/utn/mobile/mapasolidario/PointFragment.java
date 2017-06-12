@@ -6,6 +6,8 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +51,8 @@ public class PointFragment extends BaseFragment
     @Inject    private PointFragmentPresenter presenter;
 
     @InjectView(R.id.tubicacion) private TextView ubicacion;
+    @InjectView(R.id.editText) private TextView descripcion;
+    @InjectView(R.id.editTitulo) private TextView titulo;
     @InjectView(R.id.fcancel_boton) private Button bcancelar;
     @InjectView(R.id.fcont_boton) private Button bcontinuar;
     @InjectView(R.id.tipos_spinner) private Spinner spinner;
@@ -59,7 +63,7 @@ public class PointFragment extends BaseFragment
 
     static String PUNTO_MESSAGE = "mensaje.al.fragment";
     GoogleMap googleMap;
-    @Inject private static Gson gson;
+    @Inject private static Gson gson = new Gson();
 
     public PointFragment() {
         // Required empty public constructor
@@ -90,7 +94,8 @@ public class PointFragment extends BaseFragment
         //Levanto el objeto que me mandan
         if(getArguments()!=null)        {
             claseEnvio = (BasePoint) getArguments().getSerializable(PUNTO_MESSAGE);
-            claseEnvio.setAccion(PointActions.CONSULTA);//valor para probar... sacarlo desp TODO
+            claseEnvio.setId("");
+         //  claseEnvio.setAccion(PointActions.CONSULTA);//valor para probar... sacarlo desp TODO
         }
 
         revisarAccion(view);
@@ -123,46 +128,10 @@ public class PointFragment extends BaseFragment
         EditText editTitulo= (EditText) view.findViewById(R.id.editTitulo);
         EditText editDescripcion= (EditText) view.findViewById(R.id.editText);
 
-        if (claseEnvio.accion == PointActions.CONSULTA || claseEnvio.accion == PointActions.MODIFICACION ){
-            //TODO: probar el GET a la base
-            presenter.obtenerPunto(getContext(),claseEnvio.id);
-/*
-            claseEnvio.setLatitud(-34.6183);
-            claseEnvio.setLongitud(-58.3732);
-            claseEnvio.setTipo("Heladera Solidaria");
-            claseEnvio.setDescripcion("Robbins - 06 Decision:\n" +
-                    "\n" +
-                    "Tomar decisiones = hacer elecciones, gerentes de todos los niveles y todas las areas\n" +
-                    "\n" +
-                    "Etapas:\n" +
-                    "1 Identificaicon de problema\n" +
-                    "2: identificacion de criterios de decision\n" +
-                    "3: Ponderacion de criterios\n" +
-                    "4: Desarrollo de alternativas\n" +
-                    "5: Analisis de alternativas\n" +
-                    "6: Seleccion de una alternativa\n" +
-                    "7: Implementacion de la Alternativa\n" +
-                    "8: Evaluacion de la efectividad\n");
-            claseEnvio.setTitulo("Decisiones racionales: son elecciones logicas y consistentes para maximizar valor.");
-            claseEnvio.setFechaVto(new Date());
-*/
-            //lleno el layout con los datos devueltos
-            editTitulo.setText(claseEnvio.titulo);
-            editDescripcion.setText(claseEnvio.descripcion);
+        if (claseEnvio.accion == PointActions.CONSULTA || claseEnvio.accion == PointActions.MODIFICACION ) {
 
-
-            //Mostrarlo en el text view
-            String myFormat = "dd/MM/yyyy";
-            SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-            fechaVencimiento.setText(sdf.format(claseEnvio.fechaVto.getTime()));
-
-            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
-                    R.array.tipos_array, android.R.layout.simple_spinner_item);
-            int spinnerPosition = adapter.getPosition(claseEnvio.tipo);
-            spinner.setSelection(spinnerPosition);
-
+            presenter.obtenerPunto(getContext(), claseEnvio._id);
         }
-
         if (claseEnvio.accion == PointActions.CONSULTA){
             //Deshabilitar la edición
             bcontinuar.setVisibility(View.INVISIBLE);
@@ -292,26 +261,51 @@ public class PointFragment extends BaseFragment
             public void onClick(View view) {
 
                 claseEnvio.setFechaModificacion(new Date());
+                claseEnvio.setDescripcion(descripcion.getText().toString());
+                claseEnvio.setTitulo(titulo.getText().toString());
+                claseEnvio.setFechaVto(fechaVencimiento.getText().toString());
 
-                if (claseEnvio.id == ""){
+                if (claseEnvio._id == ""){
                     claseEnvio.setId_usuario(22);
                     claseEnvio.setUsuario("Dani Chacur");
                 }
-
-                //TODO: Persistir los datos en la base de datos
-//                Gson gson = new Gson();
-                if (equals(claseEnvio.accion==PointActions.ALTA)){
-                    //TODO: ojo que no le tengo que mandar ni el id ni el contador en este caso
-                    presenter.guardarPunto(getContext(),gson.toJson(claseEnvio));
+                //TODO: Persistir los datos en la base de datos_por alguna razón no hacen nada
+                if (claseEnvio.accion==PointActions.ALTA){
+                    String texto =gson.toJson(claseEnvio);
+                    presenter.guardarPunto(getContext(),texto);
                 }
-                if (equals(claseEnvio.accion==PointActions.MODIFICACION)){
-                    presenter.actualizarPunto(getContext(),claseEnvio.id,gson.toJson(claseEnvio));
+                if (claseEnvio.accion==PointActions.MODIFICACION){
+                    presenter.actualizarPunto(getContext(),claseEnvio._id,gson.toJson(claseEnvio));
                 }
 
-                ocultarTeclado();
-                getFragmentManager().popBackStack();
+  //              nuevoBackStack();
             }
         });
+    }
+
+    public void nuevoBackStack(){
+        ocultarTeclado();
+        getFragmentManager().popBackStack();
+/*
+        if (claseEnvio.accion == PointActions.MODIFICACION) {
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.content, new UserFragment(), "Fragment")
+                    .commit();
+        }else{
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.content, new MapFragment(), "Fragment")
+                    .commit();
+        }*/
+    }
+
+    @Override
+    public void showProgressDialog() {
+
+    }
+
+    @Override
+    public void hideProgressDialog() {
+
     }
 
     public void onItemSelected(AdapterView<?> parent, View view,
@@ -331,11 +325,37 @@ public class PointFragment extends BaseFragment
 
             if(punto != null){
                 claseEnvio = punto;
-                Toast.makeText(getContext(), "Punto no es null =)", Toast.LENGTH_LONG ).show();
+
+                //lleno el layout con los datos devueltos
+                cargarMapa();
+                ubicacion.setText(getCompleteAddressString(claseEnvio.latitud, claseEnvio.longitud));
+
+                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+                        R.array.tipos_array, android.R.layout.simple_spinner_item);
+                int spinnerPosition = adapter.getPosition(claseEnvio.tipo);
+                spinner.setSelection(spinnerPosition);
+
+                titulo.setText(claseEnvio.titulo);
+                fechaVencimiento.setText(claseEnvio.fechaVto);
+                descripcion.setText(claseEnvio.descripcion);
+
             }else{
-                Toast.makeText(getContext(), "Sin error pero punto era null", Toast.LENGTH_LONG ).show();
+                Toast.makeText(getContext(), "Error al obtener los datos", Toast.LENGTH_LONG ).show();
             }
     }
+
+    @Override
+    public void okPoint(BasePoint punto) {
+
+        if(punto != null){
+            claseEnvio = punto;
+            Toast.makeText(getContext(), "Punto Guardado correctamente", Toast.LENGTH_LONG ).show();
+        }else{
+            Toast.makeText(getContext(), "Error al obtener los datos", Toast.LENGTH_LONG ).show();
+        }
+        nuevoBackStack();
+    }
+
 
     @Override
     public void showMessageError(FetchPuntosErrors error) {

@@ -18,5 +18,10 @@ interface PointFragmentView extends BaseView {
     void showMessageError(FetchPuntosErrors error);
 
     void loadPoint(BasePoint resultadoDTO);
+    void okPoint(BasePoint resultadoDTO);
+
+    void showProgressDialog();
+
+    void hideProgressDialog();
 
 }

@@ -17,7 +17,7 @@ import roboguice.util.RoboAsyncTask;
 
 public class PostPuntoTask extends RoboAsyncTask<BasePoint> {
 
-    private String datos;
+    private String datos ="";
     protected Context context;
     @Inject
     private IRemoteService remoteService;

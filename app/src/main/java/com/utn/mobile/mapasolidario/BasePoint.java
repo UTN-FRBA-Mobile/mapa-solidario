@@ -20,7 +20,7 @@ import java.util.Date;
 public class BasePoint
         implements Serializable {
 //    LatLng ubicacion = new LatLng(-34.603748, -58.381533);
-    String id = "593dbf11a05a0f0004b0d9ab";
+    String _id = "593f2678a608c10004c6b456";
     double latitud = -34.603748;
     double longitud = -58.381533;
     String titulo = "";
@@ -29,7 +29,7 @@ public class BasePoint
     int id_usuario = 0;
     String usuario = "";
     Date fechaCreacion = new Date();
-    Date fechaVto = new Date();
+    String fechaVto = "01/01/2001";
     Date fechaModificacion =  new Date();
     PointActions accion = PointActions.CONSULTA;
     int contador = 0;
@@ -39,7 +39,7 @@ public class BasePoint
 
     public void setLatitud (Double lat){latitud = lat;}
     public void setLongitud (Double lat){longitud = lat;}
-    public void setId (String iden){ id = iden; }
+    public void setId (String iden){ _id = iden; }
     public void setContador (int puntos2) {contador = puntos2;}
     public void setAccion (PointActions valor){ accion = valor; }
     public void setFechaModificacion (Date fecha){ fechaModificacion = fecha;}
@@ -49,6 +49,6 @@ public class BasePoint
     public void setUsuario (String user){usuario = user;}
     public void setId_usuario (int iden){ id_usuario = iden; }
     public void setFechaCreacion (Date fecha){ fechaCreacion = fecha;}
-    public void setFechaVto(Date fecha){ fechaVto = fecha;}
+    public void setFechaVto(String fecha){ fechaVto = fecha;}
 
 }

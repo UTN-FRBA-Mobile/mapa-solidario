@@ -19,20 +19,20 @@ import org.greenrobot.eventbus.ThreadMode;
 public class PointFragmentPresenter extends BasePresenter<PointFragmentView>{
 
     public void obtenerPunto(Context context,String id){
-
+        view.showProgressDialog();
         if (UiUtils.checkNetworkAvailable(context)) {
             new GetPuntoTask(context,id).execute();
         }
     }
 
     public void actualizarPunto(Context context,String id, String json){
-
+        view.showProgressDialog();
         if (UiUtils.checkNetworkAvailable(context)) {
             new PutPuntoTask(context,id,json).execute();
         }
     }
     public void guardarPunto(Context context,String json){
-
+        view.showProgressDialog();
         if (UiUtils.checkNetworkAvailable(context)) {
             new PostPuntoTask(context,json).execute();
         }
@@ -40,13 +40,31 @@ public class PointFragmentPresenter extends BasePresenter<PointFragmentView>{
 
 
     public void onEvent(FetchPuntosFailedEvent event) {
+        view.hideProgressDialog();
         view.showMessageError(event.getError());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onGetPuntoSuccessEvent(GetPuntoSuccessEvent event) {
+        view.hideProgressDialog();
         if (event.getResultadoDTO() != null) {
           view.loadPoint(event.getResultadoDTO());
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPostPuntoSuccessEvent(GetPuntoSuccessEvent event) {
+        view.hideProgressDialog();
+        if (event.getResultadoDTO() != null) {
+            view.okPoint(event.getResultadoDTO());
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPutPuntoSuccessEvent(GetPuntoSuccessEvent event) {
+        view.hideProgressDialog();
+        if (event.getResultadoDTO() != null) {
+            view.okPoint(event.getResultadoDTO());
         }
     }
 

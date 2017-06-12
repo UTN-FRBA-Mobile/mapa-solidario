@@ -9,6 +9,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -25,25 +26,15 @@ public interface MapaSolidarioRetrofitService {
     @GET("points")
     Call<List<PuntoResponse>> fetchPuntos();
 
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
     @POST("points")
     Call<BasePoint> postPunto(@Body String json);
 
     @GET("points/{id}")
-        //593dbf11a05a0f0004b0d9ab
     Call<BasePoint> getPunto(@Path("id") String id);
 
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
     @PUT("points/{id}")
     Call<BasePoint> putPunto(@Path("id") String id, @Body String json);
-/*
 
-    @POST("points")
-    void postPunto(@Body String json,Callback callback);
-
-    @GET("points/{id}")
-        //593dbf11a05a0f0004b0d9ab
-    void getPunto(@Path("id") String id, Callback callback);
-
-    @PUT("points/{id}")
-    void putPunto(@Path("id") String id, @Body String json,Callback callback);
-*/
 }
