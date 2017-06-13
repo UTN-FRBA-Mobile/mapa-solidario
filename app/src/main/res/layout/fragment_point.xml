@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.utn.mobile.mapasolidario.PointFragment"
+    android:id="@+id/scrollVista"
     android:fillViewport="true">
 
     <LinearLayout
@@ -13,58 +14,59 @@
         android:orientation="vertical">
 
         <TextView
-                android:id="@+id/tnuevo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Detalle Punto de necesidad"
-                android:textColor="@color/white"
-                android:textSize="20dp"
-                android:gravity="center_horizontal"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:background="@color/colorPrimary"
-                android:fontFamily="sans-serif-thin"
-                />
+            android:id="@+id/tnuevo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Detalle Punto de necesidad"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:gravity="center_horizontal"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:background="@color/colorPrimary"
+            android:fontFamily="sans-serif-thin"/>
 
-            <com.google.android.gms.maps.MapView
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:id="@+id/pmap"
-                />
+        <com.google.android.gms.maps.MapView
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:id="@+id/pmap"/>
+
         <TextView
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:textSize="16dp"
             android:text="@string/punto_confirmacion" />
+
         <TextView
             android:id="@+id/tubicacion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:text="mostrar ubicación en la salada de aca a la vuelta y en la esquina de la casa de mi novio , adrogue fulano y sultano"/>
-
+            android:textSize="16dp" />
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/ttipo"
-                    android:text="Tipo "
-                    android:layout_marginStart="@dimen/activity_horizontal_margin"
-                    android:textSize="16dp"
-                    />
-                <Spinner
-                    android:id="@+id/tipos_spinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="100dp"
-                    />
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ttipo"
+                android:text="Tipo "
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:textSize="16dp"/>
+
+            <Spinner
+                android:id="@+id/tipos_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="100dp"/>
+
         </FrameLayout>
 
         <TextView
@@ -72,56 +74,57 @@
             android:layout_width="wrap_content"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:textSize="16dp"
             android:text="Título" />
 
         <EditText
+            android:id="@+id/editTitulo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="Ingrese el Título"
-            android:ems="10"
+            android:ems="17"
             android:inputType="textCapSentences"
             android:layout_marginTop="5dp"
             android:layout_marginStart="20dp"
-            />
+            android:layout_marginEnd="20dp"/>
 
         <TextView
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:textSize="16dp"
             android:text="Fecha Vencimiento" />
 
         <EditText
+            android:id="@+id/fvencimiento"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginStart="20dp"
             android:ems="10"
-            android:hint="Ingrese Fecha vencimiento"
-            android:inputType="date"/>
+            android:hint="Fecha vencimiento"
+            android:focusable="false"
+            android:longClickable="false"/>
 
         <TextView
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:textSize="16dp"
             android:text="Descripción" />
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true">
-            <EditText
-                android:id="@+id/editText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="17"
-                android:layout_marginTop="5dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:hint="Ingrese Descripción"
-                android:inputType="textMultiLine"/>
-        </ScrollView>
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="17"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:hint="Ingrese Descripción"
+            android:inputType="textMultiLine"/>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -133,16 +136,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|left"
-            android:text="@string/punto_volver"
-            />
+            android:text="@string/punto_volver"/>
 
         <Button
             android:id="@+id/fcont_boton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
-            android:text="@string/punto_avanzar"
-            />
+            android:text="@string/punto_avanzar"/>
         </FrameLayout>
 
     </LinearLayout>
