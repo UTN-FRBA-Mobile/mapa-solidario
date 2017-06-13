@@ -14,7 +14,7 @@ class ClaseUsuario implements Serializable {
     private String id;
     private String nombre;
     private String apellido;
-    private URL url;
+    private String url;
 
     public String getId() {
         return id;
@@ -40,11 +40,11 @@ class ClaseUsuario implements Serializable {
         this.apellido = apellido;
     }
 
-    public URL getUrl() {
+    public String getUrl() {
         return url;
     }
 
-    public void setUrl(URL url) {
+    public void setUrl(String url) {
         this.url = url;
     }
 

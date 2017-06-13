@@ -13,6 +13,11 @@
 bin/
 gen/
 
+# Gradle files
+.gradle/
+build/
+app/app.iml
+
 # Local configuration file (sdk path, etc)
 local.properties
 
@@ -106,6 +111,3 @@ gradle.run.settings.xml
 ignore.xml
 vcs.xml
 web-browsers.xml
-.gradle/
-build/android-profile/
-build/intermediates/
