@@ -15,11 +15,15 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -44,7 +48,7 @@ import roboguice.inject.InjectView;
 
 
 public class PointFragment extends BaseFragment
-        implements View.OnClickListener, PointFragmentView,
+        implements View.OnClickListener,  CompoundButton.OnCheckedChangeListener, PointFragmentView,
         AdapterView.OnItemSelectedListener {
     private OnFragmentInteractionListener mListener;
 
@@ -57,10 +61,17 @@ public class PointFragment extends BaseFragment
     @InjectView(R.id.fcont_boton) private Button bcontinuar;
     @InjectView(R.id.tipos_spinner) private Spinner spinner;
     @InjectView(R.id.fvencimiento) private EditText fechaVencimiento;
+    @InjectView(R.id.fcreacion) private EditText fechacreacion;
+    @InjectView(R.id.eayuda)     EditText ayudas;
     @InjectView(R.id.pmap)    MapView mMapView;
+    @InjectView(R.id.lcreacion)     FrameLayout creacion;
+    @InjectView(R.id.lvencimiento)     FrameLayout lvencimiento;
+    @InjectView(R.id.svencimiento)    ToggleButton vswitch;
+
 
     @Inject public BasePoint claseEnvio;
 
+    private PointActions accion;
     static String PUNTO_MESSAGE = "mensaje.al.fragment";
     GoogleMap googleMap;
     @Inject private static Gson gson = new Gson();
@@ -87,6 +98,7 @@ public class PointFragment extends BaseFragment
     public void onClick(View v) {
     }
 
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -94,9 +106,13 @@ public class PointFragment extends BaseFragment
         //Levanto el objeto que me mandan
         if(getArguments()!=null)        {
             claseEnvio = (BasePoint) getArguments().getSerializable(PUNTO_MESSAGE);
+            accion = claseEnvio.accion;
             claseEnvio.setId("");
-         //  claseEnvio.setAccion(PointActions.CONSULTA);//valor para probar... sacarlo desp TODO
+          // claseEnvio.setAccion(PointActions.CONSULTA);//valor para probar... sacarlo desp TODO
         }
+
+        //oculto la barra de abajo
+        getActivity().findViewById(R.id.navigation).setVisibility(View.GONE);
 
         revisarAccion(view);
 
@@ -108,8 +124,7 @@ public class PointFragment extends BaseFragment
             @Override
             public void onClick(View view) {
                 bcontinuar.setVisibility(View.VISIBLE);
-                ocultarTeclado();
-                getFragmentManager().popBackStack();
+                nuevoBackStack();
             }
         });
 
@@ -120,28 +135,57 @@ public class PointFragment extends BaseFragment
             cargarMapa();
         }
 
+        vswitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    fechaVencimiento.setVisibility(View.VISIBLE);
+                } else {
+                    fechaVencimiento.setText("");
+                    fechaVencimiento.setVisibility(View.GONE);
+                }
+            }
+        });
+
     }
 
 
-    public void revisarAccion (View view){
+    public void revisarAccion (View view) {
 
-        EditText editTitulo= (EditText) view.findViewById(R.id.editTitulo);
-        EditText editDescripcion= (EditText) view.findViewById(R.id.editText);
+        EditText editTitulo = (EditText) view.findViewById(R.id.editTitulo);
+        EditText editDescripcion = (EditText) view.findViewById(R.id.editText);
 
-        if (claseEnvio.accion == PointActions.CONSULTA || claseEnvio.accion == PointActions.MODIFICACION ) {
+        if (claseEnvio.accion == PointActions.CONSULTA || claseEnvio.accion == PointActions.MODIFICACION) {
 
             presenter.obtenerPunto(getContext(), claseEnvio._id);
+            creacion.setVisibility(View.VISIBLE); // muestra fecha de creación
+            creacion.setEnabled(false);
         }
-        if (claseEnvio.accion == PointActions.CONSULTA){
+        if (claseEnvio.accion == PointActions.CONSULTA) {
             //Deshabilitar la edición
-            bcontinuar.setVisibility(View.INVISIBLE);
+            //  bcontinuar.setVisibility(View.INVISIBLE);
+            vswitch.setVisibility(View.GONE);//oculto el toggle
+            bcontinuar.setText(getResources().getString(R.string.punto_ayudar));
+            fechacreacion.setEnabled(false);
+            fechaVencimiento.setEnabled(false);
             editTitulo.setEnabled(false);
             editDescripcion.setEnabled(false);
-            fechaVencimiento.setEnabled(false);
             spinner.setEnabled(false);
         }
+        if (claseEnvio.accion == PointActions.ALTA) {
+            FrameLayout frame = (FrameLayout) view.findViewById(R.id.layuda);
+            frame.setVisibility(View.GONE);
+        }
 
-    }
+        if (claseEnvio.accion == PointActions.MODIFICACION) {
+
+//            float value = getResources().getDimension(R.dimen.vencimiento);
+//            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) fechaVencimiento.getLayoutParams();
+//            params.setMarginStart(410);
+//            params.setMarginStart(230);
+//            fechaVencimiento.setLayoutParams(params);
+        }
+
+        }
 
     void cargarMapa(){
 
@@ -187,6 +231,8 @@ public class PointFragment extends BaseFragment
         //Cargo el datePicker de la fecha vencimiento
         llenarDatepicker();
 
+        ayudas.setText(String.valueOf(claseEnvio.contador));
+        ayudas.setEnabled(false);
     }
 
     private String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
@@ -260,21 +306,25 @@ public class PointFragment extends BaseFragment
             @Override
             public void onClick(View view) {
 
-                claseEnvio.setFechaModificacion(new Date());
-                claseEnvio.setDescripcion(descripcion.getText().toString());
-                claseEnvio.setTitulo(titulo.getText().toString());
-                claseEnvio.setFechaVto(fechaVencimiento.getText().toString());
+                if (claseEnvio.accion == PointActions.CONSULTA) {
+                    claseEnvio.setContador(claseEnvio.contador+1);//sumo un punto cada vez que tocan el botón
+                }else {
+                    claseEnvio.setFechaModificacion(new Date());
+                    claseEnvio.setDescripcion(descripcion.getText().toString());
+                    claseEnvio.setTitulo(titulo.getText().toString());
+                    claseEnvio.setFechaVto(fechaVencimiento.getText().toString());
 
-                if (claseEnvio._id == ""){
-                    claseEnvio.setId_usuario(22);
-                    claseEnvio.setUsuario("Dani Chacur");
+                    if (claseEnvio._id == "") {
+                        claseEnvio.setId_usuario(22);
+                        claseEnvio.setUsuario("Dani Chacur");
+                    }
                 }
-                //TODO: Persistir los datos en la base de datos_por alguna razón no hacen nada
+                //TODO: Persistir los datos en la base de datos_devuelven bad request pero no se porque
                 if (claseEnvio.accion==PointActions.ALTA){
                     String texto =gson.toJson(claseEnvio);
                     presenter.guardarPunto(getContext(),texto);
                 }
-                if (claseEnvio.accion==PointActions.MODIFICACION){
+                if (claseEnvio.accion==PointActions.MODIFICACION || claseEnvio.accion == PointActions.CONSULTA){
                     presenter.actualizarPunto(getContext(),claseEnvio._id,gson.toJson(claseEnvio));
                 }
 
@@ -285,6 +335,8 @@ public class PointFragment extends BaseFragment
 
     public void nuevoBackStack(){
         ocultarTeclado();
+        //muestro la barra de abajo
+        getActivity().findViewById(R.id.navigation).setVisibility(View.VISIBLE);
         getFragmentManager().popBackStack();
 /*
         if (claseEnvio.accion == PointActions.MODIFICACION) {
@@ -306,6 +358,16 @@ public class PointFragment extends BaseFragment
     @Override
     public void hideProgressDialog() {
 
+    }
+
+
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (isChecked) {
+            fechaVencimiento.setVisibility(View.VISIBLE);
+        } else {
+            fechaVencimiento.setVisibility(View.GONE);
+            claseEnvio.setFechaVto("01/01/2001");
+        }
     }
 
     public void onItemSelected(AdapterView<?> parent, View view,
@@ -336,9 +398,28 @@ public class PointFragment extends BaseFragment
                 spinner.setSelection(spinnerPosition);
 
                 titulo.setText(claseEnvio.titulo);
-                fechaVencimiento.setText(claseEnvio.fechaVto);
+
+                if (claseEnvio.fechaVto=="01/01/2001"){
+                    if (accion==PointActions.MODIFICACION) {
+                        vswitch.setChecked(false);
+                    }else{
+                        lvencimiento.setVisibility(View.GONE);
+                    }
+                }else {
+                    fechaVencimiento.setVisibility(View.VISIBLE);
+                    fechaVencimiento.setText(claseEnvio.fechaVto);
+                    if (accion==PointActions.MODIFICACION) {
+                        vswitch.setChecked(true);}
+                }
                 descripcion.setText(claseEnvio.descripcion);
 
+                //Mostrarlo en el text view
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+                fechacreacion.setText(sdf.format(claseEnvio.fechaCreacion.getTime()));
+
+                ayudas.setText(String.valueOf(claseEnvio.contador));
+
+                claseEnvio.accion =accion;
             }else{
                 Toast.makeText(getContext(), "Error al obtener los datos", Toast.LENGTH_LONG ).show();
             }
@@ -349,6 +430,7 @@ public class PointFragment extends BaseFragment
 
         if(punto != null){
             claseEnvio = punto;
+            claseEnvio.accion =accion;
             Toast.makeText(getContext(), "Punto Guardado correctamente", Toast.LENGTH_LONG ).show();
         }else{
             Toast.makeText(getContext(), "Error al obtener los datos", Toast.LENGTH_LONG ).show();

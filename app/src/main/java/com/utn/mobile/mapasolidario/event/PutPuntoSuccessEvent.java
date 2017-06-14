@@ -6,7 +6,7 @@ import com.utn.mobile.mapasolidario.BasePoint;
  * Created by dani on 04/06/17.
  */
 
-public class GetPuntoSuccessEvent {
+public class PutPuntoSuccessEvent {
 
     private BasePoint resultadoDTO;
 
@@ -14,7 +14,7 @@ public class GetPuntoSuccessEvent {
         return resultadoDTO;
     }
 
-    public GetPuntoSuccessEvent setResultadoDTO(BasePoint resultadoDTO) {
+    public PutPuntoSuccessEvent setResultadoDTO(BasePoint resultadoDTO) {
         this.resultadoDTO = resultadoDTO;
         return this;
     }
