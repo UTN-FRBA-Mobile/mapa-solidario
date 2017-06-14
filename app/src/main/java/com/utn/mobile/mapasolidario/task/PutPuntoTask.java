@@ -5,7 +5,7 @@ import android.content.Context;
 import com.google.inject.Inject;
 import com.utn.mobile.mapasolidario.BasePoint;
 import com.utn.mobile.mapasolidario.IRemoteService;
-import com.utn.mobile.mapasolidario.event.GetPuntoSuccessEvent;
+import com.utn.mobile.mapasolidario.event.PutPuntoSuccessEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -40,6 +40,6 @@ public class PutPuntoTask extends RoboAsyncTask<BasePoint> {
 
     @Override
     protected void onSuccess(BasePoint response) {
-        EventBus.getDefault().getDefault().post(new GetPuntoSuccessEvent().setResultadoDTO(response));
+        EventBus.getDefault().getDefault().post(new PutPuntoSuccessEvent().setResultadoDTO(response));
     }
 }
