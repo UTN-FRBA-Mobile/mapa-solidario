@@ -1,15 +1,14 @@
-package com.utn.mobile.mapasolidario;
+package com.utn.mobile.mapasolidario.task;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.google.inject.Inject;
+import com.utn.mobile.mapasolidario.IRemoteService;
 import com.utn.mobile.mapasolidario.dto.PuntoResponse;
 import com.utn.mobile.mapasolidario.event.FetchPuntosSuccessEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import roboguice.util.RoboAsyncTask;
@@ -18,7 +17,7 @@ import roboguice.util.RoboAsyncTask;
  * Created by juani on 04/06/17.
  */
 
-class FetchPuntosTask extends RoboAsyncTask<List<PuntoResponse>> {
+public class FetchPuntosTask extends RoboAsyncTask<List<PuntoResponse>> {
 
 
     @Inject

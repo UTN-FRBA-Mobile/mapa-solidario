@@ -82,13 +82,13 @@ public class MapFragment extends BaseFragment
 
     private static final int LOCATION_REQUEST_CODE = 1;
 
-    //URL GET POINTS
-    private static final String SERVICE_URL = "YOUR DRIVE SERVICE URL";
-
     //location
     private TrackGPS gps;
     LatLng currentLocation;
     BasePoint claseEnvio = new BasePoint();
+
+    //asigno tag a cada marker del mapa
+    Marker mAux;
 
     GoogleMap mMap;
     MapView mMapView;
@@ -100,7 +100,7 @@ public class MapFragment extends BaseFragment
     @InjectView(R.id.bpunto)     private FloatingActionButton botonf;
     @InjectView(R.id.mcancel_boton)     private Button bcancel;
     @InjectView(R.id.mcont_boton)     private Button bcontinuar;
-//    @InjectView(R.id.mtexto)     private TextView texto;
+    //    @InjectView(R.id.mtexto)     private TextView texto;
 
     @InjectView(R.id.lnuevo) private FrameLayout layout_nuevo;
 
@@ -108,7 +108,7 @@ public class MapFragment extends BaseFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         presenter.onCreate(this);
-        presenter.fetchPuntos(getContext());
+        presenter.fetchPuntos(getContext()); //get points
     }
 
     @Override
@@ -125,7 +125,6 @@ public class MapFragment extends BaseFragment
         botonf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: implementar acá que se muestre el marker de seleccion de lugar
 
                 //muestro los botones
                 botonf.setVisibility(View.INVISIBLE);
@@ -146,6 +145,7 @@ public class MapFragment extends BaseFragment
                         mMap.clear();
                         mMap.addMarker(new MarkerOptions().position(point).icon(BitmapDescriptorFactory.fromResource(R.drawable.new_marker)));
 //                        claseEnvio.setUbicacion(point); //Acá le seteo la ubicación al fragment de creación
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 18));
                         claseEnvio.setLatitud(point.latitude);
                         claseEnvio.setLongitud(point.longitude);
                     }
@@ -153,7 +153,7 @@ public class MapFragment extends BaseFragment
 
 
                 mMap.addMarker(new MarkerOptions().position(currentLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.new_marker)));
-
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
             }
         });
     }
@@ -188,10 +188,11 @@ public class MapFragment extends BaseFragment
 
 
         mMap.clear(); //limpio new_marker
+        presenter.fetchPuntos(getContext()); //get points
     }
 
     @Override
-        public void onClick(View v) {
+    public void onClick(View v) {
 
         }
 
@@ -206,8 +207,6 @@ public class MapFragment extends BaseFragment
                     mMapView.getMapAsync(this);
                 }
     }
-
-
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -225,11 +224,11 @@ public class MapFragment extends BaseFragment
         gps = new TrackGPS(getContext());
 
         currentLocation = new LatLng(-34.603748, -58.381533); //Obelisco
-        LatLng ejemplo1 = new LatLng(-34.608, -58.3712);
+        /*LatLng ejemplo1 = new LatLng(-34.608, -58.3712);
         LatLng ejemplo2 = new LatLng(-34.6075, -58.3732);
         LatLng ejemplo3 = new LatLng(-34.607, -58.3712);
         LatLng ejemplo4 = new LatLng(-34.6085, -58.3732);
-
+*/
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.getUiSettings().setMapToolbarEnabled(false);
 
@@ -286,11 +285,11 @@ public class MapFragment extends BaseFragment
 
         // Marcadores
 
-        mMap.addMarker(new MarkerOptions().title("Título 1").snippet("Haga click para Detalles").position(ejemplo1).icon(BitmapDescriptorFactory.fromResource(R.drawable.individuo_marker)));
+        /*mMap.addMarker(new MarkerOptions().title("Título 1").snippet("Haga click para Detalles").position(ejemplo1).icon(BitmapDescriptorFactory.fromResource(R.drawable.individuo_marker)));
         mMap.addMarker(new MarkerOptions().title("Título 2").snippet("Haga click para Detalles").position(ejemplo2).icon(BitmapDescriptorFactory.fromResource(R.drawable.heladera_marker)));
         mMap.addMarker(new MarkerOptions().title("Título 3").snippet("Haga click para Detalles").position(ejemplo3).icon(BitmapDescriptorFactory.fromResource(R.drawable.ropero_marker)));
         mMap.addMarker(new MarkerOptions().title("Título 4").snippet("Haga click para Detalles").position(ejemplo4).icon(BitmapDescriptorFactory.fromResource(R.drawable.emergencia_marker)));
-
+*/
         mMap.setOnInfoWindowClickListener(this);
 
 
@@ -298,10 +297,11 @@ public class MapFragment extends BaseFragment
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        //TODO:IMPLEMENTAR ACÁ LLAMADO A FRAGMENT DETALLE DEL MARKER AL PRESIONAR INFOWINDOW
-        Toast.makeText(getContext(),marker.getTitle(), Toast.LENGTH_LONG).show();
-    }
 
+        String idPoint = (String) marker.getTag();
+        //TODO:IMPLEMENTAR ACÁ LLAMADO A FRAGMENT DETALLE DEL MARKER AL PRESIONAR INFOWINDOW, PASAR EL _ID PARA HACER GET X ID
+        Toast.makeText(getContext(),idPoint, Toast.LENGTH_LONG).show();
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -373,58 +373,48 @@ public class MapFragment extends BaseFragment
         for(PuntoResponse punto : resultadoDTO){
 
             if(punto.getTipo() != null){
-                if (punto.getTipo().equals("heladera")){
+
+                if (punto.getTipo().equals("Heladera Solidaria")){
                     // creo punto de tipo heladera
-                    mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet("Haga click para Detalles").position(new LatLng(
+                    mAux=mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet("Haga click para Detalles").position(new LatLng(
                             punto.getLatitud(),
                             punto.getLongitud()
                     )).icon(BitmapDescriptorFactory.fromResource(R.drawable.heladera_marker)));
-
+                    mAux.setTag(punto.get_id());
                 }
 
-                if (punto.getTipo().equals("ropero")){
+                if (punto.getTipo().equals("Ropero Solidario")){
                     // creo punto de tipo ropero
-                    mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet("Haga click para Detalles").position(new LatLng(
+                    mAux=mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet("Haga click para Detalles").position(new LatLng(
                             punto.getLatitud(),
                             punto.getLongitud()
                     )).icon(BitmapDescriptorFactory.fromResource(R.drawable.ropero_marker)));
-
+                    mAux.setTag(punto.get_id());
                 }
 
-                if (punto.getTipo().equals("individuo")){
+                if (punto.getTipo().equals("Individuo")){
                     // creo punto de tipo individuo
-                    mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet("Haga click para Detalles").position(new LatLng(
+                    mAux=mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet("Haga click para Detalles").position(new LatLng(
                             punto.getLatitud(),
                             punto.getLongitud()
                     )).icon(BitmapDescriptorFactory.fromResource(R.drawable.individuo_marker)));
-
+                    mAux.setTag(punto.get_id());
                 }
 
-                if (punto.getTipo().equals("emergencia")){
+                if (punto.getTipo().equals("Emergencia")){
                     // creo punto de tipo emergencia
-                    mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet("Haga click para Detalles").position(new LatLng(
+                    mAux=mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet("Haga click para Detalles").position(new LatLng(
                             punto.getLatitud(),
                             punto.getLongitud()
                     )).icon(BitmapDescriptorFactory.fromResource(R.drawable.emergencia_marker)));
-
+                    mAux.setTag(punto.get_id());
                 }
+
             }
 
         }
 
     }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     *//*
-    */
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
