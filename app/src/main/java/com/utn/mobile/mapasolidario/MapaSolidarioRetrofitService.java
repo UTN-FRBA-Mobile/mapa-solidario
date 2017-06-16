@@ -2,6 +2,7 @@ package com.utn.mobile.mapasolidario;
 
 import com.utn.mobile.mapasolidario.dto.NovedadResponse;
 import com.utn.mobile.mapasolidario.dto.PuntoResponse;
+import com.utn.mobile.mapasolidario.dto.PuntoUpdate;
 
 import java.util.List;
 
@@ -26,16 +27,16 @@ public interface MapaSolidarioRetrofitService {
     @GET("points")
     Call<List<PuntoResponse>> fetchPuntos();
 
+    @Headers({"Accept: application/json"})
+    @POST("points")
+    Call<BasePoint> postPunto(@Body BasePoint json);
+
     @GET("points/{id}")
     Call<BasePoint> getPunto(@Path("id") String id);
 
-    @Headers({"Content-Type: application/json"})
-    @POST("points")
-    Call<BasePoint> postPunto(@Body String json);
-
-    @Headers({"Content-Type: application/json"})
+    @Headers({"Accept: application/json"})
     @PUT("points/actualizarPunto/{id}")
-    Call<BasePoint> putPunto(@Path("id") String id, @Body String json);
+    Call<BasePoint> putPunto(@Path("id") String id, @Body PuntoUpdate json);
 
     @Headers({"Content-Type: application/json"})
     @PUT("points/incrementarContador/{id}")

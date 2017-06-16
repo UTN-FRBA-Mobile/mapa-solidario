@@ -34,6 +34,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
+import com.utn.mobile.mapasolidario.dto.PuntoUpdate;
 import com.utn.mobile.mapasolidario.util.FetchPuntosErrors;
 import com.utn.mobile.mapasolidario.util.PointActions;
 
@@ -326,13 +327,10 @@ public class PointFragment extends BaseFragment
 
                 //TODO: Persistir los datos en la base de datos_devuelven bad request pero no se porque
                 if (claseEnvio.accion==PointActions.ALTA){
-                    presenter.guardarPunto(getContext(),gson.toJson(claseEnvio));
+                    presenter.guardarPunto(getContext(),claseEnvio);
                 }
                 if (claseEnvio.accion==PointActions.MODIFICACION){
-                    String id = claseEnvio._id;
-                    claseEnvio.setId("");
-                    String texto =gson.toJson(claseEnvio);
-                    presenter.actualizarPunto(getContext(),id,texto);
+                    presenter.actualizarPunto(getContext(),claseEnvio._id,new PuntoUpdate(claseEnvio));
                 }
 
                 if (claseEnvio.accion == PointActions.CONSULTA){

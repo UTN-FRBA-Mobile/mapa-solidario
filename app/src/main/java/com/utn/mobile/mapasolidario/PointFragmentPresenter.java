@@ -2,6 +2,7 @@ package com.utn.mobile.mapasolidario;
 
 import android.content.Context;
 
+import com.utn.mobile.mapasolidario.dto.PuntoUpdate;
 import com.utn.mobile.mapasolidario.event.FetchPuntosFailedEvent;
 import com.utn.mobile.mapasolidario.event.GetPuntoSuccessEvent;
 import com.utn.mobile.mapasolidario.event.PostPuntoSuccessEvent;
@@ -29,10 +30,9 @@ public class PointFragmentPresenter extends BasePresenter<PointFragmentView>{
         }
     }
 
-    public void actualizarPunto(Context context,String id, String json){
+    public void actualizarPunto(Context context,String id, PuntoUpdate json){
         view.showProgressDialog();
         if (UiUtils.checkNetworkAvailable(context)) {
-            json = "{"+json.substring(10);
             new PutPuntoTask(context,id,json).execute();
         }
     }
@@ -45,7 +45,7 @@ public class PointFragmentPresenter extends BasePresenter<PointFragmentView>{
     }
 
 
-    public void guardarPunto(Context context,String json){
+    public void guardarPunto(Context context,BasePoint json){
         view.showProgressDialog();
         if (UiUtils.checkNetworkAvailable(context)) {
             new PostPuntoTask(context,json).execute();

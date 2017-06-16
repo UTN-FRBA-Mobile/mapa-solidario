@@ -17,21 +17,19 @@ import roboguice.util.RoboAsyncTask;
 
 public class PostPuntoTask extends RoboAsyncTask<BasePoint> {
 
-    private String datos ="";
+    private BasePoint punto;
     protected Context context;
     @Inject
     private IRemoteService remoteService;
 
-    public PostPuntoTask(Context context, String json) {
+    public PostPuntoTask(Context context, BasePoint json) {
         super(context);
-        datos = json;
-//        this.context = context;
-//        RoboGuice.getInjector(context).injectMembers(this);
+        punto = json;
     }
 
     @Override
     public BasePoint call() throws Exception {
-        BasePoint retVal = remoteService.postPuntoService(datos);
+        BasePoint retVal = remoteService.postPuntoService(punto);
         return retVal;
     }
 

@@ -1,12 +1,6 @@
-package com.utn.mobile.mapasolidario;
+package com.utn.mobile.mapasolidario.dto;
 
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.view.View;
-
-import com.google.android.gms.maps.model.LatLng;
+import com.utn.mobile.mapasolidario.BasePoint;
 import com.utn.mobile.mapasolidario.util.PointActions;
 
 import java.io.Serializable;
@@ -17,10 +11,8 @@ import java.util.Date;
  * Created by dany on 25/05/2017.
  */
 
-public class BasePoint
+public class PuntoUpdate
         implements Serializable {
-//    LatLng ubicacion = new LatLng(-34.603748, -58.381533);
-    String _id = "593f2678a608c10004c6b456";
     double latitud = -34.603748;
     double longitud = -58.381533;
     String titulo = "";
@@ -34,12 +26,25 @@ public class BasePoint
     PointActions accion = PointActions.CONSULTA;
     int contador = 0;
 
-    public BasePoint (){
+    public PuntoUpdate(BasePoint punto){
+
+        setLatitud(punto.getLatitud());
+        setLongitud(punto.getLongitud());
+        setContador(punto.getContador());
+        setAccion(punto.getAccion());
+        setFechaModificacion(punto.getFechaModificacion());
+        setTipo(punto.getTipo());
+        setDescripcion(punto.getDescripcion());
+        setTitulo(punto.getTitulo());
+        setUsuario(punto.getUsuario());
+        setId_usuario(punto.getId_usuario());
+        setFechaCreacion(punto.getFechaCreacion());
+        setFechaVto(punto.getFechaVto());
+
     }
 
     public void setLatitud (Double lat){latitud = lat;}
     public void setLongitud (Double lat){longitud = lat;}
-    public void setId (String iden){ _id = iden; }
     public void setContador (int puntos2) {contador = puntos2;}
     public void setAccion (PointActions valor){ accion = valor; }
     public void setFechaModificacion (Date fecha){ fechaModificacion = fecha;}
@@ -53,7 +58,6 @@ public class BasePoint
 
     public Double getLatitud (){ return this.latitud;}
     public Double getLongitud ( ){ return this.longitud;}
-    public String getId(){ return this._id; }
     public int getContador () {return this.contador;}
     public PointActions getAccion ( ){ return this.accion; }
     public Date getFechaModificacion (){ return this.fechaModificacion;}
@@ -64,5 +68,6 @@ public class BasePoint
     public int getId_usuario (){ return this.id_usuario; }
     public Date getFechaCreacion (){ return this.fechaCreacion;}
     public String getFechaVto(){ return this.fechaVto;}
+
 
 }
