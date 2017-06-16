@@ -140,7 +140,7 @@ public class MapFragment extends BaseFragment
 
                     @Override
                     public void onMapClick(LatLng point) {
-                        // TODO Auto-generated method stub
+
                         //lstLatLngs.add(point);
                         mMap.clear();
                         mMap.addMarker(new MarkerOptions().position(point).icon(BitmapDescriptorFactory.fromResource(R.drawable.new_marker)));
@@ -332,11 +332,11 @@ public class MapFragment extends BaseFragment
                             gps.showSettingsAlert();
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
                         }
+                        claseEnvio.setLatitud(currentLocation.latitude);
+                        claseEnvio.setLongitud(currentLocation.longitude);
                     }
                 },
                 1000);
-        claseEnvio.setLatitud(currentLocation.latitude);
-        claseEnvio.setLongitud(currentLocation.longitude);
     }
 
     private OnFragmentInteractionListener mListener;

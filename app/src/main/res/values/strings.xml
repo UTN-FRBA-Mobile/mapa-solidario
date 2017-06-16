@@ -29,7 +29,7 @@
         AIzaSyBZru0i1cIJMYkUL4oVqd4ckNazCpbylG8
     </string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="sin_conexion">No se pudo conectar con el servidor, verifique su conexión de internet</string>
     <string name="fetching_news">Buscando novedades en el servidor, espere por favor...</string>

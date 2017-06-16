@@ -30,6 +30,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
@@ -204,13 +205,14 @@ public class PointFragment extends BaseFragment
                 googleMap = mMap;
 
                     LatLng ubicacion = new LatLng(claseEnvio.latitud, claseEnvio.longitud);
-                googleMap.addMarker(new MarkerOptions().position(ubicacion));
+                googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.new_marker)));
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacion,15));
 
                 googleMap.getUiSettings().setZoomControlsEnabled(false);
                 googleMap.getUiSettings().setCompassEnabled(false);
                 googleMap.getUiSettings().setZoomGesturesEnabled(false);
                 googleMap.getUiSettings().setScrollGesturesEnabled(false);
+                googleMap.getUiSettings().setMapToolbarEnabled(false);
             }
         });
         mMapView.setClickable(false);
@@ -304,7 +306,7 @@ public class PointFragment extends BaseFragment
         });
     }
 
-    public void  accionBotonContinuar(){
+    public void accionBotonContinuar(){
         bcontinuar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -323,8 +325,8 @@ public class PointFragment extends BaseFragment
                         claseEnvio.setUsuario("Dani Chacur");
                     }
                 }
-
-
+                //TODO: El título debe ser obligatorio pq no se puede levantar el infoWindow sino
+                //TODO: Cuando se toca GUARDAR o VOLVER, llamar a presenter.fetchPuntos(getContext()); //get points, lo traté de hacer inyectando un nuevo presentar en éste fragment y se cierra la app...
                 //TODO: Persistir los datos en la base de datos_devuelven bad request pero no se porque
                 if (claseEnvio.accion==PointActions.ALTA){
                     presenter.guardarPunto(getContext(),claseEnvio);
