@@ -5,7 +5,9 @@ import android.content.Context;
 import com.utn.mobile.mapasolidario.event.FetchPuntosFailedEvent;
 import com.utn.mobile.mapasolidario.event.GetPuntoSuccessEvent;
 import com.utn.mobile.mapasolidario.event.PostPuntoSuccessEvent;
+import com.utn.mobile.mapasolidario.event.PutAyudaSuccessEvent;
 import com.utn.mobile.mapasolidario.event.PutPuntoSuccessEvent;
+import com.utn.mobile.mapasolidario.task.PutAyudaTask;
 import com.utn.mobile.mapasolidario.util.UiUtils;
 import com.utn.mobile.mapasolidario.task.GetPuntoTask;
 import com.utn.mobile.mapasolidario.task.PutPuntoTask;
@@ -30,9 +32,19 @@ public class PointFragmentPresenter extends BasePresenter<PointFragmentView>{
     public void actualizarPunto(Context context,String id, String json){
         view.showProgressDialog();
         if (UiUtils.checkNetworkAvailable(context)) {
+            json = "{"+json.substring(10);
             new PutPuntoTask(context,id,json).execute();
         }
     }
+
+    public void actualizarPunto(Context context,String id){
+        view.showProgressDialog();
+        if (UiUtils.checkNetworkAvailable(context)) {
+            new PutAyudaTask(context,id).execute();
+        }
+    }
+
+
     public void guardarPunto(Context context,String json){
         view.showProgressDialog();
         if (UiUtils.checkNetworkAvailable(context)) {
@@ -64,6 +76,14 @@ public class PointFragmentPresenter extends BasePresenter<PointFragmentView>{
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPutPuntoSuccessEvent(PutPuntoSuccessEvent event) {
+        view.hideProgressDialog();
+        if (event.getResultadoDTO() != null) {
+            view.okPoint(event.getResultadoDTO());
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPutAyudaSuccessEvent(PutAyudaSuccessEvent event) {
         view.hideProgressDialog();
         if (event.getResultadoDTO() != null) {
             view.okPoint(event.getResultadoDTO());

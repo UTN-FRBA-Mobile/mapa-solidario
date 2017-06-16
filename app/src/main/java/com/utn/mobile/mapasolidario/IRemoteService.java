@@ -18,6 +18,7 @@ public interface IRemoteService {
     BasePoint postPuntoService(String json);
     BasePoint putPuntoService(String id, String json);
     BasePoint getPuntoService(String id);
+    BasePoint putAyudaService(String id);
 
 
 }

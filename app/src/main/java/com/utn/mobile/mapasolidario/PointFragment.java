@@ -37,6 +37,8 @@ import com.google.inject.Inject;
 import com.utn.mobile.mapasolidario.util.FetchPuntosErrors;
 import com.utn.mobile.mapasolidario.util.PointActions;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -106,9 +108,9 @@ public class PointFragment extends BaseFragment
         //Levanto el objeto que me mandan
         if(getArguments()!=null)        {
             claseEnvio = (BasePoint) getArguments().getSerializable(PUNTO_MESSAGE);
-            accion = claseEnvio.accion;
             claseEnvio.setId("");
-          // claseEnvio.setAccion(PointActions.CONSULTA);//valor para probar... sacarlo desp TODO
+       //    claseEnvio.setAccion(PointActions.MODIFICACION);//valor para probar... sacarlo desp TODO
+            accion = claseEnvio.accion;
         }
 
         //oculto la barra de abajo
@@ -314,21 +316,31 @@ public class PointFragment extends BaseFragment
                     claseEnvio.setTitulo(titulo.getText().toString());
                     claseEnvio.setFechaVto(fechaVencimiento.getText().toString());
 
+                    //TODO: leevantar los datos reales del usuario
                     if (claseEnvio._id == "") {
                         claseEnvio.setId_usuario(22);
                         claseEnvio.setUsuario("Dani Chacur");
                     }
                 }
+
+
                 //TODO: Persistir los datos en la base de datos_devuelven bad request pero no se porque
                 if (claseEnvio.accion==PointActions.ALTA){
-                    String texto =gson.toJson(claseEnvio);
-                    presenter.guardarPunto(getContext(),texto);
+                    presenter.guardarPunto(getContext(),gson.toJson(claseEnvio));
                 }
-                if (claseEnvio.accion==PointActions.MODIFICACION || claseEnvio.accion == PointActions.CONSULTA){
-                    presenter.actualizarPunto(getContext(),claseEnvio._id,gson.toJson(claseEnvio));
+                if (claseEnvio.accion==PointActions.MODIFICACION){
+                    String id = claseEnvio._id;
+                    claseEnvio.setId("");
+                    String texto =gson.toJson(claseEnvio);
+                    presenter.actualizarPunto(getContext(),id,texto);
                 }
 
-  //              nuevoBackStack();
+                if (claseEnvio.accion == PointActions.CONSULTA){
+                    presenter.actualizarPunto(getContext(),claseEnvio._id);
+                }
+
+
+                //              nuevoBackStack();
             }
         });
     }
@@ -419,7 +431,7 @@ public class PointFragment extends BaseFragment
 
                 ayudas.setText(String.valueOf(claseEnvio.contador));
 
-                claseEnvio.accion =accion;
+                claseEnvio.setAccion(accion);
             }else{
                 Toast.makeText(getContext(), "Error al obtener los datos", Toast.LENGTH_LONG ).show();
             }
@@ -430,8 +442,11 @@ public class PointFragment extends BaseFragment
 
         if(punto != null){
             claseEnvio = punto;
-            claseEnvio.accion =accion;
-            Toast.makeText(getContext(), "Punto Guardado correctamente", Toast.LENGTH_LONG ).show();
+            if (accion == PointActions.CONSULTA) {
+                Toast.makeText(getContext(), "¡Gracias por tu ayuda!", Toast.LENGTH_LONG).show();
+            }else {
+                Toast.makeText(getContext(), "Punto Guardado correctamente", Toast.LENGTH_LONG).show();
+            }
         }else{
             Toast.makeText(getContext(), "Error al obtener los datos", Toast.LENGTH_LONG ).show();
         }

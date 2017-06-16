@@ -117,5 +117,22 @@ public class RemoteServiceImpl implements IRemoteService {
         return puntoDetalle;
     }
 
+    @Override
+    public BasePoint putAyudaService(String id) {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://morning-peak-11897.herokuapp.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        MapaSolidarioRetrofitService service = retrofit.create(MapaSolidarioRetrofitService.class);
+        try {
+            Response<BasePoint> puntosResponse = service.putAyuda(id).execute();
+            puntoDetalle = puntosResponse.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return puntoDetalle;
+    }
 
 }

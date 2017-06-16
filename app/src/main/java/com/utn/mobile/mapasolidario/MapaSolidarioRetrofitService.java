@@ -26,15 +26,19 @@ public interface MapaSolidarioRetrofitService {
     @GET("points")
     Call<List<PuntoResponse>> fetchPuntos();
 
-    @Headers({"Content-Type: application/json", "Accept: application/json"})
-    @POST("points")
-    Call<BasePoint> postPunto(@Body String json);
-
     @GET("points/{id}")
     Call<BasePoint> getPunto(@Path("id") String id);
 
-    @Headers({"Content-Type: application/json", "Accept: application/json"})
-    @PUT("points/{id}")
+    @Headers({"Content-Type: application/json"})
+    @POST("points")
+    Call<BasePoint> postPunto(@Body String json);
+
+    @Headers({"Content-Type: application/json"})
+    @PUT("points/actualizarPunto/{id}")
     Call<BasePoint> putPunto(@Path("id") String id, @Body String json);
+
+    @Headers({"Content-Type: application/json"})
+    @PUT("points/incrementarContador/{id}")
+    Call<BasePoint> putAyuda(@Path("id") String id);
 
 }
