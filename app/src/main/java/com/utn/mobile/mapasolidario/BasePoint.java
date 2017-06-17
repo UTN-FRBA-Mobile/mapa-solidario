@@ -20,7 +20,7 @@ import java.util.Date;
 public class BasePoint
         implements Serializable {
 //    LatLng ubicacion = new LatLng(-34.603748, -58.381533);
-    String _id = "593f2678a608c10004c6b456";
+    String _id = "";
     double latitud = -34.603748;
     double longitud = -58.381533;
     String titulo = "";

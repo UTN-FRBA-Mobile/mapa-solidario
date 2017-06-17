@@ -298,9 +298,12 @@ public class MapFragment extends BaseFragment
     @Override
     public void onInfoWindowClick(Marker marker) {
 
-        String idPoint = (String) marker.getTag();
-        //TODO:IMPLEMENTAR ACÁ LLAMADO A FRAGMENT DETALLE DEL MARKER AL PRESIONAR INFOWINDOW, PASAR EL _ID PARA HACER GET X ID
-        Toast.makeText(getContext(),idPoint, Toast.LENGTH_LONG).show();
+        //String idPoint = (String) marker.getTag();
+        //Toast.makeText(getContext(),idPoint, Toast.LENGTH_LONG).show();
+        claseEnvio.setId((String) marker.getTag());
+        claseEnvio.setAccion(PointActions.CONSULTA);
+        FragmentManager fragmentManager = getFragmentManager();
+        consultarPunto(claseEnvio, fragmentManager);
     }
 
     @Override
@@ -376,7 +379,7 @@ public class MapFragment extends BaseFragment
 
                 if (punto.getTipo().equals("Heladera Solidaria")){
                     // creo punto de tipo heladera
-                    mAux=mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet("Haga click para Detalles").position(new LatLng(
+                    mAux=mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet(getString(R.string.leyenda_infoWindow)).position(new LatLng(
                             punto.getLatitud(),
                             punto.getLongitud()
                     )).icon(BitmapDescriptorFactory.fromResource(R.drawable.heladera_marker)));
@@ -385,7 +388,7 @@ public class MapFragment extends BaseFragment
 
                 if (punto.getTipo().equals("Ropero Solidario")){
                     // creo punto de tipo ropero
-                    mAux=mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet("Haga click para Detalles").position(new LatLng(
+                    mAux=mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet(getString(R.string.leyenda_infoWindow)).position(new LatLng(
                             punto.getLatitud(),
                             punto.getLongitud()
                     )).icon(BitmapDescriptorFactory.fromResource(R.drawable.ropero_marker)));
@@ -394,7 +397,7 @@ public class MapFragment extends BaseFragment
 
                 if (punto.getTipo().equals("Individuo")){
                     // creo punto de tipo individuo
-                    mAux=mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet("Haga click para Detalles").position(new LatLng(
+                    mAux=mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet(getString(R.string.leyenda_infoWindow)).position(new LatLng(
                             punto.getLatitud(),
                             punto.getLongitud()
                     )).icon(BitmapDescriptorFactory.fromResource(R.drawable.individuo_marker)));
@@ -403,7 +406,7 @@ public class MapFragment extends BaseFragment
 
                 if (punto.getTipo().equals("Emergencia")){
                     // creo punto de tipo emergencia
-                    mAux=mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet("Haga click para Detalles").position(new LatLng(
+                    mAux=mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet(getString(R.string.leyenda_infoWindow)).position(new LatLng(
                             punto.getLatitud(),
                             punto.getLongitud()
                     )).icon(BitmapDescriptorFactory.fromResource(R.drawable.emergencia_marker)));

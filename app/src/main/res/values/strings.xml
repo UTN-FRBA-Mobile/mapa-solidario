@@ -18,6 +18,8 @@
             <item>Emergencia</item>
     </string-array>
 
+    <string name="leyenda_infoWindow">Haga click aquí para conocer los detalles.</string>
+
     <string name="map_fragment">Map fragment</string>
     <string name="user_fragment">User fragment</string>
 

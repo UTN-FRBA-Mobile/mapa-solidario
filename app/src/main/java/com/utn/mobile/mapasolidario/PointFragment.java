@@ -102,7 +102,6 @@ public class PointFragment extends BaseFragment
     public void onClick(View v) {
     }
 
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -110,7 +109,7 @@ public class PointFragment extends BaseFragment
         //Levanto el objeto que me mandan
         if(getArguments()!=null)        {
             claseEnvio = (BasePoint) getArguments().getSerializable(PUNTO_MESSAGE);
-            claseEnvio.setId("");
+       //     claseEnvio.setId("");
        //    claseEnvio.setAccion(PointActions.MODIFICACION);//valor para probar... sacarlo desp TODO
             accion = claseEnvio.accion;
         }
@@ -151,7 +150,6 @@ public class PointFragment extends BaseFragment
         });
 
     }
-
 
     public void revisarAccion (View view) {
 
@@ -204,11 +202,40 @@ public class PointFragment extends BaseFragment
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
 
-                    LatLng ubicacion = new LatLng(claseEnvio.latitud, claseEnvio.longitud);
-                googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.new_marker)));
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacion,15));
+                LatLng ubicacion = new LatLng(claseEnvio.latitud, claseEnvio.longitud);
 
-                googleMap.getUiSettings().setZoomControlsEnabled(false);
+
+                googleMap.clear();
+
+                /*String tipo_aux = claseEnvio.getTipo();
+
+
+                    if (tipo_aux.equals("Heladera Solidaria")) {
+                        // creo punto de tipo heladera
+                        googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.heladera_marker)));
+                    }
+                    if (tipo_aux.equals("Ropero Solidario")) {
+                        // creo punto de tipo ropero
+                        googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.ropero_marker)));
+                    }
+                    if (tipo_aux.equals("Individuo")) {
+                        // creo punto de tipo individuo
+                        googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.individuo_marker)));
+                    }
+                    if (tipo_aux.equals("Emergencia")) {
+                        // creo punto de tipo emergencia
+                        googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.emergencia_marker)));
+                    }
+                    if (tipo_aux.equals("")) {
+                    // creo punto de tipo nuevo
+                    googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.new_marker)));
+                    }*/
+
+                googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.new_marker)));
+
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacion,17));
+
+                googleMap.getUiSettings().setZoomControlsEnabled(true);
                 googleMap.getUiSettings().setCompassEnabled(false);
                 googleMap.getUiSettings().setZoomGesturesEnabled(false);
                 googleMap.getUiSettings().setScrollGesturesEnabled(false);
@@ -325,7 +352,7 @@ public class PointFragment extends BaseFragment
                         claseEnvio.setUsuario("Dani Chacur");
                     }
                 }
-                //TODO: El título debe ser obligatorio pq no se puede levantar el infoWindow sino
+
                 //TODO: Cuando se toca GUARDAR o VOLVER, llamar a presenter.fetchPuntos(getContext()); //get points, lo traté de hacer inyectando un nuevo presentar en éste fragment y se cierra la app...
                 //TODO: Persistir los datos en la base de datos_devuelven bad request pero no se porque
                 if (claseEnvio.accion==PointActions.ALTA){
@@ -372,7 +399,6 @@ public class PointFragment extends BaseFragment
 
     }
 
-
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (isChecked) {
             fechaVencimiento.setVisibility(View.VISIBLE);
@@ -392,7 +418,6 @@ public class PointFragment extends BaseFragment
     public void onNothingSelected(AdapterView<?> parent) {
         // Another interface callback
     }
-
 
     @Override
     public void loadPoint(BasePoint punto) {
@@ -452,7 +477,6 @@ public class PointFragment extends BaseFragment
         }
         nuevoBackStack();
     }
-
 
     @Override
     public void showMessageError(FetchPuntosErrors error) {
