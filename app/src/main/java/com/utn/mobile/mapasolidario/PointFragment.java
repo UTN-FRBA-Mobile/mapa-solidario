@@ -135,7 +135,7 @@ public class PointFragment extends BaseFragment
         if (mMapView != null){
             mMapView.onCreate(savedInstanceState);
             mMapView.onResume();
-            cargarMapa();
+            //cargarMapa(); TODO: sino en CONSULTA se carga doble el mapa, primero con claseEnvio default y luego con claseEnvio de loadPoint
         }
 
         vswitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -176,6 +176,7 @@ public class PointFragment extends BaseFragment
         if (claseEnvio.accion == PointActions.ALTA) {
             FrameLayout frame = (FrameLayout) view.findViewById(R.id.layuda);
             frame.setVisibility(View.GONE);
+            cargarMapa(); //TODO: agregado y sacado del onViewCreated
         }
 
         if (claseEnvio.accion == PointActions.MODIFICACION) {
@@ -203,35 +204,34 @@ public class PointFragment extends BaseFragment
                 googleMap = mMap;
 
                 LatLng ubicacion = new LatLng(claseEnvio.latitud, claseEnvio.longitud);
-
+                String tipo_aux = claseEnvio.tipo;
 
                 googleMap.clear();
 
-                /*String tipo_aux = claseEnvio.getTipo();
-
-
-                    if (tipo_aux.equals("Heladera Solidaria")) {
-                        // creo punto de tipo heladera
-                        googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.heladera_marker)));
-                    }
-                    if (tipo_aux.equals("Ropero Solidario")) {
-                        // creo punto de tipo ropero
-                        googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.ropero_marker)));
-                    }
-                    if (tipo_aux.equals("Individuo")) {
-                        // creo punto de tipo individuo
-                        googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.individuo_marker)));
-                    }
-                    if (tipo_aux.equals("Emergencia")) {
-                        // creo punto de tipo emergencia
-                        googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.emergencia_marker)));
-                    }
-                    if (tipo_aux.equals("")) {
-                    // creo punto de tipo nuevo
+//TODO: depende el evento llega el tipo vacío, si toco volver del detalle (no se cargan los puntos) y toco +, me toma el tipo individuo que es el primero del array
+//TODO: no me toma el if
+//                    if (claseEnvio.accion==(PointActions.CONSULTA) ) {
+                        if (tipo_aux.equals("Heladera Solidaria")) {
+                            // creo punto de tipo heladera
+                            googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.heladera_marker)));
+                        }
+                        if (tipo_aux.equals("Ropero Solidario")) {
+                            // creo punto de tipo ropero
+                            googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.ropero_marker)));
+                        }
+                        if (tipo_aux.equals("Individuo")) {
+                            // creo punto de tipo individuo
+                            googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.individuo_marker)));
+                        }
+                        if (tipo_aux.equals("Emergencia")) {
+                            // creo punto de tipo emergencia
+                            googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.emergencia_marker)));
+                        }
+//                    }
+                if (tipo_aux.equals("")) {
+                    // creo punto de tipo emergencia
                     googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.new_marker)));
-                    }*/
-
-                googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.new_marker)));
+                }
 
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacion,17));
 
@@ -353,7 +353,7 @@ public class PointFragment extends BaseFragment
                     }
                 }
 
-                //TODO: Cuando se toca GUARDAR o VOLVER, llamar a presenter.fetchPuntos(getContext()); //get points, lo traté de hacer inyectando un nuevo presentar en éste fragment y se cierra la app...
+                //TODO: el título debe ser obligatorio al generar el punto pq sino no puedo levantar el infoWindow
                 //TODO: Persistir los datos en la base de datos_devuelven bad request pero no se porque
                 if (claseEnvio.accion==PointActions.ALTA){
                     presenter.guardarPunto(getContext(),claseEnvio);

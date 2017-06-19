@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -108,7 +109,8 @@ public class MapFragment extends BaseFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         presenter.onCreate(this);
-        presenter.fetchPuntos(getContext()); //get points
+        //presenter.fetchPuntos(getContext()); //get points
+        gps = new TrackGPS(getContext());
     }
 
     @Override
@@ -211,6 +213,7 @@ public class MapFragment extends BaseFragment
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
+        presenter.fetchPuntos(getContext()); //get points
 
         //ocultar();
         nuevaNecesidad();
@@ -221,7 +224,7 @@ public class MapFragment extends BaseFragment
         MapsInitializer.initialize(getContext());
 
         mMap = googleMap;
-        gps = new TrackGPS(getContext());
+
 
         currentLocation = new LatLng(-34.603748, -58.381533); //Obelisco
         /*LatLng ejemplo1 = new LatLng(-34.608, -58.3712);
@@ -231,9 +234,7 @@ public class MapFragment extends BaseFragment
 */
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.getUiSettings().setMapToolbarEnabled(false);
-
-
-
+        mMap.getUiSettings().setZoomControlsEnabled(true);
 
 /*
         // Custom InfoWindow
@@ -261,27 +262,49 @@ public class MapFragment extends BaseFragment
         });
 */
 
-
-
         // Permisos
-        if (ContextCompat.checkSelfPermission(super.getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+        /*if (ContextCompat.checkSelfPermission(super.getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
             this.setCurrentLocation();
-
         } else {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(super.getActivity(),
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
-                // Mostrar diálogo explicativo
-            } else {
-                // Solicitar permiso
+                // Mostrar diálogo explicativo para Solicitar permiso
                 requestPermissions(
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         LOCATION_REQUEST_CODE);
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
+            } else {
+                // No se vuelve a Solicitar permiso
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
+            }
+        }*/
+
+
+        if (ContextCompat.checkSelfPermission(super.getContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+                requestPermissions(
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        LOCATION_REQUEST_CODE);
+            } else {
+
+                Toast toast1 = Toast.makeText(getContext(), "Recuerde que puede utilizar la localización para generar un punto con mayor precisión", Toast.LENGTH_LONG);
+                toast1.setGravity(Gravity.CENTER,5,5);
+                toast1.show();
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
             }
         }
+        else
+        {
+            //mMap.setMyLocationEnabled(true);
+            this.setCurrentLocation();
+        }
 
-        mMap.getUiSettings().setZoomControlsEnabled(true);
 
         // Marcadores
 
@@ -306,7 +329,7 @@ public class MapFragment extends BaseFragment
         consultarPunto(claseEnvio, fragmentManager);
     }
 
-    @Override
+    /*@Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         if (requestCode == LOCATION_REQUEST_CODE) {
@@ -318,21 +341,46 @@ public class MapFragment extends BaseFragment
                 Toast.makeText(getContext(), "Error de permisos", Toast.LENGTH_LONG).show();
             }
         }
+    }*/
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case LOCATION_REQUEST_CODE: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    this.setCurrentLocation();
+                } else {
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
+                }
+                return;
+            }
+        }
     }
+
 
     private void setCurrentLocation(){
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
                         if(gps.canGetLocation()){
-                            Location _l = gps.getLocation();
-                            currentLocation = new LatLng(_l.getLatitude(), _l.getLongitude());
+                            gps.getLocation();
+                            currentLocation = new LatLng(gps.getLatitude(), gps.getLongitude());
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
-                            gps.stopUsingGPS();
+                            if (ContextCompat.checkSelfPermission(getContext(),
+                                    Manifest.permission.ACCESS_FINE_LOCATION)
+                                    == PackageManager.PERMISSION_GRANTED) {
+                                mMap.setMyLocationEnabled(true);
+                            }
+                            else {
+                                Toast.makeText(getContext(), "Revise los permisos", Toast.LENGTH_SHORT).show();
+                            }
+                            //gps.stopUsingGPS();
 
                         }
                         else{
-                            gps.showSettingsAlert();
+                            gps.showSettingsAlert();//TODO:revisar que pasa si apago o prendo el gps mientras uso la app
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
                         }
                         claseEnvio.setLatitud(currentLocation.latitude);
