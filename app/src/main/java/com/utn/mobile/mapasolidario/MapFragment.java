@@ -87,6 +87,7 @@ public class MapFragment extends BaseFragment
     private TrackGPS gps;
     LatLng currentLocation;
     BasePoint claseEnvio = new BasePoint();
+    boolean firstTime = true;
 
     //asigno tag a cada marker del mapa
     Marker mAux;
@@ -109,7 +110,6 @@ public class MapFragment extends BaseFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         presenter.onCreate(this);
-        //presenter.fetchPuntos(getContext()); //get points
         gps = new TrackGPS(getContext());
     }
 
@@ -211,6 +211,19 @@ public class MapFragment extends BaseFragment
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (firstTime){
+                        firstTime = false;
+        }
+
+        else{
+            gps.getLocation();
+            this.setCurrentLocation();
+        }
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
 
         presenter.fetchPuntos(getContext()); //get points
@@ -220,18 +233,12 @@ public class MapFragment extends BaseFragment
         confirmarPunto();
         cancelarPunto();
 
-
         MapsInitializer.initialize(getContext());
 
         mMap = googleMap;
 
-
         currentLocation = new LatLng(-34.603748, -58.381533); //Obelisco
-        /*LatLng ejemplo1 = new LatLng(-34.608, -58.3712);
-        LatLng ejemplo2 = new LatLng(-34.6075, -58.3732);
-        LatLng ejemplo3 = new LatLng(-34.607, -58.3712);
-        LatLng ejemplo4 = new LatLng(-34.6085, -58.3732);
-*/
+
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.getUiSettings().setZoomControlsEnabled(true);
@@ -263,25 +270,9 @@ public class MapFragment extends BaseFragment
 */
 
         // Permisos
-        /*if (ContextCompat.checkSelfPermission(super.getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            mMap.setMyLocationEnabled(true);
-            this.setCurrentLocation();
-        } else {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-                // Mostrar diálogo explicativo para Solicitar permiso
-                requestPermissions(
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        LOCATION_REQUEST_CODE);
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
-            } else {
-                // No se vuelve a Solicitar permiso
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
-            }
-        }*/
-
-
+            //no tengo los permisos de localización y pregunto si los otorgan, si no los otorgan muestro la última ubicación conocida.
+            // si no quiero que me pregunten mas por los permisos muestro ubicación por default.
+            //si los otorgo muestro la ubicación.
         if (ContextCompat.checkSelfPermission(super.getContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -299,22 +290,13 @@ public class MapFragment extends BaseFragment
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
             }
         }
+        // tengo los permisos, muestro la ubicación
         else
         {
-            //mMap.setMyLocationEnabled(true);
             this.setCurrentLocation();
         }
 
-
-        // Marcadores
-
-        /*mMap.addMarker(new MarkerOptions().title("Título 1").snippet("Haga click para Detalles").position(ejemplo1).icon(BitmapDescriptorFactory.fromResource(R.drawable.individuo_marker)));
-        mMap.addMarker(new MarkerOptions().title("Título 2").snippet("Haga click para Detalles").position(ejemplo2).icon(BitmapDescriptorFactory.fromResource(R.drawable.heladera_marker)));
-        mMap.addMarker(new MarkerOptions().title("Título 3").snippet("Haga click para Detalles").position(ejemplo3).icon(BitmapDescriptorFactory.fromResource(R.drawable.ropero_marker)));
-        mMap.addMarker(new MarkerOptions().title("Título 4").snippet("Haga click para Detalles").position(ejemplo4).icon(BitmapDescriptorFactory.fromResource(R.drawable.emergencia_marker)));
-*/
         mMap.setOnInfoWindowClickListener(this);
-
 
     }
 
@@ -328,20 +310,6 @@ public class MapFragment extends BaseFragment
         FragmentManager fragmentManager = getFragmentManager();
         consultarPunto(claseEnvio, fragmentManager);
     }
-
-    /*@Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == LOCATION_REQUEST_CODE) {
-            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ) {
-                mMap.setMyLocationEnabled(true);
-                this.setCurrentLocation();
-            }
-            else {
-                Toast.makeText(getContext(), "Error de permisos", Toast.LENGTH_LONG).show();
-            }
-        }
-    }*/
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -358,8 +326,7 @@ public class MapFragment extends BaseFragment
             }
         }
     }
-
-
+        //si tengo desactivado el gps y lo activo primero me ubica en la ultima ubicación conocida
     private void setCurrentLocation(){
         new android.os.Handler().postDelayed(
                 new Runnable() {
@@ -374,13 +341,14 @@ public class MapFragment extends BaseFragment
                                 mMap.setMyLocationEnabled(true);
                             }
                             else {
-                                Toast.makeText(getContext(), "Revise los permisos", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "Última ubicación conocida!", Toast.LENGTH_SHORT).show();
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
                             }
-                            //gps.stopUsingGPS();
+                            gps.stopUsingGPS();
 
                         }
                         else{
-                            gps.showSettingsAlert();//TODO:revisar que pasa si apago o prendo el gps mientras uso la app
+                            gps.showSettingsAlert();
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
                         }
                         claseEnvio.setLatitud(currentLocation.latitude);
@@ -417,6 +385,24 @@ public class MapFragment extends BaseFragment
     @Override
     public void hideProgressDialog() {
 
+    }
+
+    @Override
+    public void showMessageError(FetchPuntosErrors error) {
+        String msjError = "";
+        String title = getString(R.string.POPUP_TITLE_SERVIDOR);
+        switch (error) {
+            case PROBLEMA_SERVIDOR:
+                msjError = getString(R.string.sin_comunicacion);
+                break;
+            case PROBLEMA_BUSQUEDA:
+                title = getString(R.string.POPUP_TITLE_SIN_NOVEDADES);
+                msjError = getString(R.string.POPUP_MENSAJE_SIN_NOVEDADES);
+                break;
+            case TIME_OUT:
+                msjError = getString(R.string.sin_comunicacion);
+                break;
+        }
     }
 
     @Override
@@ -468,26 +454,7 @@ public class MapFragment extends BaseFragment
     }
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-    }
-
-    @Override
-    public void showMessageError(FetchPuntosErrors error) {
-        String msjError = "";
-        String title = getString(R.string.POPUP_TITLE_SERVIDOR);
-        switch (error) {
-            case PROBLEMA_SERVIDOR:
-                msjError = getString(R.string.sin_comunicacion);
-                break;
-            case PROBLEMA_BUSQUEDA:
-                title = getString(R.string.POPUP_TITLE_SIN_NOVEDADES);
-                msjError = getString(R.string.POPUP_MENSAJE_SIN_NOVEDADES);
-                break;
-            case TIME_OUT:
-                msjError = getString(R.string.sin_comunicacion);
-                break;
-        }
     }
 
 }
