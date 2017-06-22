@@ -19,6 +19,7 @@ import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -68,8 +69,8 @@ public class PointFragment extends BaseFragment
     @InjectView(R.id.fcreacion) private EditText fechacreacion;
     @InjectView(R.id.eayuda)     EditText ayudas;
     @InjectView(R.id.pmap)    MapView mMapView;
-    @InjectView(R.id.lcreacion)     FrameLayout creacion;
-    @InjectView(R.id.lvencimiento)     FrameLayout lvencimiento;
+    @InjectView(R.id.lcreacion)     LinearLayout creacion;
+    @InjectView(R.id.lvencimiento)     LinearLayout lvencimiento;
     @InjectView(R.id.svencimiento)    ToggleButton vswitch;
 
 
@@ -174,7 +175,7 @@ public class PointFragment extends BaseFragment
             spinner.setEnabled(false);
         }
         if (claseEnvio.accion == PointActions.ALTA) {
-            FrameLayout frame = (FrameLayout) view.findViewById(R.id.layuda);
+            LinearLayout frame = (LinearLayout) view.findViewById(R.id.layuda);
             frame.setVisibility(View.GONE);
             cargarMapa(); //TODO: agregado y sacado del onViewCreated
         }
@@ -344,24 +345,28 @@ public class PointFragment extends BaseFragment
                     claseEnvio.setFechaModificacion(new Date());
                     claseEnvio.setDescripcion(descripcion.getText().toString());
                     claseEnvio.setTitulo(titulo.getText().toString());
-                    claseEnvio.setFechaVto(fechaVencimiento.getText().toString());
-
-                    //TODO: leevantar los datos reales del usuario
+                    if (vswitch.isChecked()==true){
+                        claseEnvio.setFechaVto(fechaVencimiento.getText().toString());
+                    }
+                    //TODO: levantar los datos reales del usuario
                     if (claseEnvio._id == "") {
                         claseEnvio.setId_usuario(22);
                         claseEnvio.setUsuario("Dani Chacur");
                     }
                 }
 
-                //TODO: el título debe ser obligatorio al generar el punto pq sino no puedo levantar el infoWindow
-                //TODO: Persistir los datos en la base de datos_devuelven bad request pero no se porque
-                if (claseEnvio.accion==PointActions.ALTA){
-                    presenter.guardarPunto(getContext(),claseEnvio);
+                String mysz2 = claseEnvio.titulo.replaceAll("\\s","");
+                if (mysz2==""){
+                    Toast.makeText(getContext(), "El título es obligatorio", Toast.LENGTH_LONG ).show();
                 }
-                if (claseEnvio.accion==PointActions.MODIFICACION){
-                    presenter.actualizarPunto(getContext(),claseEnvio._id,new PuntoUpdate(claseEnvio));
+                else {
+                    if (claseEnvio.accion==PointActions.ALTA){
+                        presenter.guardarPunto(getContext(),claseEnvio);
+                    }
+                    if (claseEnvio.accion==PointActions.MODIFICACION){
+                        presenter.actualizarPunto(getContext(),claseEnvio._id,new PuntoUpdate(claseEnvio));
+                    }
                 }
-
                 if (claseEnvio.accion == PointActions.CONSULTA){
                     presenter.actualizarPunto(getContext(),claseEnvio._id);
                 }
@@ -436,7 +441,7 @@ public class PointFragment extends BaseFragment
 
                 titulo.setText(claseEnvio.titulo);
 
-                if (claseEnvio.fechaVto=="01/01/2001"){
+                if (claseEnvio.fechaVto=="01/01/2001"||claseEnvio.fechaVto==""){
                     if (accion==PointActions.MODIFICACION) {
                         vswitch.setChecked(false);
                     }else{
