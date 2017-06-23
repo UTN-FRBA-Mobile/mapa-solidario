@@ -229,8 +229,9 @@ public class PointFragment extends BaseFragment
                             googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.emergencia_marker)));
                         }
 //                    }
-                if (tipo_aux.equals("")) {
-                    // creo punto de tipo emergencia
+//                if (tipo_aux.equals("")) {
+              if (claseEnvio.accion==(PointActions.ALTA) ) {
+                    // creo punto de tipo +
                     googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.new_marker)));
                 }
 

@@ -95,6 +95,7 @@ public class MapFragment extends BaseFragment
     GoogleMap mMap;
     MapView mMapView;
     View mView;
+    private int zoom = 16;
 
     @Inject
     private MapFragmentPresenter  presenter;
@@ -147,7 +148,7 @@ public class MapFragment extends BaseFragment
                         mMap.clear();
                         mMap.addMarker(new MarkerOptions().position(point).icon(BitmapDescriptorFactory.fromResource(R.drawable.new_marker)));
 //                        claseEnvio.setUbicacion(point); //Acá le seteo la ubicación al fragment de creación
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 18));
+                       // mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom));
                         claseEnvio.setLatitud(point.latitude);
                         claseEnvio.setLongitud(point.longitude);
                     }
@@ -155,7 +156,7 @@ public class MapFragment extends BaseFragment
 
 
                 mMap.addMarker(new MarkerOptions().position(currentLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.new_marker)));
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
+         //       mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoom));
             }
         });
     }
@@ -213,14 +214,13 @@ public class MapFragment extends BaseFragment
     @Override
     public void onResume() {
         super.onResume();
-        if (firstTime){
-                        firstTime = false;
-        }
-
-        else{
-            gps.getLocation();
-            this.setCurrentLocation();
-        }
+//        if (firstTime){
+ //           firstTime = false;
+   //     }
+     //   else{
+//            gps.getLocation();
+//            this.setCurrentLocation();
+//        }
     }
 
     @Override
@@ -282,19 +282,20 @@ public class MapFragment extends BaseFragment
                 requestPermissions(
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         LOCATION_REQUEST_CODE);
-            } else {
+            }
+            else {
 
                 Toast toast1 = Toast.makeText(getContext(), "Recuerde que puede utilizar la localización para generar un punto con mayor precisión", Toast.LENGTH_LONG);
                 toast1.setGravity(Gravity.CENTER,5,5);
                 toast1.show();
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoom));
             }
         }
         // tengo los permisos, muestro la ubicación
-        else
-        {
+//        else
+  //      {
             this.setCurrentLocation();
-        }
+      //  }
 
         mMap.setOnInfoWindowClickListener(this);
 
@@ -320,7 +321,7 @@ public class MapFragment extends BaseFragment
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     this.setCurrentLocation();
                 } else {
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoom));
                 }
                 return;
             }
@@ -334,7 +335,7 @@ public class MapFragment extends BaseFragment
                         if(gps.canGetLocation()){
                             gps.getLocation();
                             currentLocation = new LatLng(gps.getLatitude(), gps.getLongitude());
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoom));
                             if (ContextCompat.checkSelfPermission(getContext(),
                                     Manifest.permission.ACCESS_FINE_LOCATION)
                                     == PackageManager.PERMISSION_GRANTED) {
@@ -342,14 +343,17 @@ public class MapFragment extends BaseFragment
                             }
                             else {
                                 Toast.makeText(getContext(), "Última ubicación conocida!", Toast.LENGTH_SHORT).show();
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoom));
                             }
                             gps.stopUsingGPS();
 
                         }
                         else{
-                            gps.showSettingsAlert();
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
+                            if (firstTime) {
+                                gps.showSettingsAlert();
+                                firstTime =false;
+                            }
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoom));
                         }
                         claseEnvio.setLatitud(currentLocation.latitude);
                         claseEnvio.setLongitud(currentLocation.longitude);

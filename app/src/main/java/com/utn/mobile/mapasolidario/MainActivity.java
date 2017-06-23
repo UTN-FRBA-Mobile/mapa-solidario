@@ -109,6 +109,16 @@ public class MainActivity extends RoboFragmentActivity
 
     }
 
+    @Override
+    public void onBackPressed() {
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        if (navigation.getVisibility()==View.GONE){
+            navigation.setVisibility(View.VISIBLE);
+        }
+        super.onBackPressed();
+
+    }
+
     @Subscribe
     public void hideProgressDialogEventRecieved(HideProgressDialogEvent hideProgressDialogEvent) {
         if (progressDialog.isShowing()) {
