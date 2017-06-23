@@ -6,8 +6,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +16,8 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -253,9 +249,16 @@ public class PointFragment extends BaseFragment
         ubicacion.setText(getCompleteAddressString(claseEnvio.latitud, claseEnvio.longitud));
 
         // Lleno el combo de tipo de necesidad
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.tipos_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        int flags[] = {R.drawable.individuo_marker, R.drawable.heladera_marker, R.drawable.ropero_marker, R.drawable.emergencia_marker};
+
+//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+//                R.array.tipos_array, android.R.layout.simple_spinner_item);
+//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
+  //              R.layout.row, R.id.tipo, R.array.tipos_array);
+
+        CustomAdapter adapter=new CustomAdapter(getContext(),flags,R.array.tipos_array);
+  //      adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
@@ -417,7 +420,8 @@ public class PointFragment extends BaseFragment
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
         // An item was selected. You can retrieve the selected item using
-        claseEnvio.setTipo(parent.getItemAtPosition(pos).toString());
+//        claseEnvio.setTipo(parent.getItemAtPosition(pos).toString());
+        claseEnvio.setTipo(getResources().getTextArray(R.array.tipos_array)[pos].toString());
         ocultarTeclado();
     }
 
@@ -435,10 +439,12 @@ public class PointFragment extends BaseFragment
                 cargarMapa();
                 ubicacion.setText(getCompleteAddressString(claseEnvio.latitud, claseEnvio.longitud));
 
-                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
-                        R.array.tipos_array, android.R.layout.simple_spinner_item);
-                int spinnerPosition = adapter.getPosition(claseEnvio.tipo);
-                spinner.setSelection(spinnerPosition);
+                int flags[] = {R.drawable.individuo_marker, R.drawable.heladera_marker, R.drawable.ropero_marker, R.drawable.emergencia_marker};
+                 CustomAdapter adapter=new CustomAdapter(getContext(),flags,R.array.tipos_array);
+ //               ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+   //                     R.array.tipos_array, android.R.layout.simple_spinner_item);
+//                int spinnerPosition = adapter.getPosition(claseEnvio.tipo);
+                spinner.setSelection(adapter.getPosition(claseEnvio.tipo));
 
                 titulo.setText(claseEnvio.titulo);
 
