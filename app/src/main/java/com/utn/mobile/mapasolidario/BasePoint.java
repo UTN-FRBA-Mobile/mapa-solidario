@@ -26,7 +26,7 @@ public class BasePoint
     String titulo = "";
     String descripcion = "";
     String tipo = "";
-    int id_usuario = 0;
+    String id_usuario = "";
     String usuario = "";
     Date fechaCreacion = new Date();
     String fechaVto = "01/01/2001";
@@ -47,7 +47,7 @@ public class BasePoint
     public void setTitulo (String newtitulo) {titulo = newtitulo;}
     public void setDescripcion (String newdescripcion ){descripcion = newdescripcion;}
     public void setUsuario (String user){usuario = user;}
-    public void setId_usuario (int iden){ id_usuario = iden; }
+    public void setId_usuario (String iden){ id_usuario = iden; }
     public void setFechaCreacion (Date fecha){ fechaCreacion = fecha;}
     public void setFechaVto(String fecha){ fechaVto = fecha;}
 
@@ -61,7 +61,7 @@ public class BasePoint
     public String getTitulo () {return this.titulo;}
     public String getDescripcion ( ){ return this.descripcion;}
     public String getUsuario (){ return this.usuario;}
-    public int getId_usuario (){ return this.id_usuario; }
+    public String getId_usuario (){ return this.id_usuario; }
     public Date getFechaCreacion (){ return this.fechaCreacion;}
     public String getFechaVto(){ return this.fechaVto;}
 

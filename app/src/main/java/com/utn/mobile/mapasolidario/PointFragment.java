@@ -352,11 +352,6 @@ public class PointFragment extends BaseFragment
                     if (vswitch.isChecked()==true){
                         claseEnvio.setFechaVto(fechaVencimiento.getText().toString());
                     }
-                    //TODO: levantar los datos reales del usuario
-                    if (claseEnvio._id == "") {
-                        claseEnvio.setId_usuario(22);
-                        claseEnvio.setUsuario("Dani Chacur");
-                    }
                 }
 
                 String mysz2 = claseEnvio.titulo.replaceAll("\\s","");

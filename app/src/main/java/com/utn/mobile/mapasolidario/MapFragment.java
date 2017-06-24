@@ -75,6 +75,7 @@ import java.util.List;
 import org.greenrobot.eventbus.EventBus;
 
 
+import static com.utn.mobile.mapasolidario.MainActivity.CLASS_MESSAGE;
 import static com.utn.mobile.mapasolidario.util.Utils.consultarPunto;
 
 
@@ -107,6 +108,7 @@ public class MapFragment extends BaseFragment
 
     @InjectView(R.id.lnuevo) private FrameLayout layout_nuevo;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,9 +121,16 @@ public class MapFragment extends BaseFragment
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_map, container, false);
+
+        if(getArguments()!=null) {
+
+            ClaseUsuario usuarioActual = (ClaseUsuario) getArguments().getSerializable(CLASS_MESSAGE);
+            claseEnvio.setId_usuario(usuarioActual.getId());
+            claseEnvio.setUsuario(usuarioActual.getNombre()+" "+usuarioActual.getApellido());
+        }
+
+
         return mView;
-
-
     }
 
     public void nuevaNecesidad(){
