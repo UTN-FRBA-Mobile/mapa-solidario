@@ -34,6 +34,9 @@ public interface MapaSolidarioRetrofitService {
     @GET("points")
     Call<List<PuntoResponse>> fetchPuntos();
 
+    @GET("user/{id}/points")
+    Call<List<PuntoResponse>> fetchUserPoints(@Path("id") String id);
+
     @Headers({"Accept: application/json"})
     @POST("points")
     Call<BasePoint> postPunto(@Body BasePoint json);

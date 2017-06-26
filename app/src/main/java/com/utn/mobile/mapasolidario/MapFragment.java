@@ -88,12 +88,10 @@ public class MapFragment extends BaseFragment
 
         if(getArguments()!=null) {
 
-            User usuarioActual = (User) getArguments().getSerializable(CLASS_MESSAGE);
+            User usuarioActual = UserProvider.get();
             claseEnvio.setId_usuario(usuarioActual.getId());
             claseEnvio.setUsuario(usuarioActual.getNombre()+" "+usuarioActual.getApellido());
         }
-
-
         return mView;
     }
 

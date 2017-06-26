@@ -63,6 +63,24 @@ public class RemoteServiceImpl implements IRemoteService {
     }
 
     @Override
+    public List<PuntoResponse> fetchUserPointsService() {
+        List<PuntoResponse> fetchUserPointsResponseList = new ArrayList<PuntoResponse>();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://morning-peak-11897.herokuapp.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        MapaSolidarioRetrofitService service = retrofit.create(MapaSolidarioRetrofitService.class);
+        try {
+            Response<List<PuntoResponse>> puntosResponse = service.fetchUserPoints(UserProvider.get().getId()).execute();
+            fetchUserPointsResponseList = puntosResponse.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return fetchUserPointsResponseList;
+    }
+
+    @Override
     public User getUserService(String id) {
         User _user = new User();
         Retrofit retrofit = new Retrofit.Builder()

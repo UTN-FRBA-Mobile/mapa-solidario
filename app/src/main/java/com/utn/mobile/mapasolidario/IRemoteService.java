@@ -14,6 +14,8 @@ public interface IRemoteService {
 
     User getUserService(String id);
     User saveUserService(User user);
+    List<PuntoResponse> fetchUserPointsService();
+
     List<NovedadResponse> fetchNewsService();
 
     List<PuntoResponse> fetchPuntosService();

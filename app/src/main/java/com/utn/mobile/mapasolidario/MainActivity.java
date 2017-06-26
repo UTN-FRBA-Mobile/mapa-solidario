@@ -18,6 +18,7 @@ import com.google.inject.Inject;
 import com.utn.mobile.mapasolidario.event.HideProgressDialogEvent;
 import com.utn.mobile.mapasolidario.event.ShowProgressDialogEvent;
 import com.utn.mobile.mapasolidario.login.LoginActivity;
+import com.utn.mobile.mapasolidario.user.UserFragment;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -58,7 +59,7 @@ public class MainActivity extends RoboFragmentActivity
                     return true;
                 case R.id.navigation_user:
                     getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.content, new UserFragment(usuarioActual), "Fragment")
+                            .replace(R.id.content, new UserFragment(), "Fragment")
                             .commit();
                     return true;
             }
