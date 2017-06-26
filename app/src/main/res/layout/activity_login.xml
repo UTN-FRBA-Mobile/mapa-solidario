@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.utn.mobile.mapasolidario.LoginActivity">
+    tools:context="com.utn.mobile.mapasolidario.login.LoginActivity">
 
     <include layout="@layout/content_login" />
 

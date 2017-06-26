@@ -12,6 +12,8 @@ import java.util.List;
  */
 public interface IRemoteService {
 
+    User getUserService(String id);
+    User saveUserService(User user);
     List<NovedadResponse> fetchNewsService();
 
     List<PuntoResponse> fetchPuntosService();

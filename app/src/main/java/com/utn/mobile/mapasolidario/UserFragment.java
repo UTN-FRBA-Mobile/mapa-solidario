@@ -15,19 +15,8 @@ import android.widget.TextView;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.squareup.picasso.Picasso;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
-import org.json.JSONException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,7 +33,7 @@ public class UserFragment extends Fragment {
     private AccessToken accessToken;
     private AccessTokenTracker accessTokenTracker;
     private final String TAG = "UserFragment";
-    private ClaseUsuario usuarioActualf;
+    private User usuarioActualf;
 
 
     private OnFragmentInteractionListener mListener;
@@ -53,7 +42,7 @@ public class UserFragment extends Fragment {
 
     }
 
-    public UserFragment(ClaseUsuario usuarioActual) {
+    public UserFragment(User usuarioActual) {
         usuarioActualf = usuarioActual;
     }
 
@@ -96,8 +85,8 @@ public class UserFragment extends Fragment {
 
             ((TextView)view.findViewById(R.id.tv_apellido)).setText(usuarioActualf.getApellido());
             ((TextView)view.findViewById(R.id.tv_nombre)).setText(usuarioActualf.getNombre());
-            ((TextView)view.findViewById(R.id.tv_email)).setText(usuarioActualf.getMail());
-            Picasso.with(this.getActivity()).load(usuarioActualf.getUrl()).fit().centerCrop().into((ImageView) view.findViewById(R.id.iv_usuario));
+            ((TextView)view.findViewById(R.id.tv_email)).setText(usuarioActualf.getCorreo());
+            Picasso.with(this.getActivity()).load(usuarioActualf.getUrl_imagen()).fit().centerCrop().into((ImageView) view.findViewById(R.id.iv_usuario));
 
         }
 

@@ -6,24 +6,18 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.AccessToken;
 
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.inject.Inject;
 import com.utn.mobile.mapasolidario.event.HideProgressDialogEvent;
 import com.utn.mobile.mapasolidario.event.ShowProgressDialogEvent;
+import com.utn.mobile.mapasolidario.login.LoginActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -40,7 +34,7 @@ public class MainActivity extends RoboFragmentActivity
     public static final String CLASS_MESSAGE = "mensaje.al.fragment";
     public static final String TAG = "MainActivity";
     private TextView mTextMessage;
-    private ClaseUsuario usuarioActual;
+    private User usuarioActual;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -80,7 +74,7 @@ public class MainActivity extends RoboFragmentActivity
 
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         Intent intent = getIntent();
-        usuarioActual = (ClaseUsuario)intent.getSerializableExtra("usuario");
+        usuarioActual = UserProvider.get();//(User)intent.getSerializableExtra("usuario");
 
         // Get Firebase token
         String token = FirebaseInstanceId.getInstance().getToken();

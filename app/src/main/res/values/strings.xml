@@ -12,10 +12,10 @@
     <string name="punto_ayudar">Ayudé</string>
     <string name="error_geolocalizacion">No se pudo obtener la dirección</string>
     <string-array name="tipos_array">
-            <item>Individuo</item>
-            <item>Heladera Solidaria</item>
-            <item>Ropero Solidario</item>
-            <item>Emergencia</item>
+        <item>Individuo</item>
+        <item>Heladera Solidaria</item>
+        <item>Ropero Solidario</item>
+        <item>Emergencia</item>
     </string-array>
 
     <string name="leyenda_infoWindow">Haga click aquí para conocer los detalles.</string>

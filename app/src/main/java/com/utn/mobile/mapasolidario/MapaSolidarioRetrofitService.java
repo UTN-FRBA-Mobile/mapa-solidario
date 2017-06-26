@@ -21,6 +21,13 @@ import retrofit2.http.Path;
 
 public interface MapaSolidarioRetrofitService {
 
+    @GET("user/{id}")
+    Call<User> getUser(@Path("id") String id);
+
+    @Headers({"Accept: application/json"})
+    @POST("user")
+    Call<User> saveUser(@Body User json);
+
     @GET("news")
     Call<List<NovedadResponse>> fetchNews();
 
