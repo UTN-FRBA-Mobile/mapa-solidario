@@ -3,6 +3,7 @@ package com.utn.mobile.mapasolidario;
 import com.utn.mobile.mapasolidario.dto.NovedadResponse;
 import com.utn.mobile.mapasolidario.dto.PuntoResponse;
 import com.utn.mobile.mapasolidario.dto.PuntoUpdate;
+import com.utn.mobile.mapasolidario.dto.UserResponse;
 
 import java.util.List;
 
@@ -20,6 +21,8 @@ public interface IRemoteService {
     BasePoint putPuntoService(String id, PuntoUpdate json);
     BasePoint getPuntoService(String id);
     BasePoint putAyudaService(String id);
+    UserResponse getUserService(String id);
+    UserResponse postUserService(UserResponse userResponse);
 
 
 }

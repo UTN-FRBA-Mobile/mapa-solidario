@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import com.utn.mobile.mapasolidario.dto.NovedadResponse;
 import com.utn.mobile.mapasolidario.dto.PuntoResponse;
 import com.utn.mobile.mapasolidario.dto.PuntoUpdate;
+import com.utn.mobile.mapasolidario.dto.UserResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -133,6 +134,48 @@ public class RemoteServiceImpl implements IRemoteService {
         }
 
         return puntoDetalle;
+    }
+
+    @Override
+    public UserResponse getUserService(String id) {
+
+        UserResponse usuario = new UserResponse();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://morning-peak-11897.herokuapp.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        MapaSolidarioRetrofitService service = retrofit.create(MapaSolidarioRetrofitService.class);
+        try {
+
+            Response<UserResponse> UserResponse = service.getUser(id).execute();
+            usuario = UserResponse.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return usuario;
+
+    }
+
+
+    @Override
+    public UserResponse postUserService(UserResponse usuarioResponse) {
+
+        UserResponse userResponseOk = new UserResponse();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://morning-peak-11897.herokuapp.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        MapaSolidarioRetrofitService service = retrofit.create(MapaSolidarioRetrofitService.class);
+        try {
+            Response<UserResponse> userResponse = service.postUser(usuarioResponse).execute();
+            userResponseOk = userResponse.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return userResponseOk;
     }
 
 }

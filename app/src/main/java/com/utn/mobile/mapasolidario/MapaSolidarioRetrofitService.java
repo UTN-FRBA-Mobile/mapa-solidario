@@ -3,11 +3,11 @@ package com.utn.mobile.mapasolidario;
 import com.utn.mobile.mapasolidario.dto.NovedadResponse;
 import com.utn.mobile.mapasolidario.dto.PuntoResponse;
 import com.utn.mobile.mapasolidario.dto.PuntoUpdate;
+import com.utn.mobile.mapasolidario.dto.UserResponse;
 
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
@@ -41,5 +41,12 @@ public interface MapaSolidarioRetrofitService {
     @Headers({"Content-Type: application/json"})
     @PUT("points/incrementarContador/{id}")
     Call<BasePoint> putAyuda(@Path("id") String id);
+
+    @GET("user/{id}")
+    Call<UserResponse> getUser(@Path("id") String id);
+
+    @Headers({"Accept: application/json"})
+    @POST("user")
+    Call<UserResponse> postUser(@Body UserResponse json);
 
 }
