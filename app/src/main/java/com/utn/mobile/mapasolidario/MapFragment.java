@@ -360,6 +360,7 @@ public class MapFragment extends BaseFragment
                         else{
                             if (firstTime) {
                                 gps.showSettingsAlert();
+                                //TODO: falta llamar nuevamente a setCurrentLocation()
                                 firstTime =false;
                             }
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoom));
