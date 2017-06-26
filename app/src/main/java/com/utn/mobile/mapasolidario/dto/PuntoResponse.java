@@ -9,6 +9,16 @@ public class PuntoResponse {
     private String _id, titulo, descripcion, tipo;
     private double latitud, longitud;
 
+    private int contador;
+
+    public void setContador(int contador) {
+        this.contador = contador;
+    }
+
+    public int getContador() {
+        return contador;
+    }
+
     public String get_id() {
         return _id;
     }

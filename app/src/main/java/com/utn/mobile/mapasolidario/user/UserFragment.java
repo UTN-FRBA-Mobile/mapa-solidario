@@ -45,6 +45,7 @@ public class UserFragment  extends BaseFragment implements UserView {
     private RecyclerView recyclerView;
 
     private OnFragmentInteractionListener mListener;
+    private List<PuntoResponse> points;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +69,14 @@ public class UserFragment  extends BaseFragment implements UserView {
         };
         presenter.fetchUserPoints(getContext());
 
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(this.points != null)
+            ((UserPointsAdapter) recyclerView.getAdapter()).updateData(this.points);
+        presenter.fetchUserPoints(getContext());
     }
 
     @Override
@@ -118,6 +127,7 @@ public class UserFragment  extends BaseFragment implements UserView {
     }
 
     public void loadPoints(List<PuntoResponse> points){
+        this.points = points;
         ((UserPointsAdapter) recyclerView.getAdapter()).updateData(points);
 
     }
