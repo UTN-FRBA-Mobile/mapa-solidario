@@ -3,17 +3,13 @@ package com.utn.mobile.mapasolidario;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,12 +17,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -40,43 +34,13 @@ import com.utn.mobile.mapasolidario.dto.PuntoResponse;
 import com.utn.mobile.mapasolidario.util.FetchPuntosErrors;
 import com.utn.mobile.mapasolidario.util.PointActions;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-import roboguice.inject.InjectFragment;
 import roboguice.inject.InjectView;
 
-
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
-
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
-
-import org.greenrobot.eventbus.EventBus;
-
 
 import static com.utn.mobile.mapasolidario.MainActivity.CLASS_MESSAGE;
 import static com.utn.mobile.mapasolidario.util.Utils.consultarPunto;
+
 
 
 public class MapFragment extends BaseFragment
@@ -222,13 +186,15 @@ public class MapFragment extends BaseFragment
 
     @Override
     public void onResume() {
+        gps.getLocation();
+        this.setCurrentLocation();
         super.onResume();
 //        if (firstTime){
  //           firstTime = false;
    //     }
      //   else{
 //            gps.getLocation();
-//            this.setCurrentLocation();
+
 //        }
     }
 
@@ -303,7 +269,7 @@ public class MapFragment extends BaseFragment
         // tengo los permisos, muestro la ubicación
 //        else
   //      {
-            this.setCurrentLocation();
+  //          this.setCurrentLocation();
       //  }
 
         mMap.setOnInfoWindowClickListener(this);
@@ -355,6 +321,7 @@ public class MapFragment extends BaseFragment
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoom));
                             }
                             gps.stopUsingGPS();
+//                            mMap.setMyLocationEnabled(false);
 
                         }
                         else{
