@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
@@ -77,13 +76,12 @@ public class MapFragment extends BaseFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         presenter.onCreate(this);
-        gps = new TrackGPS(getContext());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         mView = inflater.inflate(R.layout.fragment_map, container, false);
 
         if(getArguments()!=null) {
@@ -186,16 +184,14 @@ public class MapFragment extends BaseFragment
 
     @Override
     public void onResume() {
-        gps.getLocation();
-        this.setCurrentLocation();
-        super.onResume();
-//        if (firstTime){
- //           firstTime = false;
-   //     }
-     //   else{
-//            gps.getLocation();
-
-//        }
+                super.onResume();
+                if (firstTime){
+                       firstTime = false;
+                }
+                else{
+                        gps.getLocation();
+                        this.setCurrentLocation();
+                }
     }
 
     @Override
@@ -211,7 +207,7 @@ public class MapFragment extends BaseFragment
         MapsInitializer.initialize(getContext());
 
         mMap = googleMap;
-
+        gps = new TrackGPS(getContext());
         currentLocation = new LatLng(-34.603748, -58.381533); //Obelisco
 
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
@@ -219,7 +215,7 @@ public class MapFragment extends BaseFragment
         mMap.getUiSettings().setZoomControlsEnabled(true);
 
 /*
-        // Custom InfoWindow
+        // Custom InfoWindow - No utilizada
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 
             // Use default InfoWindow frame
@@ -267,10 +263,8 @@ public class MapFragment extends BaseFragment
             }
         }
         // tengo los permisos, muestro la ubicación
-//        else
-  //      {
-  //          this.setCurrentLocation();
-      //  }
+
+        this.setCurrentLocation();
 
         mMap.setOnInfoWindowClickListener(this);
 
@@ -317,19 +311,16 @@ public class MapFragment extends BaseFragment
                                 mMap.setMyLocationEnabled(true);
                             }
                             else {
-                                Toast.makeText(getContext(), "Última ubicación conocida!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "Ubicación por default!", Toast.LENGTH_SHORT).show();
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoom));
                             }
                             gps.stopUsingGPS();
-//                            mMap.setMyLocationEnabled(false);
+
 
                         }
                         else{
-                            if (firstTime) {
-                                gps.showSettingsAlert();
-                                //TODO: falta llamar nuevamente a setCurrentLocation()
-                                firstTime =false;
-                            }
+                            gps.showSettingsAlert();
+
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoom));
                         }
                         claseEnvio.setLatitud(currentLocation.latitude);
