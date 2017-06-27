@@ -87,7 +87,7 @@ public class MapFragment extends BaseFragment
         if(getArguments()!=null) {
 
             ClaseUsuario usuarioActual = (ClaseUsuario) getArguments().getSerializable(CLASS_MESSAGE);
-            claseEnvio.setId_usuario(usuarioActual.getId());
+            claseEnvio.setId_usuario(usuarioActual.getId());//TODO:revisar cuando ingreso por primera vez (sin accessToken) usuarioActual = null
             claseEnvio.setUsuario(usuarioActual.getNombre()+" "+usuarioActual.getApellido());
         }
 
@@ -303,24 +303,17 @@ public class MapFragment extends BaseFragment
                     public void run() {
                         if(gps.canGetLocation()){
                             gps.getLocation();
-                            currentLocation = new LatLng(gps.getLatitude(), gps.getLongitude());
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoom));
                             if (ContextCompat.checkSelfPermission(getContext(),
                                     Manifest.permission.ACCESS_FINE_LOCATION)
                                     == PackageManager.PERMISSION_GRANTED) {
+                                currentLocation = new LatLng(gps.getLatitude(), gps.getLongitude());
                                 mMap.setMyLocationEnabled(true);
                             }
-                            else {
-                                Toast.makeText(getContext(), "Ubicación por default!", Toast.LENGTH_SHORT).show();
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoom));
-                            }
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoom));
                             gps.stopUsingGPS();
-
-
                         }
                         else{
                             gps.showSettingsAlert();
-
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoom));
                         }
                         claseEnvio.setLatitud(currentLocation.latitude);
