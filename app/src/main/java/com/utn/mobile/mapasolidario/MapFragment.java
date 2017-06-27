@@ -3,29 +3,23 @@ package com.utn.mobile.mapasolidario;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -39,42 +33,13 @@ import com.utn.mobile.mapasolidario.dto.PuntoResponse;
 import com.utn.mobile.mapasolidario.util.FetchPuntosErrors;
 import com.utn.mobile.mapasolidario.util.PointActions;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-import roboguice.inject.InjectFragment;
 import roboguice.inject.InjectView;
 
-
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
-
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
 
-import org.greenrobot.eventbus.EventBus;
-
-
+import static com.utn.mobile.mapasolidario.MainActivity.CLASS_MESSAGE;
 import static com.utn.mobile.mapasolidario.util.Utils.consultarPunto;
+
 
 
 public class MapFragment extends BaseFragment
@@ -82,17 +47,19 @@ public class MapFragment extends BaseFragment
 
     private static final int LOCATION_REQUEST_CODE = 1;
 
-    //URL GET POINTS
-    private static final String SERVICE_URL = "YOUR DRIVE SERVICE URL";
-
     //location
     private TrackGPS gps;
     LatLng currentLocation;
     BasePoint claseEnvio = new BasePoint();
+    boolean firstTime = true;
+
+    //asigno tag a cada marker del mapa
+    Marker mAux;
 
     GoogleMap mMap;
     MapView mMapView;
     View mView;
+    private int zoom = 16;
 
     @Inject
     private MapFragmentPresenter  presenter;
@@ -100,32 +67,38 @@ public class MapFragment extends BaseFragment
     @InjectView(R.id.bpunto)     private FloatingActionButton botonf;
     @InjectView(R.id.mcancel_boton)     private Button bcancel;
     @InjectView(R.id.mcont_boton)     private Button bcontinuar;
-//    @InjectView(R.id.mtexto)     private TextView texto;
+    //    @InjectView(R.id.mtexto)     private TextView texto;
 
     @InjectView(R.id.lnuevo) private FrameLayout layout_nuevo;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         presenter.onCreate(this);
-        presenter.fetchPuntos(getContext());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         mView = inflater.inflate(R.layout.fragment_map, container, false);
+
+        if(getArguments()!=null) {
+
+            ClaseUsuario usuarioActual = (ClaseUsuario) getArguments().getSerializable(CLASS_MESSAGE);
+            claseEnvio.setId_usuario(usuarioActual.getId());//TODO:revisar cuando ingreso por primera vez (sin accessToken) usuarioActual = null
+            claseEnvio.setUsuario(usuarioActual.getNombre()+" "+usuarioActual.getApellido());
+        }
+
+
         return mView;
-
-
     }
 
     public void nuevaNecesidad(){
         botonf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: implementar acá que se muestre el marker de seleccion de lugar
 
                 //muestro los botones
                 botonf.setVisibility(View.INVISIBLE);
@@ -141,11 +114,12 @@ public class MapFragment extends BaseFragment
 
                     @Override
                     public void onMapClick(LatLng point) {
-                        // TODO Auto-generated method stub
+
                         //lstLatLngs.add(point);
                         mMap.clear();
                         mMap.addMarker(new MarkerOptions().position(point).icon(BitmapDescriptorFactory.fromResource(R.drawable.new_marker)));
 //                        claseEnvio.setUbicacion(point); //Acá le seteo la ubicación al fragment de creación
+                       // mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom));
                         claseEnvio.setLatitud(point.latitude);
                         claseEnvio.setLongitud(point.longitude);
                     }
@@ -153,7 +127,7 @@ public class MapFragment extends BaseFragment
 
 
                 mMap.addMarker(new MarkerOptions().position(currentLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.new_marker)));
-
+         //       mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoom));
             }
         });
     }
@@ -188,10 +162,11 @@ public class MapFragment extends BaseFragment
 
 
         mMap.clear(); //limpio new_marker
+        presenter.fetchPuntos(getContext()); //get points
     }
 
     @Override
-        public void onClick(View v) {
+    public void onClick(View v) {
 
         }
 
@@ -207,37 +182,40 @@ public class MapFragment extends BaseFragment
                 }
     }
 
-
+    @Override
+    public void onResume() {
+                super.onResume();
+                if (firstTime){
+                       firstTime = false;
+                }
+                else{
+                        gps.getLocation();
+                        this.setCurrentLocation();
+                }
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
+        presenter.fetchPuntos(getContext()); //get points
 
         //ocultar();
         nuevaNecesidad();
         confirmarPunto();
         cancelarPunto();
 
-
         MapsInitializer.initialize(getContext());
 
         mMap = googleMap;
         gps = new TrackGPS(getContext());
-
         currentLocation = new LatLng(-34.603748, -58.381533); //Obelisco
-        LatLng ejemplo1 = new LatLng(-34.608, -58.3712);
-        LatLng ejemplo2 = new LatLng(-34.6075, -58.3732);
-        LatLng ejemplo3 = new LatLng(-34.607, -58.3712);
-        LatLng ejemplo4 = new LatLng(-34.6085, -58.3732);
 
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.getUiSettings().setMapToolbarEnabled(false);
-
-
-
+        mMap.getUiSettings().setZoomControlsEnabled(true);
 
 /*
-        // Custom InfoWindow
+        // Custom InfoWindow - No utilizada
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 
             // Use default InfoWindow frame
@@ -262,81 +240,87 @@ public class MapFragment extends BaseFragment
         });
 */
 
-
-
         // Permisos
-        if (ContextCompat.checkSelfPermission(super.getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            mMap.setMyLocationEnabled(true);
-            this.setCurrentLocation();
+            //no tengo los permisos de localización y pregunto si los otorgan, si no los otorgan muestro la última ubicación conocida.
+            // si no quiero que me pregunten mas por los permisos muestro ubicación por default.
+            //si los otorgo muestro la ubicación.
+        if (ContextCompat.checkSelfPermission(super.getContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
 
-        } else {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(super.getActivity(),
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
-                // Mostrar diálogo explicativo
-            } else {
-                // Solicitar permiso
                 requestPermissions(
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         LOCATION_REQUEST_CODE);
             }
+            else {
+
+                Toast toast1 = Toast.makeText(getContext(), "Recuerde que puede utilizar la localización para generar un punto con mayor precisión", Toast.LENGTH_LONG);
+                toast1.setGravity(Gravity.CENTER,5,5);
+                toast1.show();
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoom));
+            }
         }
+        // tengo los permisos, muestro la ubicación
 
-        mMap.getUiSettings().setZoomControlsEnabled(true);
-
-        // Marcadores
-
-        mMap.addMarker(new MarkerOptions().title("Título 1").snippet("Haga click para Detalles").position(ejemplo1).icon(BitmapDescriptorFactory.fromResource(R.drawable.individuo_marker)));
-        mMap.addMarker(new MarkerOptions().title("Título 2").snippet("Haga click para Detalles").position(ejemplo2).icon(BitmapDescriptorFactory.fromResource(R.drawable.heladera_marker)));
-        mMap.addMarker(new MarkerOptions().title("Título 3").snippet("Haga click para Detalles").position(ejemplo3).icon(BitmapDescriptorFactory.fromResource(R.drawable.ropero_marker)));
-        mMap.addMarker(new MarkerOptions().title("Título 4").snippet("Haga click para Detalles").position(ejemplo4).icon(BitmapDescriptorFactory.fromResource(R.drawable.emergencia_marker)));
+        this.setCurrentLocation();
 
         mMap.setOnInfoWindowClickListener(this);
-
 
     }
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        //TODO:IMPLEMENTAR ACÁ LLAMADO A FRAGMENT DETALLE DEL MARKER AL PRESIONAR INFOWINDOW
-        Toast.makeText(getContext(),marker.getTitle(), Toast.LENGTH_LONG).show();
+
+        //String idPoint = (String) marker.getTag();
+        //Toast.makeText(getContext(),idPoint, Toast.LENGTH_LONG).show();
+        claseEnvio.setId((String) marker.getTag());
+        claseEnvio.setAccion(PointActions.CONSULTA);
+        FragmentManager fragmentManager = getFragmentManager();
+        consultarPunto(claseEnvio, fragmentManager);
     }
 
-
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == LOCATION_REQUEST_CODE) {
-            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ) {
-                mMap.setMyLocationEnabled(true);
-                this.setCurrentLocation();
-            }
-            else {
-                Toast.makeText(getContext(), "Error de permisos", Toast.LENGTH_LONG).show();
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case LOCATION_REQUEST_CODE: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    this.setCurrentLocation();
+                } else {
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoom));
+                }
+                return;
             }
         }
     }
-
+        //si tengo desactivado el gps y lo activo primero me ubica en la ultima ubicación conocida
     private void setCurrentLocation(){
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
                         if(gps.canGetLocation()){
-                            Location _l = gps.getLocation();
-                            currentLocation = new LatLng(_l.getLatitude(), _l.getLongitude());
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
+                            gps.getLocation();
+                            if (ContextCompat.checkSelfPermission(getContext(),
+                                    Manifest.permission.ACCESS_FINE_LOCATION)
+                                    == PackageManager.PERMISSION_GRANTED) {
+                                currentLocation = new LatLng(gps.getLatitude(), gps.getLongitude());
+                                mMap.setMyLocationEnabled(true);
+                            }
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoom));
                             gps.stopUsingGPS();
-
                         }
                         else{
                             gps.showSettingsAlert();
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoom));
                         }
+                        claseEnvio.setLatitud(currentLocation.latitude);
+                        claseEnvio.setLongitud(currentLocation.longitude);
                     }
                 },
                 1000);
-        claseEnvio.setLatitud(currentLocation.latitude);
-        claseEnvio.setLongitud(currentLocation.longitude);
     }
 
     private OnFragmentInteractionListener mListener;
@@ -369,69 +353,6 @@ public class MapFragment extends BaseFragment
     }
 
     @Override
-    public void loadPointsInMap(List<PuntoResponse> resultadoDTO) {
-        for(PuntoResponse punto : resultadoDTO){
-
-            if(punto.getTipo() != null){
-                if (punto.getTipo().equals("heladera")){
-                    // creo punto de tipo heladera
-                    mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet("Haga click para Detalles").position(new LatLng(
-                            punto.getLatitud(),
-                            punto.getLongitud()
-                    )).icon(BitmapDescriptorFactory.fromResource(R.drawable.heladera_marker)));
-
-                }
-
-                if (punto.getTipo().equals("ropero")){
-                    // creo punto de tipo ropero
-                    mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet("Haga click para Detalles").position(new LatLng(
-                            punto.getLatitud(),
-                            punto.getLongitud()
-                    )).icon(BitmapDescriptorFactory.fromResource(R.drawable.ropero_marker)));
-
-                }
-
-                if (punto.getTipo().equals("individuo")){
-                    // creo punto de tipo individuo
-                    mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet("Haga click para Detalles").position(new LatLng(
-                            punto.getLatitud(),
-                            punto.getLongitud()
-                    )).icon(BitmapDescriptorFactory.fromResource(R.drawable.individuo_marker)));
-
-                }
-
-                if (punto.getTipo().equals("emergencia")){
-                    // creo punto de tipo emergencia
-                    mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet("Haga click para Detalles").position(new LatLng(
-                            punto.getLatitud(),
-                            punto.getLongitud()
-                    )).icon(BitmapDescriptorFactory.fromResource(R.drawable.emergencia_marker)));
-
-                }
-            }
-
-        }
-
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     *//*
-    */
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
-
-    @Override
     public void showMessageError(FetchPuntosErrors error) {
         String msjError = "";
         String title = getString(R.string.POPUP_TITLE_SERVIDOR);
@@ -447,6 +368,58 @@ public class MapFragment extends BaseFragment
                 msjError = getString(R.string.sin_comunicacion);
                 break;
         }
+    }
+
+    @Override
+    public void loadPointsInMap(List<PuntoResponse> resultadoDTO) {
+        for(PuntoResponse punto : resultadoDTO){
+
+            if(punto.getTipo() != null){
+
+                if (punto.getTipo().equals("Heladera Solidaria")){
+                    // creo punto de tipo heladera
+                    mAux=mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet(getString(R.string.leyenda_infoWindow)).position(new LatLng(
+                            punto.getLatitud(),
+                            punto.getLongitud()
+                    )).icon(BitmapDescriptorFactory.fromResource(R.drawable.heladera_marker)));
+                    mAux.setTag(punto.get_id());
+                }
+
+                if (punto.getTipo().equals("Ropero Solidario")){
+                    // creo punto de tipo ropero
+                    mAux=mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet(getString(R.string.leyenda_infoWindow)).position(new LatLng(
+                            punto.getLatitud(),
+                            punto.getLongitud()
+                    )).icon(BitmapDescriptorFactory.fromResource(R.drawable.ropero_marker)));
+                    mAux.setTag(punto.get_id());
+                }
+
+                if (punto.getTipo().equals("Individuo")){
+                    // creo punto de tipo individuo
+                    mAux=mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet(getString(R.string.leyenda_infoWindow)).position(new LatLng(
+                            punto.getLatitud(),
+                            punto.getLongitud()
+                    )).icon(BitmapDescriptorFactory.fromResource(R.drawable.individuo_marker)));
+                    mAux.setTag(punto.get_id());
+                }
+
+                if (punto.getTipo().equals("Emergencia")){
+                    // creo punto de tipo emergencia
+                    mAux=mMap.addMarker(new MarkerOptions().title(punto.getTitulo()).snippet(getString(R.string.leyenda_infoWindow)).position(new LatLng(
+                            punto.getLatitud(),
+                            punto.getLongitud()
+                    )).icon(BitmapDescriptorFactory.fromResource(R.drawable.emergencia_marker)));
+                    mAux.setTag(punto.get_id());
+                }
+
+            }
+
+        }
+
+    }
+
+    public interface OnFragmentInteractionListener {
+        void onFragmentInteraction(Uri uri);
     }
 
 }

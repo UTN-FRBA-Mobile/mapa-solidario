@@ -6,8 +6,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +16,8 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -30,12 +27,16 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
+import com.utn.mobile.mapasolidario.dto.PuntoUpdate;
 import com.utn.mobile.mapasolidario.util.FetchPuntosErrors;
 import com.utn.mobile.mapasolidario.util.PointActions;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -64,8 +65,8 @@ public class PointFragment extends BaseFragment
     @InjectView(R.id.fcreacion) private EditText fechacreacion;
     @InjectView(R.id.eayuda)     EditText ayudas;
     @InjectView(R.id.pmap)    MapView mMapView;
-    @InjectView(R.id.lcreacion)     FrameLayout creacion;
-    @InjectView(R.id.lvencimiento)     FrameLayout lvencimiento;
+    @InjectView(R.id.lcreacion)     LinearLayout creacion;
+    @InjectView(R.id.lvencimiento)     LinearLayout lvencimiento;
     @InjectView(R.id.svencimiento)    ToggleButton vswitch;
 
 
@@ -98,7 +99,6 @@ public class PointFragment extends BaseFragment
     public void onClick(View v) {
     }
 
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -106,9 +106,9 @@ public class PointFragment extends BaseFragment
         //Levanto el objeto que me mandan
         if(getArguments()!=null)        {
             claseEnvio = (BasePoint) getArguments().getSerializable(PUNTO_MESSAGE);
+       //     claseEnvio.setId("");
+       //    claseEnvio.setAccion(PointActions.MODIFICACION);//valor para probar... sacarlo desp TODO
             accion = claseEnvio.accion;
-            claseEnvio.setId("");
-          // claseEnvio.setAccion(PointActions.CONSULTA);//valor para probar... sacarlo desp TODO
         }
 
         //oculto la barra de abajo
@@ -132,7 +132,7 @@ public class PointFragment extends BaseFragment
         if (mMapView != null){
             mMapView.onCreate(savedInstanceState);
             mMapView.onResume();
-            cargarMapa();
+            //cargarMapa(); TODO: sino en CONSULTA se carga doble el mapa, primero con claseEnvio default y luego con claseEnvio de loadPoint
         }
 
         vswitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -147,7 +147,6 @@ public class PointFragment extends BaseFragment
         });
 
     }
-
 
     public void revisarAccion (View view) {
 
@@ -172,8 +171,9 @@ public class PointFragment extends BaseFragment
             spinner.setEnabled(false);
         }
         if (claseEnvio.accion == PointActions.ALTA) {
-            FrameLayout frame = (FrameLayout) view.findViewById(R.id.layuda);
+            LinearLayout frame = (LinearLayout) view.findViewById(R.id.layuda);
             frame.setVisibility(View.GONE);
+            cargarMapa(); //TODO: agregado y sacado del onViewCreated
         }
 
         if (claseEnvio.accion == PointActions.MODIFICACION) {
@@ -200,14 +200,44 @@ public class PointFragment extends BaseFragment
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
 
-                    LatLng ubicacion = new LatLng(claseEnvio.latitud, claseEnvio.longitud);
-                googleMap.addMarker(new MarkerOptions().position(ubicacion));
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacion,15));
+                LatLng ubicacion = new LatLng(claseEnvio.latitud, claseEnvio.longitud);
+                String tipo_aux = claseEnvio.tipo;
 
-                googleMap.getUiSettings().setZoomControlsEnabled(false);
+                googleMap.clear();
+
+//TODO: depende el evento llega el tipo vacío, si toco volver del detalle (no se cargan los puntos) y toco +, me toma el tipo individuo que es el primero del array
+//TODO: no me toma el if
+//                    if (claseEnvio.accion==(PointActions.CONSULTA) ) {
+                        if (tipo_aux.equals("Heladera Solidaria")) {
+                            // creo punto de tipo heladera
+                            googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.heladera_marker)));
+                        }
+                        if (tipo_aux.equals("Ropero Solidario")) {
+                            // creo punto de tipo ropero
+                            googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.ropero_marker)));
+                        }
+                        if (tipo_aux.equals("Individuo")) {
+                            // creo punto de tipo individuo
+                            googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.individuo_marker)));
+                        }
+                        if (tipo_aux.equals("Emergencia")) {
+                            // creo punto de tipo emergencia
+                            googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.emergencia_marker)));
+                        }
+//                    }
+//                if (tipo_aux.equals("")) {
+              if (claseEnvio.accion==(PointActions.ALTA) ) {
+                    // creo punto de tipo +
+                    googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.new_marker)));
+                }
+
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacion,17));
+
+                googleMap.getUiSettings().setZoomControlsEnabled(true);
                 googleMap.getUiSettings().setCompassEnabled(false);
                 googleMap.getUiSettings().setZoomGesturesEnabled(false);
                 googleMap.getUiSettings().setScrollGesturesEnabled(false);
+                googleMap.getUiSettings().setMapToolbarEnabled(false);
             }
         });
         mMapView.setClickable(false);
@@ -219,9 +249,16 @@ public class PointFragment extends BaseFragment
         ubicacion.setText(getCompleteAddressString(claseEnvio.latitud, claseEnvio.longitud));
 
         // Lleno el combo de tipo de necesidad
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.tipos_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        int flags[] = {R.drawable.individuo_marker, R.drawable.heladera_marker, R.drawable.ropero_marker, R.drawable.emergencia_marker};
+
+//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+//                R.array.tipos_array, android.R.layout.simple_spinner_item);
+//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
+  //              R.layout.row, R.id.tipo, R.array.tipos_array);
+
+        CustomAdapter adapter=new CustomAdapter(getContext(),flags,R.array.tipos_array);
+  //      adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
@@ -301,7 +338,7 @@ public class PointFragment extends BaseFragment
         });
     }
 
-    public void  accionBotonContinuar(){
+    public void accionBotonContinuar(){
         bcontinuar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -312,23 +349,29 @@ public class PointFragment extends BaseFragment
                     claseEnvio.setFechaModificacion(new Date());
                     claseEnvio.setDescripcion(descripcion.getText().toString());
                     claseEnvio.setTitulo(titulo.getText().toString());
-                    claseEnvio.setFechaVto(fechaVencimiento.getText().toString());
-
-                    if (claseEnvio._id == "") {
-                        claseEnvio.setId_usuario(22);
-                        claseEnvio.setUsuario("Dani Chacur");
+                    if (vswitch.isChecked()==true){
+                        claseEnvio.setFechaVto(fechaVencimiento.getText().toString());
                     }
                 }
-                //TODO: Persistir los datos en la base de datos_devuelven bad request pero no se porque
-                if (claseEnvio.accion==PointActions.ALTA){
-                    String texto =gson.toJson(claseEnvio);
-                    presenter.guardarPunto(getContext(),texto);
+
+                String mysz2 = claseEnvio.titulo.replaceAll("\\s","");
+                if (mysz2==""){
+                    Toast.makeText(getContext(), "El título es obligatorio", Toast.LENGTH_LONG ).show();
                 }
-                if (claseEnvio.accion==PointActions.MODIFICACION || claseEnvio.accion == PointActions.CONSULTA){
-                    presenter.actualizarPunto(getContext(),claseEnvio._id,gson.toJson(claseEnvio));
+                else {
+                    if (claseEnvio.accion==PointActions.ALTA){
+                        presenter.guardarPunto(getContext(),claseEnvio);
+                    }
+                    if (claseEnvio.accion==PointActions.MODIFICACION){
+                        presenter.actualizarPunto(getContext(),claseEnvio._id,new PuntoUpdate(claseEnvio));
+                    }
+                }
+                if (claseEnvio.accion == PointActions.CONSULTA){
+                    presenter.actualizarPunto(getContext(),claseEnvio._id);
                 }
 
-  //              nuevoBackStack();
+
+                //              nuevoBackStack();
             }
         });
     }
@@ -360,7 +403,6 @@ public class PointFragment extends BaseFragment
 
     }
 
-
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (isChecked) {
             fechaVencimiento.setVisibility(View.VISIBLE);
@@ -373,14 +415,14 @@ public class PointFragment extends BaseFragment
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
         // An item was selected. You can retrieve the selected item using
-        claseEnvio.setTipo(parent.getItemAtPosition(pos).toString());
+//        claseEnvio.setTipo(parent.getItemAtPosition(pos).toString());
+        claseEnvio.setTipo(getResources().getTextArray(R.array.tipos_array)[pos].toString());
         ocultarTeclado();
     }
 
     public void onNothingSelected(AdapterView<?> parent) {
         // Another interface callback
     }
-
 
     @Override
     public void loadPoint(BasePoint punto) {
@@ -392,14 +434,16 @@ public class PointFragment extends BaseFragment
                 cargarMapa();
                 ubicacion.setText(getCompleteAddressString(claseEnvio.latitud, claseEnvio.longitud));
 
-                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
-                        R.array.tipos_array, android.R.layout.simple_spinner_item);
-                int spinnerPosition = adapter.getPosition(claseEnvio.tipo);
-                spinner.setSelection(spinnerPosition);
+                int flags[] = {R.drawable.individuo_marker, R.drawable.heladera_marker, R.drawable.ropero_marker, R.drawable.emergencia_marker};
+                 CustomAdapter adapter=new CustomAdapter(getContext(),flags,R.array.tipos_array);
+ //               ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+   //                     R.array.tipos_array, android.R.layout.simple_spinner_item);
+//                int spinnerPosition = adapter.getPosition(claseEnvio.tipo);
+                spinner.setSelection(adapter.getPosition(claseEnvio.tipo));
 
                 titulo.setText(claseEnvio.titulo);
 
-                if (claseEnvio.fechaVto=="01/01/2001"){
+                if (claseEnvio.fechaVto=="01/01/2001"||claseEnvio.fechaVto==""){
                     if (accion==PointActions.MODIFICACION) {
                         vswitch.setChecked(false);
                     }else{
@@ -419,7 +463,7 @@ public class PointFragment extends BaseFragment
 
                 ayudas.setText(String.valueOf(claseEnvio.contador));
 
-                claseEnvio.accion =accion;
+                claseEnvio.setAccion(accion);
             }else{
                 Toast.makeText(getContext(), "Error al obtener los datos", Toast.LENGTH_LONG ).show();
             }
@@ -430,14 +474,16 @@ public class PointFragment extends BaseFragment
 
         if(punto != null){
             claseEnvio = punto;
-            claseEnvio.accion =accion;
-            Toast.makeText(getContext(), "Punto Guardado correctamente", Toast.LENGTH_LONG ).show();
+            if (accion == PointActions.CONSULTA) {
+                Toast.makeText(getContext(), "¡Gracias por tu ayuda!", Toast.LENGTH_LONG).show();
+            }else {
+                Toast.makeText(getContext(), "Punto Guardado correctamente", Toast.LENGTH_LONG).show();
+            }
         }else{
             Toast.makeText(getContext(), "Error al obtener los datos", Toast.LENGTH_LONG ).show();
         }
         nuevoBackStack();
     }
-
 
     @Override
     public void showMessageError(FetchPuntosErrors error) {

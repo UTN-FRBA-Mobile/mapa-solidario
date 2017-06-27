@@ -37,6 +37,7 @@ public class MainActivity extends RoboFragmentActivity
     @Inject
     private ProgressDialog progressDialog;
 
+    public static final String CLASS_MESSAGE = "mensaje.al.fragment";
     public static final String TAG = "MainActivity";
     private TextView mTextMessage;
     private ClaseUsuario usuarioActual;
@@ -47,10 +48,14 @@ public class MainActivity extends RoboFragmentActivity
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_map:
+                case R.id.navigation_map:{
+                    Bundle args = new Bundle();
+                    args.putSerializable(CLASS_MESSAGE,usuarioActual);
+                    MapFragment fragment =  new MapFragment();
+                    fragment.setArguments(args);
                     getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.content, new MapFragment(), "Fragment")
-                            .commit();
+                            .replace(R.id.content, fragment, "Fragment")
+                            .commit();}
                     return true;
                 case R.id.navigation_news:
                     getSupportFragmentManager().beginTransaction()
@@ -87,8 +92,13 @@ public class MainActivity extends RoboFragmentActivity
             BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
             navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+            Bundle args = new Bundle();
+            args.putSerializable(CLASS_MESSAGE,usuarioActual);
+            MapFragment fragment =  new MapFragment();
+            fragment.setArguments(args);
+
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content, new MapFragment(), "Fragment")
+                    .replace(R.id.content, fragment, "Fragment")
                     .commit();
         }
         else {
@@ -96,6 +106,13 @@ public class MainActivity extends RoboFragmentActivity
             startActivity(_intent);
         }
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode,permissions,grantResults);
+    }
+
 
     //@Override
     public void goBack() {
@@ -106,6 +123,16 @@ public class MainActivity extends RoboFragmentActivity
 
     @Override
     public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        if (navigation.getVisibility()==View.GONE){
+            navigation.setVisibility(View.VISIBLE);
+        }
+        super.onBackPressed();
 
     }
 

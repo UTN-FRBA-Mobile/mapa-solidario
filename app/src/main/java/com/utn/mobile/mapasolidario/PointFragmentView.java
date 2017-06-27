@@ -24,4 +24,5 @@ interface PointFragmentView extends BaseView {
 
     void hideProgressDialog();
 
+
 }

@@ -2,9 +2,9 @@ package com.utn.mobile.mapasolidario;
 
 import android.content.Context;
 
-import com.utn.mobile.mapasolidario.event.FetchNewsFailedEvent;
 import com.utn.mobile.mapasolidario.event.FetchPuntosFailedEvent;
 import com.utn.mobile.mapasolidario.event.FetchPuntosSuccessEvent;
+import com.utn.mobile.mapasolidario.task.FetchPuntosTask;
 import com.utn.mobile.mapasolidario.util.UiUtils;
 
 import org.greenrobot.eventbus.Subscribe;

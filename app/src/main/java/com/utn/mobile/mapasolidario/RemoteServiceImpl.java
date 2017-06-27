@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.utn.mobile.mapasolidario.dto.NovedadResponse;
 import com.utn.mobile.mapasolidario.dto.PuntoResponse;
+import com.utn.mobile.mapasolidario.dto.PuntoUpdate;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -80,9 +81,8 @@ public class RemoteServiceImpl implements IRemoteService {
         return puntoDetalle;
     }
 
-
     @Override
-    public BasePoint postPuntoService(String json) {
+    public BasePoint postPuntoService(BasePoint json) {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://morning-peak-11897.herokuapp.com/")
@@ -100,7 +100,7 @@ public class RemoteServiceImpl implements IRemoteService {
     }
 
     @Override
-    public BasePoint putPuntoService(String id, String json) {
+    public BasePoint putPuntoService(String id, PuntoUpdate json) {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://morning-peak-11897.herokuapp.com/")
@@ -117,5 +117,22 @@ public class RemoteServiceImpl implements IRemoteService {
         return puntoDetalle;
     }
 
+    @Override
+    public BasePoint putAyudaService(String id) {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://morning-peak-11897.herokuapp.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        MapaSolidarioRetrofitService service = retrofit.create(MapaSolidarioRetrofitService.class);
+        try {
+            Response<BasePoint> puntosResponse = service.putAyuda(id).execute();
+            puntoDetalle = puntosResponse.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return puntoDetalle;
+    }
 
 }

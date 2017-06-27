@@ -1,11 +1,13 @@
 package com.utn.mobile.mapasolidario;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
@@ -30,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     private AccessToken accessToken;
     private AccessTokenTracker accessTokenTracker;
 
+
     private final String TAG = "LoginActivity";
 
     @Override
@@ -50,18 +53,24 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onCompleted(JSONObject user, GraphResponse graphResponse) {
 
-                    ClaseUsuario usuario = new ClaseUsuario();
-                    usuario.setId(user.optString("id"));
-                    usuario.setNombre(user.optString("first_name"));
-                    usuario.setApellido(user.optString("last_name"));
-                    usuario.setMail(user.optString("email"));
-                    usuario.setUrl("https://graph.facebook.com/" + user.optString("id") + "/picture?type=large");
+                    if (graphResponse.getRawResponse() != null) {
 
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.putExtra("usuario", usuario);
-                    startActivity(intent);
-                    finish();
-                }
+                        ClaseUsuario usuario = new ClaseUsuario();
+                        usuario.setId(user.optString("id"));
+                        usuario.setNombre(user.optString("first_name"));
+                        usuario.setApellido(user.optString("last_name"));
+                        usuario.setMail(user.optString("email"));
+                        usuario.setUrl("https://graph.facebook.com/" + user.optString("id") + "/picture?type=large");
+
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.putExtra("usuario", usuario);
+                        startActivity(intent);
+                        finish();
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "Debe conectarse a Internet", Toast.LENGTH_SHORT).show();
+                        }
+                    }
             });
 
             Bundle parameters = new Bundle();
