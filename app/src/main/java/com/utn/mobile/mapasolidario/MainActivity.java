@@ -15,6 +15,7 @@ import com.facebook.AccessToken;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.inject.Inject;
+import com.utn.mobile.mapasolidario.dummy.DummyContent;
 import com.utn.mobile.mapasolidario.event.HideProgressDialogEvent;
 import com.utn.mobile.mapasolidario.event.ShowProgressDialogEvent;
 import com.utn.mobile.mapasolidario.login.LoginActivity;
@@ -27,7 +28,8 @@ public class MainActivity extends RoboFragmentActivity
         implements MapFragment.OnFragmentInteractionListener,
         NewsFragment.OnFragmentInteractionListener,
         UserFragment.OnFragmentInteractionListener,
-        PointFragment.OnFragmentInteractionListener{
+        PointFragment.OnFragmentInteractionListener,
+        PointListFragment.OnListFragmentInteractionListener{
 
     @Inject
     private ProgressDialog progressDialog;
@@ -43,7 +45,12 @@ public class MainActivity extends RoboFragmentActivity
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_map:{
+                case R.id.navigation_map:
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.content, new PointsFragment(), "Fragment")
+                            .commit();
+                    return true;
+                /*case R.id.navigation_map:{
                     Bundle args = new Bundle();
                     args.putSerializable(CLASS_MESSAGE,usuarioActual);
                     MapFragment fragment =  new MapFragment();
@@ -51,7 +58,7 @@ public class MainActivity extends RoboFragmentActivity
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.content, fragment, "Fragment")
                             .commit();}
-                    return true;
+                    return true;*/
                 case R.id.navigation_news:
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.content, new NewsFragment(), "Fragment")
@@ -89,7 +96,7 @@ public class MainActivity extends RoboFragmentActivity
 
             Bundle args = new Bundle();
             args.putSerializable(CLASS_MESSAGE,usuarioActual);
-            MapFragment fragment =  new MapFragment();
+            PointsFragment fragment =  new PointsFragment();
             fragment.setArguments(args);
 
             getSupportFragmentManager().beginTransaction()
@@ -150,4 +157,8 @@ public class MainActivity extends RoboFragmentActivity
         }
     }
 
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+
+    }
 }
