@@ -9,6 +9,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
@@ -21,11 +22,21 @@ import retrofit2.http.Path;
 
 public interface MapaSolidarioRetrofitService {
 
+    @GET("user/{id}")
+    Call<User> getUser(@Path("id") String id);
+
+    @Headers({"Accept: application/json"})
+    @POST("user")
+    Call<User> saveUser(@Body User json);
+
     @GET("news")
     Call<List<NovedadResponse>> fetchNews();
 
     @GET("points")
     Call<List<PuntoResponse>> fetchPuntos();
+
+    @GET("user/{id}/points")
+    Call<List<PuntoResponse>> fetchUserPoints(@Path("id") String id);
 
     @Headers({"Accept: application/json"})
     @POST("points")
@@ -37,6 +48,9 @@ public interface MapaSolidarioRetrofitService {
     @Headers({"Accept: application/json"})
     @PUT("points/actualizarPunto/{id}")
     Call<BasePoint> putPunto(@Path("id") String id, @Body PuntoUpdate json);
+
+    @DELETE("points/{id}")
+    Call<BasePoint> deletePunto(@Path("id") String id);
 
     @Headers({"Content-Type: application/json"})
     @PUT("points/incrementarContador/{id}")

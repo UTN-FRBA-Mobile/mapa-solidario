@@ -214,6 +214,14 @@
             android:text="@string/punto_volver"/>
 
         <Button
+            android:id="@+id/fborrar_boton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+
+            android:text="@string/punto_borrar"/>
+
+        <Button
             android:id="@+id/fcont_boton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

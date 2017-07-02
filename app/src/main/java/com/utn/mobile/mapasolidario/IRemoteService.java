@@ -12,6 +12,10 @@ import java.util.List;
  */
 public interface IRemoteService {
 
+    User getUserService(String id);
+    User saveUserService(User user);
+    List<PuntoResponse> fetchUserPointsService();
+
     List<NovedadResponse> fetchNewsService();
 
     List<PuntoResponse> fetchPuntosService();
@@ -20,6 +24,7 @@ public interface IRemoteService {
     BasePoint putPuntoService(String id, PuntoUpdate json);
     BasePoint getPuntoService(String id);
     BasePoint putAyudaService(String id);
+    BasePoint deletePuntoService(String id);
 
 
 }

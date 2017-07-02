@@ -36,6 +36,7 @@ public class MapFragmentPresenter extends BasePresenter<MapFragmentView> {
         view.hideProgressDialog();
         if (event.getResultadoDTO() != null) {
             if (!event.getResultadoDTO().isEmpty()) {
+                PointListProvider.set(event.getResultadoDTO());
                 view.loadPointsInMap(event.getResultadoDTO());
             }
         }

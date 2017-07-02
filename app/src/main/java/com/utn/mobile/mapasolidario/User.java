@@ -2,19 +2,23 @@ package com.utn.mobile.mapasolidario;
 
 import android.graphics.Bitmap;
 
+import com.google.inject.Singleton;
+
 import java.io.Serializable;
-import java.net.URL;
 
 /**
  * Created by Juanca on 13/5/17.
  */
 @SuppressWarnings("serial")
-class ClaseUsuario implements Serializable {
+@Singleton
+public class User implements Serializable {
 
     private String id;
     private String nombre;
     private String apellido;
-    private String url;
+    private String url_imagen;
+    private String correo;
+    private Bitmap imagen;
 
     public String getId() {
         return id;
@@ -40,20 +44,20 @@ class ClaseUsuario implements Serializable {
         this.apellido = apellido;
     }
 
-    public String getUrl() {
-        return url;
+    public String getUrl_imagen() {
+        return url_imagen;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setUrl_imagen(String url_imagen) {
+        this.url_imagen = url_imagen;
     }
 
-    public String getMail() {
-        return mail;
+    public String getCorreo() {
+        return correo;
     }
 
-    public void setMail(String mail) {
-        this.mail = mail;
+    public void setCorreo(String correo) {
+        this.correo = correo;
     }
 
     public Bitmap getImagen() {
@@ -64,6 +68,4 @@ class ClaseUsuario implements Serializable {
         this.imagen = imagen;
     }
 
-    private String mail;
-    private Bitmap imagen;
 }

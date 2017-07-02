@@ -91,13 +91,10 @@ public class MapFragment extends BaseFragment
         mView = inflater.inflate(R.layout.fragment_map, container, false);
 
         if(getArguments()!=null) {
-
-            ClaseUsuario usuarioActual = (ClaseUsuario) getArguments().getSerializable(CLASS_MESSAGE);
-//            claseEnvio.setId_usuario(usuarioActual.getId());//TODO:revisar cuando ingreso por primera vez (sin accessToken) usuarioActual = null
-//            claseEnvio.setUsuario(usuarioActual.getNombre()+" "+usuarioActual.getApellido());
+            User usuarioActual = UserProvider.get();
+            claseEnvio.setId_usuario(usuarioActual.getId());
+            claseEnvio.setUsuario(usuarioActual.getNombre()+" "+usuarioActual.getApellido());
         }
-
-
         return mView;
     }
 
@@ -120,12 +117,8 @@ public class MapFragment extends BaseFragment
 
                     @Override
                     public void onMapClick(LatLng point) {
-
-                        //lstLatLngs.add(point);
                         mMap.clear();
                         mMap.addMarker(new MarkerOptions().position(point).icon(BitmapDescriptorFactory.fromResource(R.drawable.new_marker)));
-//                        claseEnvio.setUbicacion(point); //Acá le seteo la ubicación al fragment de creación
-                       // mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom));
                         claseEnvio.setLatitud(point.latitude);
                         claseEnvio.setLongitud(point.longitude);
                     }
@@ -133,7 +126,6 @@ public class MapFragment extends BaseFragment
 
 
                 mMap.addMarker(new MarkerOptions().position(currentLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.new_marker)));
-         //       mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoom));
             }
         });
     }
@@ -190,14 +182,14 @@ public class MapFragment extends BaseFragment
 
     @Override
     public void onResume() {
-                super.onResume();
-                if (!firstTime){
-                //       firstTime = false;
-                //}
-                //else{
-                        gps.getLocation();
-                        this.setCurrentLocation();
-                }
+      super.onResume();
+      if (!firstTime){
+      //       firstTime = false;
+      //}
+      //else{
+              gps.getLocation();
+              this.setCurrentLocation();
+      }
     }
 
     @Override
@@ -283,7 +275,7 @@ public class MapFragment extends BaseFragment
         //Toast.makeText(getContext(),idPoint, Toast.LENGTH_LONG).show();
         claseEnvio.setId((String) marker.getTag());
         claseEnvio.setAccion(PointActions.CONSULTA);
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         consultarPunto(claseEnvio, fragmentManager);
     }
 

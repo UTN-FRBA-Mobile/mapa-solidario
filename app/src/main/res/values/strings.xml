@@ -9,13 +9,14 @@
     <string name="punto_confirmacion">Ubicación:</string>
     <string name="punto_volver">Volver</string>
     <string name="punto_avanzar">Guardar</string>
+    <string name="punto_borrar">Borrar</string>
     <string name="punto_ayudar">Ayudé</string>
     <string name="error_geolocalizacion">No se pudo obtener la dirección</string>
     <string-array name="tipos_array">
-            <item>Individuo</item>
-            <item>Heladera Solidaria</item>
-            <item>Ropero Solidario</item>
-            <item>Emergencia</item>
+        <item>Individuo</item>
+        <item>Heladera Solidaria</item>
+        <item>Ropero Solidario</item>
+        <item>Emergencia</item>
     </string-array>
 
     <string name="leyenda_infoWindow">Haga click aquí para conocer los detalles.</string>

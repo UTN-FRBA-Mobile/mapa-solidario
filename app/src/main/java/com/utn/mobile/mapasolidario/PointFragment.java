@@ -64,6 +64,7 @@ public class PointFragment extends BaseFragment
     @InjectView(R.id.editTitulo) private TextView titulo;
     @InjectView(R.id.fcancel_boton) private Button bcancelar;
     @InjectView(R.id.fcont_boton) private Button bcontinuar;
+    @InjectView(R.id.fborrar_boton) private Button bborrar;
     @InjectView(R.id.tipos_spinner) private Spinner spinner;
     @InjectView(R.id.fvencimiento) private EditText fechaVencimiento;
     @InjectView(R.id.fcreacion) private EditText fechacreacion;
@@ -124,6 +125,8 @@ public class PointFragment extends BaseFragment
         configurarLayout();
 
         accionBotonContinuar();
+        accionBotonBorrar();
+
         //accion botón cancelar
         bcancelar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -365,6 +368,8 @@ public class PointFragment extends BaseFragment
                 }
                 else {
                     if (claseEnvio.accion==PointActions.ALTA){
+                        claseEnvio.setId_usuario(UserProvider.get().getId());
+                        claseEnvio.setUsuario(UserProvider.get().getNombre()+" "+UserProvider.get().getApellido());
                         presenter.guardarPunto(getContext(),claseEnvio);
                     }
                     if (claseEnvio.accion==PointActions.MODIFICACION){
@@ -379,6 +384,20 @@ public class PointFragment extends BaseFragment
                 //              nuevoBackStack();
             }
         });
+    }
+
+    public void accionBotonBorrar(){
+        if (claseEnvio.accion==PointActions.MODIFICACION) {
+            bborrar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    presenter.borrarPunto(getContext(), claseEnvio._id);
+                }
+            });
+        }
+        else
+            bborrar.setVisibility(View.GONE);
+
     }
 
     public void nuevoBackStack(){

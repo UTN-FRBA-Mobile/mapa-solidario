@@ -3,11 +3,13 @@ package com.utn.mobile.mapasolidario;
 import android.content.Context;
 
 import com.utn.mobile.mapasolidario.dto.PuntoUpdate;
+import com.utn.mobile.mapasolidario.event.DeletePuntoSuccessEvent;
 import com.utn.mobile.mapasolidario.event.FetchPuntosFailedEvent;
 import com.utn.mobile.mapasolidario.event.GetPuntoSuccessEvent;
 import com.utn.mobile.mapasolidario.event.PostPuntoSuccessEvent;
 import com.utn.mobile.mapasolidario.event.PutAyudaSuccessEvent;
 import com.utn.mobile.mapasolidario.event.PutPuntoSuccessEvent;
+import com.utn.mobile.mapasolidario.task.DeletePuntoTask;
 import com.utn.mobile.mapasolidario.task.PutAyudaTask;
 import com.utn.mobile.mapasolidario.util.UiUtils;
 import com.utn.mobile.mapasolidario.task.GetPuntoTask;
@@ -47,6 +49,12 @@ public class PointFragmentPresenter extends BasePresenter<PointFragmentView>{
         }
     }
 
+    public void borrarPunto(Context context,String id){
+        view.showProgressDialog();
+        if (UiUtils.checkNetworkAvailable(context)) {
+            new DeletePuntoTask(context,id).execute();
+        }
+    }
 
     public void guardarPunto(Context context,BasePoint json){
         view.showProgressDialog();
@@ -91,6 +99,14 @@ public class PointFragmentPresenter extends BasePresenter<PointFragmentView>{
         if (event.getResultadoDTO() != null) {
             view.okPoint(event.getResultadoDTO());
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onDeletePuntoSuccessEvent(DeletePuntoSuccessEvent event) {
+        view.hideProgressDialog();
+       /* if (event.getResultadoDTO() != null) {
+            view.okPoint(event.getResultadoDTO());
+        }*/
     }
 
 }

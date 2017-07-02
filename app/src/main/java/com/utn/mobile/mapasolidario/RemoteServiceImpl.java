@@ -62,6 +62,41 @@ public class RemoteServiceImpl implements IRemoteService {
         return fetchPuntosResponseList;
     }
 
+    @Override
+    public List<PuntoResponse> fetchUserPointsService() {
+        List<PuntoResponse> fetchUserPointsResponseList = new ArrayList<PuntoResponse>();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://morning-peak-11897.herokuapp.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        MapaSolidarioRetrofitService service = retrofit.create(MapaSolidarioRetrofitService.class);
+        try {
+            Response<List<PuntoResponse>> puntosResponse = service.fetchUserPoints(UserProvider.get().getId()).execute();
+            fetchUserPointsResponseList = puntosResponse.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return fetchUserPointsResponseList;
+    }
+
+    @Override
+    public User getUserService(String id) {
+        User _user = new User();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://morning-peak-11897.herokuapp.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        MapaSolidarioRetrofitService service = retrofit.create(MapaSolidarioRetrofitService.class);
+        try {
+            Response<User> userResponse = service.getUser(id).execute();
+            _user = userResponse.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return _user;
+    }
 
     @Override
     public BasePoint getPuntoService(String id) {
@@ -79,6 +114,23 @@ public class RemoteServiceImpl implements IRemoteService {
         }
 
         return puntoDetalle;
+    }
+
+    @Override
+    public User saveUserService(User json) {
+        User _u = new User();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://morning-peak-11897.herokuapp.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        MapaSolidarioRetrofitService service = retrofit.create(MapaSolidarioRetrofitService.class);
+        try {
+            Response<User> userResponse = service.saveUser(json).execute();
+            _u = userResponse.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return _u;
     }
 
     @Override
@@ -127,6 +179,24 @@ public class RemoteServiceImpl implements IRemoteService {
         MapaSolidarioRetrofitService service = retrofit.create(MapaSolidarioRetrofitService.class);
         try {
             Response<BasePoint> puntosResponse = service.putAyuda(id).execute();
+            puntoDetalle = puntosResponse.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return puntoDetalle;
+    }
+
+    @Override
+    public BasePoint deletePuntoService(String id) {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://morning-peak-11897.herokuapp.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        MapaSolidarioRetrofitService service = retrofit.create(MapaSolidarioRetrofitService.class);
+        try {
+            Response<BasePoint> puntosResponse = service.deletePunto(id).execute();
             puntoDetalle = puntosResponse.body();
         } catch (IOException e) {
             e.printStackTrace();

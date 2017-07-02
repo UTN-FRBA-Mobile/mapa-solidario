@@ -6,24 +6,20 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.AccessToken;
 
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.inject.Inject;
+import com.utn.mobile.mapasolidario.dummy.DummyContent;
 import com.utn.mobile.mapasolidario.event.HideProgressDialogEvent;
 import com.utn.mobile.mapasolidario.event.ShowProgressDialogEvent;
+import com.utn.mobile.mapasolidario.login.LoginActivity;
+import com.utn.mobile.mapasolidario.user.UserFragment;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -32,7 +28,8 @@ public class MainActivity extends RoboFragmentActivity
         implements MapFragment.OnFragmentInteractionListener,
         NewsFragment.OnFragmentInteractionListener,
         UserFragment.OnFragmentInteractionListener,
-        PointFragment.OnFragmentInteractionListener{
+        PointFragment.OnFragmentInteractionListener,
+        PointListFragment.OnListFragmentInteractionListener{
 
     @Inject
     private ProgressDialog progressDialog;
@@ -40,7 +37,7 @@ public class MainActivity extends RoboFragmentActivity
     public static final String CLASS_MESSAGE = "mensaje.al.fragment";
     public static final String TAG = "MainActivity";
     private TextView mTextMessage;
-    private ClaseUsuario usuarioActual;
+    private User usuarioActual;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -48,7 +45,12 @@ public class MainActivity extends RoboFragmentActivity
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_map:{
+                case R.id.navigation_map:
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.content, new PointsFragment(), "Fragment")
+                            .commit();
+                    return true;
+                /*case R.id.navigation_map:{
                     Bundle args = new Bundle();
                     args.putSerializable(CLASS_MESSAGE,usuarioActual);
                     MapFragment fragment =  new MapFragment();
@@ -56,7 +58,7 @@ public class MainActivity extends RoboFragmentActivity
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.content, fragment, "Fragment")
                             .commit();}
-                    return true;
+                    return true;*/
                 case R.id.navigation_news:
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.content, new NewsFragment(), "Fragment")
@@ -64,7 +66,7 @@ public class MainActivity extends RoboFragmentActivity
                     return true;
                 case R.id.navigation_user:
                     getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.content, new UserFragment(usuarioActual), "Fragment")
+                            .replace(R.id.content, new UserFragment(), "Fragment")
                             .commit();
                     return true;
             }
@@ -80,7 +82,7 @@ public class MainActivity extends RoboFragmentActivity
 
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         Intent intent = getIntent();
-        usuarioActual = (ClaseUsuario)intent.getSerializableExtra("usuario");
+        usuarioActual = UserProvider.get();//(User)intent.getSerializableExtra("usuario");
 
         // Get Firebase token
         String token = FirebaseInstanceId.getInstance().getToken();
@@ -94,7 +96,7 @@ public class MainActivity extends RoboFragmentActivity
 
             Bundle args = new Bundle();
             args.putSerializable(CLASS_MESSAGE,usuarioActual);
-            MapFragment fragment =  new MapFragment();
+            PointsFragment fragment =  new PointsFragment();
             fragment.setArguments(args);
 
             getSupportFragmentManager().beginTransaction()
@@ -155,4 +157,8 @@ public class MainActivity extends RoboFragmentActivity
         }
     }
 
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+
+    }
 }

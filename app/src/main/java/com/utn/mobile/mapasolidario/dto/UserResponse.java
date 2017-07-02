@@ -4,20 +4,10 @@ package com.utn.mobile.mapasolidario.dto;
  * Created by juani on 04/06/17.
  */
 
-public class PuntoResponse {
+public class UserResponse {
 
     private String _id, titulo, descripcion, tipo;
     private double latitud, longitud;
-
-    private int contador;
-
-    public void setContador(int contador) {
-        this.contador = contador;
-    }
-
-    public int getContador() {
-        return contador;
-    }
 
     public String get_id() {
         return _id;

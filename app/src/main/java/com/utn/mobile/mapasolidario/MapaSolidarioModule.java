@@ -15,5 +15,6 @@ public class MapaSolidarioModule extends AbstractModule {
     protected void configure() {
         bind(ProgressDialog.class).toProvider(ProgressDialogProvider.class).in(Singleton.class);
         bind(IRemoteService.class).to(RemoteServiceImpl.class);
+
     }
 }
