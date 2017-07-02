@@ -382,15 +382,17 @@ public class PointFragment extends BaseFragment
     }
 
     public void accionBotonBorrar(){
-        bborrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        if (claseEnvio.accion==PointActions.MODIFICACION) {
+            bborrar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    presenter.borrarPunto(getContext(), claseEnvio._id);
+                }
+            });
+        }
+        else
+            bborrar.setVisibility(View.GONE);
 
-            if (claseEnvio.accion==PointActions.MODIFICACION){
-                presenter.borrarPunto(getContext(),claseEnvio._id);
-            }
-            }
-        });
     }
 
     public void nuevoBackStack(){
