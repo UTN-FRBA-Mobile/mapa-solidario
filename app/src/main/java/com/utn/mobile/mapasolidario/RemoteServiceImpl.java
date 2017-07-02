@@ -31,7 +31,6 @@ public class RemoteServiceImpl implements IRemoteService {
     @Override
     public List<NovedadResponse> fetchNewsService() {
         List<NovedadResponse> fetchNovedadResponseList = new ArrayList<NovedadResponse>();
-  //      MapaSolidarioRetrofitService retrofitService = null;
         MapaSolidarioRetrofitService service = getMapaSolidarioRetrofitService();
         try {
             Response<List<NovedadResponse>> newsResponse = service.fetchNews().execute();
@@ -46,7 +45,6 @@ public class RemoteServiceImpl implements IRemoteService {
     @Override
     public List<PuntoResponse> fetchPuntosService() {
         List<PuntoResponse> fetchPuntosResponseList = new ArrayList<PuntoResponse>();
-   //     MapaSolidarioRetrofitService retrofitService = null;
         MapaSolidarioRetrofitService service = getMapaSolidarioRetrofitService();
         try {
             Response<List<PuntoResponse>> puntosResponse = service.fetchPuntos().execute();

@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -95,18 +94,18 @@ public class NewsFragmentAdapter extends RecyclerView.Adapter<NewsFragmentAdapte
         }
 
         void bind(NovedadResponse novedad) {
-//            User user = findUser(novedad.getUser());
+//            User user = findUser(novedad.getUsuario());
 //            if (user != null) {
 //                ImageLoader.instance.loadImage(user.getProfile().getImage_24(), newsUserImg);
 //            }
-            newsTitle.setText(novedad.getTitle());
-            newsDescription.setText(novedad.getDescription());
-            newsID.setText(novedad.getId_point());
-            if (novedad.getExpires() != null) {
+            newsTitle.setText(novedad.getTitulo());
+            newsDescription.setText(novedad.getDescripcion());
+            newsID.setText(novedad.get_id());
+            if (novedad.getFechaVto() != null && !novedad.getFechaVto().isEmpty()) {
                 newsFragmentView.changeItemColor(itemView);
                 newsExpireDate.setVisibility(View.VISIBLE);
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                newsExpireDate.setText("Fecha de Finalizazión: " + sdf.format(novedad.getExpires()));
+                newsExpireDate.setText("Fecha de Finalizazión: " + novedad.getFechaVto());
             } else {
                 newsExpireDate.setVisibility(View.INVISIBLE);
             }

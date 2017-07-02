@@ -14,13 +14,9 @@ import android.view.ViewGroup;
 
 import com.google.inject.Inject;
 import com.utn.mobile.mapasolidario.dto.NovedadResponse;
-import com.utn.mobile.mapasolidario.event.HideProgressDialogEvent;
-import com.utn.mobile.mapasolidario.event.ShowProgressDialogEvent;
 import com.utn.mobile.mapasolidario.util.FetchNewsErrors;
 import com.utn.mobile.mapasolidario.util.PointActions;
 import com.utn.mobile.mapasolidario.util.Utils;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -47,7 +43,6 @@ public class NewsFragment extends BaseFragment implements NewsFragmentView {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         presenter.onCreate(this);
-//        presenter.fetchNews(getContext());
     }
 
     @Override
@@ -111,17 +106,6 @@ public class NewsFragment extends BaseFragment implements NewsFragmentView {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    @Override
-    public void showProgressDialog() {
-        progress = new ProgressDialog(getActivity());
-        EventBus.getDefault().post(new ShowProgressDialogEvent(progress));
-    }
-
-    @Override
-    public void hideProgressDialog() {
-        EventBus.getDefault().post(new HideProgressDialogEvent(progress));
     }
 
     @Override

@@ -8,55 +8,46 @@ import java.util.Date;
 
 public class NovedadResponse {
 
-    private String user, title, address, description, id_point;
-    private Date expires;
+    private String usuario, titulo, descripcion, _id;
+    private String fechaVto;
 
-    public String getId_point() {
-        return id_point;
+    public String get_id() {
+        return _id;
     }
 
-    public void setId_point(String punto) {
-        this.id_point = punto;
+    public void set_id(String punto) {
+        this._id = punto;
     }
 
-
-    public String getUser() {
-        return user;
+    public String getUsuario() {
+        return usuario;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
     }
 
-    public String getTitle() {
-        return title;
+    public String getTitulo() {
+        return titulo;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
     }
 
-    public String getAddress() {
-        return address;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
-    public String getDescription() {
-        return description;
+    public String getFechaVto() {
+        return fechaVto;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Date getExpires() {
-        return expires;
-    }
-
-    public void setExpires(Date expires) {
-        this.expires = expires;
+    public void setFechaVto(String fechaVto) {
+        this.fechaVto = fechaVto;
     }
 }

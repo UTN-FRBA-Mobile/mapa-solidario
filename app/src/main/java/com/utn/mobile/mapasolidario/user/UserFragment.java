@@ -48,7 +48,6 @@ public class UserFragment extends BaseFragment implements UserView {
 
     private OnFragmentInteractionListener mListener;
     private List<PuntoResponse> points;
-    private ProgressDialog progress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -136,17 +135,6 @@ public class UserFragment extends BaseFragment implements UserView {
         this.points = points;
         ((UserPointsAdapter) recyclerView.getAdapter()).updateData(points);
         hideProgressDialog();
-    }
-
-    @Override
-    public void showProgressDialog() {
-        progress = new ProgressDialog(getActivity());
-        EventBus.getDefault().post(new ShowProgressDialogEvent(progress));
-    }
-
-    @Override
-    public void hideProgressDialog() {
-        EventBus.getDefault().post(new HideProgressDialogEvent(progress));
     }
 
 }
