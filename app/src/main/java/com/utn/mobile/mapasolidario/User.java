@@ -19,6 +19,7 @@ public class User implements Serializable {
     private String url_imagen;
     private String correo;
     private Bitmap imagen;
+    private String puntuacion;
 
     public String getId() {
         return id;
@@ -68,4 +69,11 @@ public class User implements Serializable {
         this.imagen = imagen;
     }
 
+    public String getPuntuacion() {
+        return puntuacion;
+    }
+
+    public void setPuntuacion(String puntuacion) {
+        this.puntuacion = puntuacion;
+    }
 }

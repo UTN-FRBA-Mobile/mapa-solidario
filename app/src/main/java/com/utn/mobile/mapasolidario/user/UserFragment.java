@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,12 +18,10 @@ import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.login.widget.LoginButton;
-import com.google.inject.Inject;
 import com.squareup.picasso.Picasso;
 import com.utn.mobile.mapasolidario.BaseFragment;
 import com.utn.mobile.mapasolidario.MainActivity;
 import com.utn.mobile.mapasolidario.R;
-import com.utn.mobile.mapasolidario.User;
 import com.utn.mobile.mapasolidario.UserProvider;
 import com.utn.mobile.mapasolidario.dto.PuntoResponse;
 
@@ -100,6 +97,7 @@ public class UserFragment  extends BaseFragment implements UserView {
         ((TextView)view.findViewById(R.id.tv_apellido)).setText(UserProvider.get().getApellido());
         ((TextView)view.findViewById(R.id.tv_nombre)).setText(UserProvider.get().getNombre());
         ((TextView)view.findViewById(R.id.tv_email)).setText(UserProvider.get().getCorreo());
+        ((TextView)view.findViewById(R.id.tv_mis_puntos)).setText("Mis puntos: " + UserProvider.get().getPuntuacion());
         Picasso.with(this.getActivity()).load(UserProvider.get().getUrl_imagen()).fit().centerCrop().into((ImageView) view.findViewById(R.id.iv_usuario));
 
     }

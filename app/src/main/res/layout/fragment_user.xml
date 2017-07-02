@@ -88,19 +88,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/iv_usuario"
-            android:id="@+id/mis_puntos"
+            android:id="@+id/tv_mis_puntos"
             android:background="@color/colorPrimary"
             android:gravity="center_horizontal"
             android:padding="10dp"
             android:textColor="@color/white"
-            android:textSize="16dp"
-            android:text="Mis puntos"/>
+            android:textSize="16dp" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/user_points_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/mis_puntos"
+            android:layout_below="@id/tv_mis_puntos"
             android:scrollbars="vertical" />
     </RelativeLayout>
 </LinearLayout>
