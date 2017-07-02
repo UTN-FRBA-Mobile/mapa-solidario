@@ -35,12 +35,11 @@ import com.utn.mobile.mapasolidario.util.PointActions;
 
 import roboguice.inject.InjectView;
 
-
 import java.util.List;
-
 
 import static com.utn.mobile.mapasolidario.MainActivity.CLASS_MESSAGE;
 import static com.utn.mobile.mapasolidario.util.Utils.consultarPunto;
+
 
 
 public class MapFragment extends BaseFragment
@@ -77,17 +76,15 @@ public class MapFragment extends BaseFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         presenter.onCreate(this);
-        gps = new TrackGPS(getContext());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         mView = inflater.inflate(R.layout.fragment_map, container, false);
 
         if(getArguments()!=null) {
-
             User usuarioActual = UserProvider.get();
             claseEnvio.setId_usuario(usuarioActual.getId());
             claseEnvio.setUsuario(usuarioActual.getNombre()+" "+usuarioActual.getApellido());
@@ -180,6 +177,13 @@ public class MapFragment extends BaseFragment
     @Override
     public void onResume() {
         super.onResume();
+        if (firstTime){
+               firstTime = false;
+        }
+        else{
+                gps.getLocation();
+                this.setCurrentLocation();
+        }
     }
 
     @Override
@@ -195,7 +199,7 @@ public class MapFragment extends BaseFragment
         MapsInitializer.initialize(getContext());
 
         mMap = googleMap;
-
+        gps = new TrackGPS(getContext());
         currentLocation = new LatLng(-34.603748, -58.381533); //Obelisco
 
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
@@ -203,7 +207,7 @@ public class MapFragment extends BaseFragment
         mMap.getUiSettings().setZoomControlsEnabled(true);
 
 /*
-        // Custom InfoWindow
+        // Custom InfoWindow - No utilizada
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 
             // Use default InfoWindow frame
@@ -251,10 +255,8 @@ public class MapFragment extends BaseFragment
             }
         }
         // tengo los permisos, muestro la ubicación
-//        else
-  //      {
-            this.setCurrentLocation();
-      //  }
+
+        this.setCurrentLocation();
 
         mMap.setOnInfoWindowClickListener(this);
 
@@ -293,25 +295,17 @@ public class MapFragment extends BaseFragment
                     public void run() {
                         if(gps.canGetLocation()){
                             gps.getLocation();
-                            currentLocation = new LatLng(gps.getLatitude(), gps.getLongitude());
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoom));
                             if (ContextCompat.checkSelfPermission(getContext(),
                                     Manifest.permission.ACCESS_FINE_LOCATION)
                                     == PackageManager.PERMISSION_GRANTED) {
+                                currentLocation = new LatLng(gps.getLatitude(), gps.getLongitude());
                                 mMap.setMyLocationEnabled(true);
                             }
-                            else {
-                                Toast.makeText(getContext(), "Última ubicación conocida!", Toast.LENGTH_SHORT).show();
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoom));
-                            }
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoom));
                             gps.stopUsingGPS();
-
                         }
                         else{
-                            if (firstTime) {
-                                gps.showSettingsAlert();
-                                firstTime =false;
-                            }
+                            gps.showSettingsAlert();
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoom));
                         }
                         claseEnvio.setLatitud(currentLocation.latitude);

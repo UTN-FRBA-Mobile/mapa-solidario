@@ -33,8 +33,6 @@ public class LoginActivity extends RoboActivity implements  LoginView {
     private AccessToken accessToken;
     private AccessTokenTracker accessTokenTracker;
 
-    private final String TAG = "LoginActivity";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
