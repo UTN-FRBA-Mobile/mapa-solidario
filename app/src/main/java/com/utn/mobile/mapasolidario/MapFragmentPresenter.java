@@ -20,6 +20,8 @@ public class MapFragmentPresenter extends BasePresenter<MapFragmentView> {
         view.showProgressDialog();
         if (UiUtils.checkNetworkAvailable(context)) {
             new FetchPuntosTask(context).execute();
+        }else {
+            view.hideProgressDialog();
         }
 
     }
