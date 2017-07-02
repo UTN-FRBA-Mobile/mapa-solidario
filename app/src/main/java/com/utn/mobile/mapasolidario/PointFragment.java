@@ -1,6 +1,7 @@
 package com.utn.mobile.mapasolidario;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
@@ -33,9 +34,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.utn.mobile.mapasolidario.dto.PuntoUpdate;
+import com.utn.mobile.mapasolidario.event.HideProgressDialogEvent;
+import com.utn.mobile.mapasolidario.event.ShowProgressDialogEvent;
 import com.utn.mobile.mapasolidario.util.FetchPuntosErrors;
 import com.utn.mobile.mapasolidario.util.PointActions;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -72,6 +76,7 @@ public class PointFragment extends BaseFragment
 
     @Inject public BasePoint claseEnvio;
 
+    public ProgressDialog progress;
     private PointActions accion;
     static String PUNTO_MESSAGE = "mensaje.al.fragment";
     GoogleMap googleMap;
@@ -396,11 +401,14 @@ public class PointFragment extends BaseFragment
     @Override
     public void showProgressDialog() {
 
+        progress = new ProgressDialog(getActivity());
+        EventBus.getDefault().post(new ShowProgressDialogEvent(progress));
     }
 
     @Override
     public void hideProgressDialog() {
 
+        EventBus.getDefault().post(new HideProgressDialogEvent(progress));
     }
 
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

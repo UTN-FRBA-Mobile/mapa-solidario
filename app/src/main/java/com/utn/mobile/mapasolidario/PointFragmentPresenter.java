@@ -27,7 +27,10 @@ public class PointFragmentPresenter extends BasePresenter<PointFragmentView>{
         view.showProgressDialog();
         if (UiUtils.checkNetworkAvailable(context)) {
             new GetPuntoTask(context,id).execute();
+        }else {
+            view.hideProgressDialog();
         }
+
     }
 
     public void actualizarPunto(Context context,String id, PuntoUpdate json){

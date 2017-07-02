@@ -20,6 +20,8 @@ class NewsFragmentPresenter extends BasePresenter<NewsFragmentView> {
         view.showProgressDialog();
         if (UiUtils.checkNetworkAvailable(context)) {
             new FetchNewsTask(context).execute();
+        }else {
+            view.hideProgressDialog();
         }
     }
 

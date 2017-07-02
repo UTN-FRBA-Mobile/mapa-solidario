@@ -1,9 +1,11 @@
 package com.utn.mobile.mapasolidario;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import com.utn.mobile.mapasolidario.dto.NovedadResponse;
 import com.utn.mobile.mapasolidario.event.HideProgressDialogEvent;
 import com.utn.mobile.mapasolidario.event.ShowProgressDialogEvent;
 import com.utn.mobile.mapasolidario.util.FetchNewsErrors;
+import com.utn.mobile.mapasolidario.util.PointActions;
 import com.utn.mobile.mapasolidario.util.Utils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -23,8 +26,11 @@ import java.util.List;
 
 import roboguice.inject.InjectView;
 
+import static com.utn.mobile.mapasolidario.util.Utils.consultarPunto;
+
 public class NewsFragment extends BaseFragment implements NewsFragmentView {
     private OnFragmentInteractionListener mListener;
+    public ProgressDialog progress;
 
     @InjectView(R.id.newsRecyclerView)
     private RecyclerView recyclerView;
@@ -40,7 +46,7 @@ public class NewsFragment extends BaseFragment implements NewsFragmentView {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         presenter.onCreate(this);
-        presenter.fetchNews(getContext());
+//        presenter.fetchNews(getContext());
     }
 
     @Override
@@ -50,7 +56,6 @@ public class NewsFragment extends BaseFragment implements NewsFragmentView {
         return inflater.inflate(R.layout.fragment_news, container, false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -58,11 +63,34 @@ public class NewsFragment extends BaseFragment implements NewsFragmentView {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        presenter.fetchNews(getContext());
+
+    }
+
+
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        recyclerView.setAdapter(new NewsFragmentAdapter(getContext(), this));
+
+        NewsFragmentAdapter projectAdapter = new NewsFragmentAdapter(getContext(), this);
+        recyclerView.setAdapter(projectAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        projectAdapter.SetOnItemClickListener(new NewsFragmentAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position, String id) {
+//                System.out.println("onItemClick" + id);
+                BasePoint claseEnvio = new BasePoint();
+                claseEnvio.setId(id);
+                claseEnvio.setAccion(PointActions.CONSULTA);
+                FragmentManager fragmentManager = getFragmentManager();
+                consultarPunto(claseEnvio, fragmentManager);
+            }
+        });
     }
+
 
     @Override
     public void onAttach(Context context) {
@@ -85,14 +113,18 @@ public class NewsFragment extends BaseFragment implements NewsFragmentView {
         mListener = null;
     }
 
+
     @Override
     public void showProgressDialog() {
-        EventBus.getDefault().post(new ShowProgressDialogEvent());
+
+        progress = new ProgressDialog(getActivity());
+       EventBus.getDefault().post(new ShowProgressDialogEvent(progress));
     }
 
     @Override
     public void hideProgressDialog() {
-        EventBus.getDefault().post(new HideProgressDialogEvent());
+
+        EventBus.getDefault().post(new HideProgressDialogEvent(progress));
     }
 
     @Override

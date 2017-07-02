@@ -1,6 +1,7 @@
 package com.utn.mobile.mapasolidario;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -30,8 +31,12 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.inject.Inject;
 import com.utn.mobile.mapasolidario.dto.PuntoResponse;
+import com.utn.mobile.mapasolidario.event.HideProgressDialogEvent;
+import com.utn.mobile.mapasolidario.event.ShowProgressDialogEvent;
 import com.utn.mobile.mapasolidario.util.FetchPuntosErrors;
 import com.utn.mobile.mapasolidario.util.PointActions;
+
+import org.greenrobot.eventbus.EventBus;
 
 import roboguice.inject.InjectView;
 
@@ -52,6 +57,7 @@ public class MapFragment extends BaseFragment
     LatLng currentLocation;
     BasePoint claseEnvio = new BasePoint();
     boolean firstTime = true;
+    public ProgressDialog progress;
 
     //asigno tag a cada marker del mapa
     Marker mAux;
@@ -87,8 +93,8 @@ public class MapFragment extends BaseFragment
         if(getArguments()!=null) {
 
             ClaseUsuario usuarioActual = (ClaseUsuario) getArguments().getSerializable(CLASS_MESSAGE);
-            claseEnvio.setId_usuario(usuarioActual.getId());//TODO:revisar cuando ingreso por primera vez (sin accessToken) usuarioActual = null
-            claseEnvio.setUsuario(usuarioActual.getNombre()+" "+usuarioActual.getApellido());
+//            claseEnvio.setId_usuario(usuarioActual.getId());//TODO:revisar cuando ingreso por primera vez (sin accessToken) usuarioActual = null
+//            claseEnvio.setUsuario(usuarioActual.getNombre()+" "+usuarioActual.getApellido());
         }
 
 
@@ -185,10 +191,10 @@ public class MapFragment extends BaseFragment
     @Override
     public void onResume() {
                 super.onResume();
-                if (firstTime){
-                       firstTime = false;
-                }
-                else{
+                if (!firstTime){
+                //       firstTime = false;
+                //}
+                //else{
                         gps.getLocation();
                         this.setCurrentLocation();
                 }
@@ -313,7 +319,10 @@ public class MapFragment extends BaseFragment
                             gps.stopUsingGPS();
                         }
                         else{
-                            gps.showSettingsAlert();
+                            if (firstTime){
+                                firstTime = false;
+                                gps.showSettingsAlert();
+                            }
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoom));
                         }
                         claseEnvio.setLatitud(currentLocation.latitude);
@@ -345,11 +354,14 @@ public class MapFragment extends BaseFragment
     @Override
     public void showProgressDialog() {
 
+        progress = new ProgressDialog(getActivity());
+        EventBus.getDefault().post(new ShowProgressDialogEvent(progress));
     }
 
     @Override
     public void hideProgressDialog() {
 
+        EventBus.getDefault().post(new HideProgressDialogEvent(progress));
     }
 
     @Override
