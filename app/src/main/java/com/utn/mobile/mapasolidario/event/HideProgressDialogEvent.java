@@ -15,7 +15,6 @@ public class HideProgressDialogEvent {
 
     public HideProgressDialogEvent (ProgressDialog progress){
         progress.dismiss();
-
     }
 
 }

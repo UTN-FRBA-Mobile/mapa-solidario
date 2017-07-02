@@ -30,13 +30,14 @@ import static com.utn.mobile.mapasolidario.util.Utils.consultarPunto;
 
 public class NewsFragment extends BaseFragment implements NewsFragmentView {
     private OnFragmentInteractionListener mListener;
-    public ProgressDialog progress;
 
     @InjectView(R.id.newsRecyclerView)
     private RecyclerView recyclerView;
 
     @Inject
     private NewsFragmentPresenter presenter;
+
+    private ProgressDialog progress;
 
     public NewsFragment() {
         // Required empty public constructor
@@ -68,7 +69,6 @@ public class NewsFragment extends BaseFragment implements NewsFragmentView {
         presenter.fetchNews(getContext());
 
     }
-
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -113,17 +113,14 @@ public class NewsFragment extends BaseFragment implements NewsFragmentView {
         mListener = null;
     }
 
-
     @Override
     public void showProgressDialog() {
-
         progress = new ProgressDialog(getActivity());
-       EventBus.getDefault().post(new ShowProgressDialogEvent(progress));
+        EventBus.getDefault().post(new ShowProgressDialogEvent(progress));
     }
 
     @Override
     public void hideProgressDialog() {
-
         EventBus.getDefault().post(new HideProgressDialogEvent(progress));
     }
 
