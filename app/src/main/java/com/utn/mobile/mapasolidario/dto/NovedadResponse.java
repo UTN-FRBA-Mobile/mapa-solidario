@@ -8,8 +8,17 @@ import java.util.Date;
 
 public class NovedadResponse {
 
-    private String user, title, address, description;
+    private String user, title, address, description, id_point;
     private Date expires;
+
+    public String getId_point() {
+        return id_point;
+    }
+
+    public void setId_point(String punto) {
+        this.id_point = punto;
+    }
+
 
     public String getUser() {
         return user;

@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,6 +24,7 @@ public class NewsFragmentAdapter extends RecyclerView.Adapter<NewsFragmentAdapte
     private final NewsFragmentView newsFragmentView;
     private LayoutInflater layoutInflater;
     private List<NovedadResponse> news = new ArrayList<>();
+    OnItemClickListener mItemClickListener;
 
     public NewsFragmentAdapter(Context context, NewsFragmentView newsFragmentView) {
         layoutInflater = LayoutInflater.from(context);
@@ -33,6 +35,14 @@ public class NewsFragmentAdapter extends RecyclerView.Adapter<NewsFragmentAdapte
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = layoutInflater.inflate(R.layout.fragment_news_item, parent, false);
         return new ViewHolder(view);
+    }
+
+    public interface OnItemClickListener {
+        public void onItemClick(View view, int position, String id);
+    }
+
+    public void SetOnItemClickListener(final OnItemClickListener mItemClickListener) {
+        this.mItemClickListener = mItemClickListener;
     }
 
     @Override
@@ -56,13 +66,14 @@ public class NewsFragmentAdapter extends RecyclerView.Adapter<NewsFragmentAdapte
         notifyItemRemoved(position);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private ImageView newsUserImg;
         private TextView newsTitle;
         private TextView newsDescription;
         private TextView newsExpireDate;
         private View relativeLayout;
+        TextView newsID;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -71,7 +82,16 @@ public class NewsFragmentAdapter extends RecyclerView.Adapter<NewsFragmentAdapte
             newsDescription = (TextView) itemView.findViewById(R.id.txt_newsDescription);
             newsExpireDate = (TextView) itemView.findViewById(R.id.txt_newsExpireDate);
             relativeLayout = (View) itemView.findViewById(R.id.lay_newsIsImportant);
+            newsID = (TextView) itemView.findViewById(R.id.txt_newsID);
+            itemView.setOnClickListener(this);
+        }
 
+
+        @Override
+        public void onClick(View v) {
+            System.out.println("onClick");
+            String id = newsID.getText().toString();
+            mItemClickListener.onItemClick(v, getAdapterPosition(), id); //OnItemClickListener mItemClickListener;
         }
 
         void bind(NovedadResponse novedad) {
@@ -81,6 +101,7 @@ public class NewsFragmentAdapter extends RecyclerView.Adapter<NewsFragmentAdapte
 //            }
             newsTitle.setText(novedad.getTitle());
             newsDescription.setText(novedad.getDescription());
+            newsID.setText(novedad.getId_point());
             if (novedad.getExpires() != null) {
                 newsFragmentView.changeItemColor(itemView);
                 newsExpireDate.setVisibility(View.VISIBLE);
