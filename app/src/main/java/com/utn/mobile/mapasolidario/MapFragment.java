@@ -279,7 +279,7 @@ public class MapFragment extends BaseFragment
         //Toast.makeText(getContext(),idPoint, Toast.LENGTH_LONG).show();
         claseEnvio.setId((String) marker.getTag());
         claseEnvio.setAccion(PointActions.CONSULTA);
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         consultarPunto(claseEnvio, fragmentManager);
     }
 
