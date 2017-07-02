@@ -1,5 +1,6 @@
 package com.utn.mobile.mapasolidario.user;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -27,6 +28,7 @@ import com.utn.mobile.mapasolidario.R;
 import com.utn.mobile.mapasolidario.User;
 import com.utn.mobile.mapasolidario.UserProvider;
 import com.utn.mobile.mapasolidario.dto.PuntoResponse;
+import com.utn.mobile.mapasolidario.login.LoginActivity;
 
 import java.util.List;
 
@@ -39,6 +41,7 @@ public class UserFragment  extends BaseFragment implements UserView {
     private AccessToken accessToken;
     private AccessTokenTracker accessTokenTracker;
     private final String TAG = "UserFragment";
+    public MainActivity mActivity = null;
 
     private UserPresenter presenter;
     @InjectView(R.id.user_points_recyclerview)
@@ -61,9 +64,7 @@ public class UserFragment  extends BaseFragment implements UserView {
                     AccessToken currentAccessToken) {
                 if (currentAccessToken == null) {
                     Log.d(TAG, "Logout");
-                    Intent intent = new Intent(getActivity() , MainActivity.class);
-                    startActivity(intent);
-                    getActivity().finish();
+                    mActivity.navigateToLogin();
                 }
             }
         };
@@ -113,6 +114,12 @@ public class UserFragment  extends BaseFragment implements UserView {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mActivity = (MainActivity) activity;
     }
 
     @Override
