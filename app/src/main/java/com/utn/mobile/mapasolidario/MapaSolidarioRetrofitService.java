@@ -9,6 +9,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
@@ -47,6 +48,9 @@ public interface MapaSolidarioRetrofitService {
     @Headers({"Accept: application/json"})
     @PUT("points/actualizarPunto/{id}")
     Call<BasePoint> putPunto(@Path("id") String id, @Body PuntoUpdate json);
+
+    @DELETE("points/{id}")
+    Call<BasePoint> deletePunto(@Path("id") String id);
 
     @Headers({"Content-Type: application/json"})
     @PUT("points/incrementarContador/{id}")

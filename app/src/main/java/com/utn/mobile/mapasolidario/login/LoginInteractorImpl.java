@@ -43,7 +43,7 @@ public class LoginInteractorImpl implements LoginInteractor {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onGetUserSuccessEvent(GetUserSuccessEvent event) {
         User _user = event.getResultadoDTO();
-        if(_user.getId() == null)
+        if(_user != null && _user.getId() == null)
             listener.onUserNotExists();
         else
             listener.onUserExists(_user);

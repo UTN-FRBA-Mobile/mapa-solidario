@@ -60,6 +60,7 @@ public class PointFragment extends BaseFragment
     @InjectView(R.id.editTitulo) private TextView titulo;
     @InjectView(R.id.fcancel_boton) private Button bcancelar;
     @InjectView(R.id.fcont_boton) private Button bcontinuar;
+    @InjectView(R.id.fborrar_boton) private Button bborrar;
     @InjectView(R.id.tipos_spinner) private Spinner spinner;
     @InjectView(R.id.fvencimiento) private EditText fechaVencimiento;
     @InjectView(R.id.fcreacion) private EditText fechacreacion;
@@ -119,6 +120,8 @@ public class PointFragment extends BaseFragment
         configurarLayout();
 
         accionBotonContinuar();
+        accionBotonBorrar();
+
         //accion botón cancelar
         bcancelar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -372,6 +375,18 @@ public class PointFragment extends BaseFragment
 
 
                 //              nuevoBackStack();
+            }
+        });
+    }
+
+    public void accionBotonBorrar(){
+        bborrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            if (claseEnvio.accion==PointActions.MODIFICACION){
+                presenter.borrarPunto(getContext(),claseEnvio._id);
+            }
             }
         });
     }
