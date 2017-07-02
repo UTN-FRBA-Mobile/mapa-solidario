@@ -363,6 +363,8 @@ public class PointFragment extends BaseFragment
                 }
                 else {
                     if (claseEnvio.accion==PointActions.ALTA){
+                        claseEnvio.setId_usuario(UserProvider.get().getId());
+                        claseEnvio.setUsuario(UserProvider.get().getNombre()+" "+UserProvider.get().getApellido());
                         presenter.guardarPunto(getContext(),claseEnvio);
                     }
                     if (claseEnvio.accion==PointActions.MODIFICACION){
