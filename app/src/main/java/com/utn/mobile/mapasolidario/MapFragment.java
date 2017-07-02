@@ -114,12 +114,8 @@ public class MapFragment extends BaseFragment
 
                     @Override
                     public void onMapClick(LatLng point) {
-
-                        //lstLatLngs.add(point);
                         mMap.clear();
                         mMap.addMarker(new MarkerOptions().position(point).icon(BitmapDescriptorFactory.fromResource(R.drawable.new_marker)));
-//                        claseEnvio.setUbicacion(point); //Acá le seteo la ubicación al fragment de creación
-                       // mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom));
                         claseEnvio.setLatitud(point.latitude);
                         claseEnvio.setLongitud(point.longitude);
                     }
@@ -127,7 +123,6 @@ public class MapFragment extends BaseFragment
 
 
                 mMap.addMarker(new MarkerOptions().position(currentLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.new_marker)));
-         //       mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoom));
             }
         });
     }
@@ -185,13 +180,6 @@ public class MapFragment extends BaseFragment
     @Override
     public void onResume() {
         super.onResume();
-//        if (firstTime){
- //           firstTime = false;
-   //     }
-     //   else{
-//            gps.getLocation();
-//            this.setCurrentLocation();
-//        }
     }
 
     @Override

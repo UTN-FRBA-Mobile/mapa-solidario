@@ -1,5 +1,6 @@
 package com.utn.mobile.mapasolidario;
 
+import android.graphics.Point;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.utn.mobile.mapasolidario.PointListFragment.OnListFragmentInteractionListener;
+import com.utn.mobile.mapasolidario.dto.PuntoResponse;
 import com.utn.mobile.mapasolidario.dummy.DummyContent.DummyItem;
 
 import java.util.List;
@@ -18,12 +20,10 @@ import java.util.List;
  */
 public class PointItemRecyclerViewAdapter extends RecyclerView.Adapter<PointItemRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
-    private final OnListFragmentInteractionListener mListener;
+    private final List<PuntoResponse> mValues;
 
-    public PointItemRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public PointItemRecyclerViewAdapter(List<PuntoResponse> items, OnListFragmentInteractionListener listener) {
         mValues = items;
-        mListener = listener;
     }
 
     @Override
@@ -36,17 +36,13 @@ public class PointItemRecyclerViewAdapter extends RecyclerView.Adapter<PointItem
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mIdView.setText(mValues.get(position).get_id());
+        holder.mContentView.setText(mValues.get(position).getDescripcion());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
-                }
+
             }
         });
     }
@@ -60,7 +56,7 @@ public class PointItemRecyclerViewAdapter extends RecyclerView.Adapter<PointItem
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public DummyItem mItem;
+        public PuntoResponse mItem;
 
         public ViewHolder(View view) {
             super(view);

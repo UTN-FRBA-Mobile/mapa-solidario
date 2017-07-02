@@ -69,7 +69,7 @@ public class PointListFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new PointItemRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            recyclerView.setAdapter(new PointItemRecyclerViewAdapter(PointListProvider.get(), mListener));
         }
         return view;
     }
