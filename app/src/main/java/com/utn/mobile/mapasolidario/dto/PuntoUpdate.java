@@ -20,9 +20,9 @@ public class PuntoUpdate
     String tipo = "";
     String id_usuario = "";
     String usuario = "";
-    Date fechaCreacion = new Date();
+    String fechaCreacion = "";
     String fechaVto = "01/01/2001";
-    Date fechaModificacion =  new Date();
+    String fechaModificacion =  "";
     PointActions accion = PointActions.CONSULTA;
     int contador = 0;
 
@@ -47,26 +47,26 @@ public class PuntoUpdate
     public void setLongitud (Double lat){longitud = lat;}
     public void setContador (int puntos2) {contador = puntos2;}
     public void setAccion (PointActions valor){ accion = valor; }
-    public void setFechaModificacion (Date fecha){ fechaModificacion = fecha;}
+    public void setFechaModificacion (String fecha){ fechaModificacion = fecha;}
     public void setTipo (String newtipo){   tipo = newtipo;}
     public void setTitulo (String newtitulo) {titulo = newtitulo;}
     public void setDescripcion (String newdescripcion ){descripcion = newdescripcion;}
     public void setUsuario (String user){usuario = user;}
     public void setId_usuario (String iden){ id_usuario = iden; }
-    public void setFechaCreacion (Date fecha){ fechaCreacion = fecha;}
+    public void setFechaCreacion (String fecha){ fechaCreacion = fecha;}
     public void setFechaVto(String fecha){ fechaVto = fecha;}
 
     public Double getLatitud (){ return this.latitud;}
     public Double getLongitud ( ){ return this.longitud;}
     public int getContador () {return this.contador;}
     public PointActions getAccion ( ){ return this.accion; }
-    public Date getFechaModificacion (){ return this.fechaModificacion;}
+    public String getFechaModificacion (){ return this.fechaModificacion;}
     public String getTipo (){ return this.tipo;}
     public String getTitulo () {return this.titulo;}
     public String getDescripcion ( ){ return this.descripcion;}
     public String getUsuario (){ return this.usuario;}
     public String getId_usuario (){ return this.id_usuario; }
-    public Date getFechaCreacion (){ return this.fechaCreacion;}
+    public String getFechaCreacion (){ return this.fechaCreacion;}
     public String getFechaVto(){ return this.fechaVto;}
 
 

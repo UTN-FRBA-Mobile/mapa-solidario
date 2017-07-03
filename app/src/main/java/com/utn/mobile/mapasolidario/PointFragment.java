@@ -358,11 +358,13 @@ public class PointFragment extends BaseFragment
                 if (claseEnvio.accion == PointActions.CONSULTA) {
                     claseEnvio.setContador(claseEnvio.contador + 1);//sumo un punto cada vez que tocan el botón
                 } else {
-                    claseEnvio.setFechaModificacion(new Date());
+//                    claseEnvio.setFechaModificacion(new Date());
                     claseEnvio.setDescripcion(descripcion.getText().toString());
                     claseEnvio.setTitulo(titulo.getText().toString());
                     if (vswitch.isChecked() == true) {
-                        claseEnvio.setFechaVto(fechaVencimiento.getText().toString());
+                        String fecha = fechaVencimiento.getText().toString();
+                      //            fechacreacion.setText(convertirFecha(claseEnvio.fechaCreacion));
+                         claseEnvio.setFechaVto(fecha.substring(6,10)+fecha.substring(3,5)+fecha.substring(0,2)+"000000");
                     }
                 }
 
@@ -424,7 +426,7 @@ public class PointFragment extends BaseFragment
             fechaVencimiento.setVisibility(View.VISIBLE);
         } else {
             fechaVencimiento.setVisibility(View.GONE);
-            claseEnvio.setFechaVto("01/01/2001");
+            claseEnvio.setFechaVto("20010101000000");
         }
     }
 
@@ -459,7 +461,7 @@ public class PointFragment extends BaseFragment
 
             titulo.setText(claseEnvio.titulo);
 
-            if (claseEnvio.fechaVto == "01/01/2001" || claseEnvio.fechaVto == "") {
+            if (claseEnvio.fechaVto == "20010101000000" || claseEnvio.fechaVto == "") {
                 if (accion == PointActions.MODIFICACION) {
                     vswitch.setChecked(false);
                 } else {
@@ -467,7 +469,7 @@ public class PointFragment extends BaseFragment
                 }
             } else {
                 fechaVencimiento.setVisibility(View.VISIBLE);
-                fechaVencimiento.setText(claseEnvio.fechaVto);
+                fechaVencimiento.setText(convertirFecha(claseEnvio.fechaVto));
                 if (accion == PointActions.MODIFICACION) {
                     vswitch.setChecked(true);
                 }
@@ -475,8 +477,10 @@ public class PointFragment extends BaseFragment
             descripcion.setText(claseEnvio.descripcion);
 
             //Mostrarlo en el text view
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
-            fechacreacion.setText(sdf.format(claseEnvio.fechaCreacion.getTime()));
+//            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+//            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmss", Locale.US);
+//            fechacreacion.setText(sdf.format(claseEnvio.fechaCreacion));
+            fechacreacion.setText(convertirFecha(claseEnvio.fechaCreacion));
 
             ayudas.setText(String.valueOf(claseEnvio.contador));
 
@@ -484,6 +488,13 @@ public class PointFragment extends BaseFragment
         } else {
             Toast.makeText(getContext(), "Error al obtener los datos", Toast.LENGTH_LONG).show();
         }
+    }
+
+
+    public String convertirFecha (String fecha){
+        String fechaBonita = "";
+        fechaBonita = fecha.substring(6,8)+"/"+fecha.substring(4,6)+"/"+fecha.substring(0,4);
+        return fechaBonita;
     }
 
     @Override

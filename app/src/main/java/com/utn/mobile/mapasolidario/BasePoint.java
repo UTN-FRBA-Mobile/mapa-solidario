@@ -3,7 +3,9 @@ package com.utn.mobile.mapasolidario;
 import com.utn.mobile.mapasolidario.util.PointActions;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by dany on 25/05/2017.
@@ -20,13 +22,16 @@ public class BasePoint
     String tipo = "";
     String id_usuario = "";
     String usuario = "";
-    Date fechaCreacion = new Date();
-    String fechaVto = "01/01/2001";
-    Date fechaModificacion = new Date();
+    String fechaCreacion = "";
+    String fechaVto = "20010101000000";
+    String fechaModificacion = "";
     PointActions accion = PointActions.CONSULTA;
     int contador = 0;
 
     public BasePoint() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmss", Locale.US);
+        fechaCreacion = sdf.format(new Date());
+        fechaModificacion = sdf.format(new Date());
     }
 
     public void setLatitud(Double lat) {
@@ -49,7 +54,7 @@ public class BasePoint
         accion = valor;
     }
 
-    public void setFechaModificacion(Date fecha) {
+    public void setFechaModificacion(String fecha) {
         fechaModificacion = fecha;
     }
 
@@ -73,7 +78,7 @@ public class BasePoint
         id_usuario = iden;
     }
 
-    public void setFechaCreacion(Date fecha) {
+    public void setFechaCreacion(String fecha) {
         fechaCreacion = fecha;
     }
 
@@ -101,7 +106,7 @@ public class BasePoint
         return this.accion;
     }
 
-    public Date getFechaModificacion() {
+    public String getFechaModificacion() {
         return this.fechaModificacion;
     }
 
@@ -125,7 +130,7 @@ public class BasePoint
         return this.id_usuario;
     }
 
-    public Date getFechaCreacion() {
+    public String getFechaCreacion() {
         return this.fechaCreacion;
     }
 
