@@ -47,7 +47,7 @@ public class MainActivity extends RoboFragmentActivity
             switch (item.getItemId()) {
                 case R.id.navigation_map:
                     getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.content, new PointsFragment(), "Fragment")
+                            .replace(R.id.content, new MapFragment(), "Fragment")
                             .commit();
                     return true;
                 /*case R.id.navigation_map:{
@@ -96,7 +96,7 @@ public class MainActivity extends RoboFragmentActivity
 
             Bundle args = new Bundle();
             args.putSerializable(CLASS_MESSAGE, usuarioActual);
-            PointsFragment fragment = new PointsFragment();
+            MapFragment fragment = new MapFragment();
             fragment.setArguments(args);
 
             getSupportFragmentManager().beginTransaction()
