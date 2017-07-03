@@ -68,13 +68,11 @@ public class Utils {
     }
 
     public static void  consultarPunto(BasePoint claseEnvio,FragmentManager fragmentManager){
-
         Fragment fragment = new PointFragment();
         Bundle args = new Bundle();
         String PUNTO_MESSAGE = "mensaje.al.fragment";
         args.putSerializable(PUNTO_MESSAGE,claseEnvio);
         fragment.setArguments(args);
-
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.content, fragment, "Fragment");
         fragmentTransaction.addToBackStack(null);

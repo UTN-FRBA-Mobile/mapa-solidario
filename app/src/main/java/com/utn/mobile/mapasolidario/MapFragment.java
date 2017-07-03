@@ -1,7 +1,6 @@
 package com.utn.mobile.mapasolidario;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -21,31 +20,23 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.inject.Inject;
 import com.utn.mobile.mapasolidario.dto.PuntoResponse;
-import com.utn.mobile.mapasolidario.event.HideProgressDialogEvent;
-import com.utn.mobile.mapasolidario.event.ShowProgressDialogEvent;
 import com.utn.mobile.mapasolidario.util.FetchPuntosErrors;
 import com.utn.mobile.mapasolidario.util.PointActions;
 
-import org.greenrobot.eventbus.EventBus;
+import java.util.List;
 
 import roboguice.inject.InjectView;
 
-import java.util.List;
-
-import static com.utn.mobile.mapasolidario.MainActivity.CLASS_MESSAGE;
 import static com.utn.mobile.mapasolidario.util.Utils.consultarPunto;
-
-
 
 public class MapFragment extends BaseFragment
         implements OnMapReadyCallback, View.OnClickListener, GoogleMap.OnInfoWindowClickListener, MapFragmentView{
@@ -57,7 +48,6 @@ public class MapFragment extends BaseFragment
     LatLng currentLocation;
     BasePoint claseEnvio = new BasePoint();
     boolean firstTime = true;
-    public ProgressDialog progress;
 
     //asigno tag a cada marker del mapa
     Marker mAux;
@@ -341,19 +331,6 @@ public class MapFragment extends BaseFragment
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    @Override
-    public void showProgressDialog() {
-
-        progress = new ProgressDialog(getActivity());
-        EventBus.getDefault().post(new ShowProgressDialogEvent(progress));
-    }
-
-    @Override
-    public void hideProgressDialog() {
-
-        EventBus.getDefault().post(new HideProgressDialogEvent(progress));
     }
 
     @Override

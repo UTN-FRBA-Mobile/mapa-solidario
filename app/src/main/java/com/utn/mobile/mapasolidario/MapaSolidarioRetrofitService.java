@@ -7,7 +7,6 @@ import com.utn.mobile.mapasolidario.dto.PuntoUpdate;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;

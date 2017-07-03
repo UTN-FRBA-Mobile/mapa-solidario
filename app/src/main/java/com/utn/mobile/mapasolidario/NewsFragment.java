@@ -14,13 +14,9 @@ import android.view.ViewGroup;
 
 import com.google.inject.Inject;
 import com.utn.mobile.mapasolidario.dto.NovedadResponse;
-import com.utn.mobile.mapasolidario.event.HideProgressDialogEvent;
-import com.utn.mobile.mapasolidario.event.ShowProgressDialogEvent;
 import com.utn.mobile.mapasolidario.util.FetchNewsErrors;
 import com.utn.mobile.mapasolidario.util.PointActions;
 import com.utn.mobile.mapasolidario.util.Utils;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -30,13 +26,14 @@ import static com.utn.mobile.mapasolidario.util.Utils.consultarPunto;
 
 public class NewsFragment extends BaseFragment implements NewsFragmentView {
     private OnFragmentInteractionListener mListener;
-    public ProgressDialog progress;
 
     @InjectView(R.id.newsRecyclerView)
     private RecyclerView recyclerView;
 
     @Inject
     private NewsFragmentPresenter presenter;
+
+    private ProgressDialog progress;
 
     public NewsFragment() {
         // Required empty public constructor
@@ -46,7 +43,6 @@ public class NewsFragment extends BaseFragment implements NewsFragmentView {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         presenter.onCreate(this);
-//        presenter.fetchNews(getContext());
     }
 
     @Override
@@ -68,7 +64,6 @@ public class NewsFragment extends BaseFragment implements NewsFragmentView {
         presenter.fetchNews(getContext());
 
     }
-
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -113,20 +108,6 @@ public class NewsFragment extends BaseFragment implements NewsFragmentView {
         mListener = null;
     }
 
-
-    @Override
-    public void showProgressDialog() {
-
-        progress = new ProgressDialog(getActivity());
-       EventBus.getDefault().post(new ShowProgressDialogEvent(progress));
-    }
-
-    @Override
-    public void hideProgressDialog() {
-
-        EventBus.getDefault().post(new HideProgressDialogEvent(progress));
-    }
-
     @Override
     public void showMessageError(FetchNewsErrors error) {
         String msjError = "";
@@ -143,6 +124,7 @@ public class NewsFragment extends BaseFragment implements NewsFragmentView {
                 msjError = getString(R.string.sin_comunicacion);
                 break;
         }
+        Utils.createMessageDialog(this.getContext(), title, msjError, R.drawable.ic_notifications_black_24dp);
     }
 
     @Override

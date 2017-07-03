@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.facebook.AccessToken;
-
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.inject.Inject;
 import com.utn.mobile.mapasolidario.dummy.DummyContent;
@@ -24,12 +23,13 @@ import com.utn.mobile.mapasolidario.user.UserFragment;
 import org.greenrobot.eventbus.Subscribe;
 
 import roboguice.activity.RoboFragmentActivity;
+
 public class MainActivity extends RoboFragmentActivity
         implements MapFragment.OnFragmentInteractionListener,
         NewsFragment.OnFragmentInteractionListener,
         UserFragment.OnFragmentInteractionListener,
         PointFragment.OnFragmentInteractionListener,
-        PointListFragment.OnListFragmentInteractionListener{
+        PointListFragment.OnListFragmentInteractionListener {
 
     @Inject
     private ProgressDialog progressDialog;
@@ -47,7 +47,7 @@ public class MainActivity extends RoboFragmentActivity
             switch (item.getItemId()) {
                 case R.id.navigation_map:
                     getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.content, new PointsFragment(), "Fragment")
+                            .replace(R.id.content, new MapFragment(), "Fragment")
                             .commit();
                     return true;
                 /*case R.id.navigation_map:{
@@ -88,22 +88,21 @@ public class MainActivity extends RoboFragmentActivity
         String token = FirebaseInstanceId.getInstance().getToken();
 
         // Log and toast
-        Log.d(TAG, "Firebase token: "+token);
+        Log.d(TAG, "Firebase token: " + token);
 
-        if(accessToken != null){
+        if (accessToken != null) {
             BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
             navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
             Bundle args = new Bundle();
-            args.putSerializable(CLASS_MESSAGE,usuarioActual);
-            PointsFragment fragment =  new PointsFragment();
+            args.putSerializable(CLASS_MESSAGE, usuarioActual);
+            MapFragment fragment = new MapFragment();
             fragment.setArguments(args);
 
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.content, fragment, "Fragment")
                     .commit();
-        }
-        else {
+        } else {
             Intent _intent = new Intent(this, LoginActivity.class);
             startActivity(_intent);
         }
@@ -112,7 +111,7 @@ public class MainActivity extends RoboFragmentActivity
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode,permissions,grantResults);
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
 
@@ -120,7 +119,7 @@ public class MainActivity extends RoboFragmentActivity
     public void goBack() {
         getFragmentManager().popBackStack();
         //Muestro el botón que estaba oculto
-   //     botonf.setVisibility(View.VISIBLE);
+        //     botonf.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -131,7 +130,7 @@ public class MainActivity extends RoboFragmentActivity
     @Override
     public void onBackPressed() {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        if (navigation.getVisibility()==View.GONE){
+        if (navigation.getVisibility() == View.GONE) {
             navigation.setVisibility(View.VISIBLE);
         }
         super.onBackPressed();

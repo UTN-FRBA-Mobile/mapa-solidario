@@ -2,11 +2,9 @@ package com.utn.mobile.mapasolidario.user;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,21 +18,18 @@ import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.login.widget.LoginButton;
-import com.google.inject.Inject;
 import com.squareup.picasso.Picasso;
 import com.utn.mobile.mapasolidario.BaseFragment;
 import com.utn.mobile.mapasolidario.MainActivity;
 import com.utn.mobile.mapasolidario.R;
-import com.utn.mobile.mapasolidario.User;
 import com.utn.mobile.mapasolidario.UserProvider;
 import com.utn.mobile.mapasolidario.dto.PuntoResponse;
-import com.utn.mobile.mapasolidario.login.LoginActivity;
 
 import java.util.List;
 
 import roboguice.inject.InjectView;
 
-public class UserFragment  extends BaseFragment implements UserView {
+public class UserFragment extends BaseFragment implements UserView {
 
     private CallbackManager callbackManager;
     private LoginButton loginButton;
@@ -73,9 +68,9 @@ public class UserFragment  extends BaseFragment implements UserView {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        if(this.points != null)
+        if (this.points != null)
             ((UserPointsAdapter) recyclerView.getAdapter()).updateData(this.points);
         presenter.fetchUserPoints(getContext());
     }
@@ -97,10 +92,12 @@ public class UserFragment  extends BaseFragment implements UserView {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
-    public void setUserData(View view){
-        ((TextView)view.findViewById(R.id.tv_apellido)).setText(UserProvider.get().getApellido());
-        ((TextView)view.findViewById(R.id.tv_nombre)).setText(UserProvider.get().getNombre());
-        ((TextView)view.findViewById(R.id.tv_email)).setText(UserProvider.get().getCorreo());
+    public void setUserData(View view) {
+        ((TextView) view.findViewById(R.id.tv_apellido)).setText(UserProvider.get().getApellido());
+        ((TextView) view.findViewById(R.id.tv_nombre)).setText(UserProvider.get().getNombre());
+        ((TextView) view.findViewById(R.id.tv_email)).setText(UserProvider.get().getCorreo());
+        String puntuacion = UserProvider.get().getPuntuacion() == null || UserProvider.get().getPuntuacion().isEmpty() ? "0" : UserProvider.get().getPuntuacion();
+        ((TextView) view.findViewById(R.id.tv_mis_puntos)).setText("Mis puntos: " + puntuacion);
         Picasso.with(this.getActivity()).load(UserProvider.get().getUrl_imagen()).fit().centerCrop().into((ImageView) view.findViewById(R.id.iv_usuario));
 
     }
@@ -133,7 +130,7 @@ public class UserFragment  extends BaseFragment implements UserView {
         void onFragmentInteraction(Uri uri);
     }
 
-    public void loadPoints(List<PuntoResponse> points){
+    public void loadPoints(List<PuntoResponse> points) {
         this.points = points;
         ((UserPointsAdapter) recyclerView.getAdapter()).updateData(points);
 

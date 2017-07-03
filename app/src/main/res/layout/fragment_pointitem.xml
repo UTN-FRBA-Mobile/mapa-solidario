@@ -1,20 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pointitem_list_item"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:gravity="top"
+    android:padding="5dp">
 
     <TextView
-        android:id="@+id/id"
+        android:id="@+id/pointitem_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem" />
+        android:visibility="gone" />
 
     <TextView
-        android:id="@+id/content"
-        android:layout_width="wrap_content"
+        android:id="@+id/pointitem_fecha"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem" />
-</LinearLayout>
+        android:layout_marginLeft="2dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/pointitem_user"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="2dp"
+        android:layout_below="@id/pointitem_fecha"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/pointitem_titulo"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="2dp"
+        android:layout_below="@id/pointitem_user"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/pointitem_descripcion"
+        android:layout_width="280dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/pointitem_titulo"
+        android:layout_margin="4dp"
+        android:layout_marginLeft="2dp"
+        android:textColor="@android:color/black" />
+
+</RelativeLayout>

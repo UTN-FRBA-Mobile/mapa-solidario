@@ -6,4 +6,8 @@ public interface BaseView {
 
     public void showErrorMessage(String message);
 
+    public void showProgressDialog();
+
+    public void hideProgressDialog();
+
 }

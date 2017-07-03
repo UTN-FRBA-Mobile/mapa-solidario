@@ -1,7 +1,6 @@
 package com.utn.mobile.mapasolidario;
 
 import android.app.DatePickerDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
@@ -31,18 +29,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.utn.mobile.mapasolidario.dto.PuntoUpdate;
-import com.utn.mobile.mapasolidario.event.HideProgressDialogEvent;
-import com.utn.mobile.mapasolidario.event.ShowProgressDialogEvent;
 import com.utn.mobile.mapasolidario.util.FetchPuntosErrors;
 import com.utn.mobile.mapasolidario.util.PointActions;
 
-import org.greenrobot.eventbus.EventBus;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -51,37 +42,50 @@ import java.util.Locale;
 
 import roboguice.inject.InjectView;
 
-
 public class PointFragment extends BaseFragment
-        implements View.OnClickListener,  CompoundButton.OnCheckedChangeListener, PointFragmentView,
+        implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, PointFragmentView,
         AdapterView.OnItemSelectedListener {
     private OnFragmentInteractionListener mListener;
 
-    @Inject    private PointFragmentPresenter presenter;
+    @Inject
+    private PointFragmentPresenter presenter;
 
-    @InjectView(R.id.tubicacion) private TextView ubicacion;
-    @InjectView(R.id.editText) private TextView descripcion;
-    @InjectView(R.id.editTitulo) private TextView titulo;
-    @InjectView(R.id.fcancel_boton) private Button bcancelar;
-    @InjectView(R.id.fcont_boton) private Button bcontinuar;
-    @InjectView(R.id.fborrar_boton) private Button bborrar;
-    @InjectView(R.id.tipos_spinner) private Spinner spinner;
-    @InjectView(R.id.fvencimiento) private EditText fechaVencimiento;
-    @InjectView(R.id.fcreacion) private EditText fechacreacion;
-    @InjectView(R.id.eayuda)     EditText ayudas;
-    @InjectView(R.id.pmap)    MapView mMapView;
-    @InjectView(R.id.lcreacion)     LinearLayout creacion;
-    @InjectView(R.id.lvencimiento)     LinearLayout lvencimiento;
-    @InjectView(R.id.svencimiento)    ToggleButton vswitch;
+    @InjectView(R.id.tubicacion)
+    private TextView ubicacion;
+    @InjectView(R.id.editText)
+    private TextView descripcion;
+    @InjectView(R.id.editTitulo)
+    private TextView titulo;
+    @InjectView(R.id.fcancel_boton)
+    private Button bcancelar;
+    @InjectView(R.id.fcont_boton)
+    private Button bcontinuar;
+    @InjectView(R.id.fborrar_boton)
+    private Button bborrar;
+    @InjectView(R.id.tipos_spinner)
+    private Spinner spinner;
+    @InjectView(R.id.fvencimiento)
+    private EditText fechaVencimiento;
+    @InjectView(R.id.fcreacion)
+    private EditText fechacreacion;
+    @InjectView(R.id.eayuda)
+    EditText ayudas;
+    @InjectView(R.id.pmap)
+    MapView mMapView;
+    @InjectView(R.id.lcreacion)
+    LinearLayout creacion;
+    @InjectView(R.id.lvencimiento)
+    LinearLayout lvencimiento;
+    @InjectView(R.id.svencimiento)
+    ToggleButton vswitch;
 
 
-    @Inject public BasePoint claseEnvio;
+    @Inject
+    public BasePoint claseEnvio;
 
-    public ProgressDialog progress;
     private PointActions accion;
     static String PUNTO_MESSAGE = "mensaje.al.fragment";
     GoogleMap googleMap;
-    @Inject private static Gson gson = new Gson();
 
     public PointFragment() {
         // Required empty public constructor
@@ -110,10 +114,10 @@ public class PointFragment extends BaseFragment
         super.onViewCreated(view, savedInstanceState);
 
         //Levanto el objeto que me mandan
-        if(getArguments()!=null)        {
+        if (getArguments() != null) {
             claseEnvio = (BasePoint) getArguments().getSerializable(PUNTO_MESSAGE);
-       //     claseEnvio.setId("");
-       //    claseEnvio.setAccion(PointActions.MODIFICACION);//valor para probar... sacarlo desp TODO
+            //     claseEnvio.setId("");
+            //    claseEnvio.setAccion(PointActions.MODIFICACION);//valor para probar... sacarlo desp TODO
             accion = claseEnvio.accion;
         }
 
@@ -137,7 +141,7 @@ public class PointFragment extends BaseFragment
         });
 
         //Muestro el mapa
-        if (mMapView != null){
+        if (mMapView != null) {
             mMapView.onCreate(savedInstanceState);
             mMapView.onResume();
             //cargarMapa(); TODO: sino en CONSULTA se carga doble el mapa, primero con claseEnvio default y luego con claseEnvio de loadPoint
@@ -156,7 +160,7 @@ public class PointFragment extends BaseFragment
 
     }
 
-    public void revisarAccion (View view) {
+    public void revisarAccion(View view) {
 
         EditText editTitulo = (EditText) view.findViewById(R.id.editTitulo);
         EditText editDescripcion = (EditText) view.findViewById(R.id.editText);
@@ -193,9 +197,9 @@ public class PointFragment extends BaseFragment
 //            fechaVencimiento.setLayoutParams(params);
         }
 
-        }
+    }
 
-    void cargarMapa(){
+    void cargarMapa() {
 
         try {
             MapsInitializer.initialize(getContext());
@@ -216,30 +220,30 @@ public class PointFragment extends BaseFragment
 //TODO: depende el evento llega el tipo vacío, si toco volver del detalle (no se cargan los puntos) y toco +, me toma el tipo individuo que es el primero del array
 //TODO: no me toma el if
 //                    if (claseEnvio.accion==(PointActions.CONSULTA) ) {
-                        if (tipo_aux.equals("Heladera Solidaria")) {
-                            // creo punto de tipo heladera
-                            googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.heladera_marker)));
-                        }
-                        if (tipo_aux.equals("Ropero Solidario")) {
-                            // creo punto de tipo ropero
-                            googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.ropero_marker)));
-                        }
-                        if (tipo_aux.equals("Individuo")) {
-                            // creo punto de tipo individuo
-                            googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.individuo_marker)));
-                        }
-                        if (tipo_aux.equals("Emergencia")) {
-                            // creo punto de tipo emergencia
-                            googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.emergencia_marker)));
-                        }
+                if (tipo_aux.equals("Heladera Solidaria")) {
+                    // creo punto de tipo heladera
+                    googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.heladera_marker)));
+                }
+                if (tipo_aux.equals("Ropero Solidario")) {
+                    // creo punto de tipo ropero
+                    googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.ropero_marker)));
+                }
+                if (tipo_aux.equals("Individuo")) {
+                    // creo punto de tipo individuo
+                    googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.individuo_marker)));
+                }
+                if (tipo_aux.equals("Emergencia")) {
+                    // creo punto de tipo emergencia
+                    googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.emergencia_marker)));
+                }
 //                    }
 //                if (tipo_aux.equals("")) {
-              if (claseEnvio.accion==(PointActions.ALTA) ) {
+                if (claseEnvio.accion == (PointActions.ALTA)) {
                     // creo punto de tipo +
                     googleMap.addMarker(new MarkerOptions().position(ubicacion).icon(BitmapDescriptorFactory.fromResource(R.drawable.new_marker)));
                 }
 
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacion,17));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacion, 17));
 
                 googleMap.getUiSettings().setZoomControlsEnabled(true);
                 googleMap.getUiSettings().setCompassEnabled(false);
@@ -251,7 +255,7 @@ public class PointFragment extends BaseFragment
         mMapView.setClickable(false);
     }
 
-    public void configurarLayout(){
+    public void configurarLayout() {
 
         //Mostrar dirección del punto
         ubicacion.setText(getCompleteAddressString(claseEnvio.latitud, claseEnvio.longitud));
@@ -263,10 +267,10 @@ public class PointFragment extends BaseFragment
 //        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
 //                R.array.tipos_array, android.R.layout.simple_spinner_item);
 //        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
-  //              R.layout.row, R.id.tipo, R.array.tipos_array);
+        //              R.layout.row, R.id.tipo, R.array.tipos_array);
 
-        CustomAdapter adapter=new CustomAdapter(getContext(),flags,R.array.tipos_array);
-  //      adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        CustomAdapter adapter = new CustomAdapter(getContext(), flags, R.array.tipos_array);
+        //      adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
@@ -288,16 +292,16 @@ public class PointFragment extends BaseFragment
             if (addresses != null) {
 
                 String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
- //               String city = addresses.get(0).getLocality();
+                //               String city = addresses.get(0).getLocality();
                 String state = addresses.get(0).getAdminArea();
                 String country = addresses.get(0).getCountryName();
 //                String postalCode = addresses.get(0).getPostalCode();
 //                String knownName = addresses.get(0).getFeatureName();
 
-                strAdd = address + ", "+state+ ", "+country;
+                strAdd = address + ", " + state + ", " + country;
 
             } else {
-                strAdd =  getResources().getString(R.string.error_geolocalizacion);
+                strAdd = getResources().getString(R.string.error_geolocalizacion);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -306,17 +310,17 @@ public class PointFragment extends BaseFragment
         return strAdd;
     }
 
-    public void ocultarTeclado(){
+    public void ocultarTeclado() {
         //Oculto el teclado cuando sale del foco
         View foco = getActivity().getCurrentFocus();
         if (foco != null) {
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(foco.getWindowToken(), imm.HIDE_NOT_ALWAYS );
+            imm.hideSoftInputFromWindow(foco.getWindowToken(), imm.HIDE_NOT_ALWAYS);
         }
 
     }
 
-    public void llenarDatepicker(){
+    public void llenarDatepicker() {
 
         final Calendar myCalendar = Calendar.getInstance();
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
@@ -346,38 +350,39 @@ public class PointFragment extends BaseFragment
         });
     }
 
-    public void accionBotonContinuar(){
+    public void accionBotonContinuar() {
         bcontinuar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 if (claseEnvio.accion == PointActions.CONSULTA) {
-                    claseEnvio.setContador(claseEnvio.contador+1);//sumo un punto cada vez que tocan el botón
-                }else {
-                    claseEnvio.setFechaModificacion(new Date());
+                    claseEnvio.setContador(claseEnvio.contador + 1);//sumo un punto cada vez que tocan el botón
+                } else {
+//                    claseEnvio.setFechaModificacion(new Date());
                     claseEnvio.setDescripcion(descripcion.getText().toString());
                     claseEnvio.setTitulo(titulo.getText().toString());
-                    if (vswitch.isChecked()==true){
-                        claseEnvio.setFechaVto(fechaVencimiento.getText().toString());
+                    if (vswitch.isChecked() == true) {
+                        String fecha = fechaVencimiento.getText().toString();
+                      //            fechacreacion.setText(convertirFecha(claseEnvio.fechaCreacion));
+                         claseEnvio.setFechaVto(fecha.substring(6,10)+fecha.substring(3,5)+fecha.substring(0,2)+"000000");
                     }
                 }
 
-                String mysz2 = claseEnvio.titulo.replaceAll("\\s","");
-                if (mysz2==""){
-                    Toast.makeText(getContext(), "El título es obligatorio", Toast.LENGTH_LONG ).show();
-                }
-                else {
-                    if (claseEnvio.accion==PointActions.ALTA){
+                String mysz2 = claseEnvio.titulo.replaceAll("\\s", "");
+                if (mysz2 == "") {
+                    Toast.makeText(getContext(), "El título es obligatorio", Toast.LENGTH_LONG).show();
+                } else {
+                    if (claseEnvio.accion == PointActions.ALTA) {
                         claseEnvio.setId_usuario(UserProvider.get().getId());
-                        claseEnvio.setUsuario(UserProvider.get().getNombre()+" "+UserProvider.get().getApellido());
-                        presenter.guardarPunto(getContext(),claseEnvio);
+                        claseEnvio.setUsuario(UserProvider.get().getNombre() + " " + UserProvider.get().getApellido());
+                        presenter.guardarPunto(getContext(), claseEnvio);
                     }
-                    if (claseEnvio.accion==PointActions.MODIFICACION){
-                        presenter.actualizarPunto(getContext(),claseEnvio._id,new PuntoUpdate(claseEnvio));
+                    if (claseEnvio.accion == PointActions.MODIFICACION) {
+                        presenter.actualizarPunto(getContext(), claseEnvio._id, new PuntoUpdate(claseEnvio));
                     }
                 }
-                if (claseEnvio.accion == PointActions.CONSULTA){
-                    presenter.actualizarPunto(getContext(),claseEnvio._id);
+                if (claseEnvio.accion == PointActions.CONSULTA) {
+                    presenter.actualizarPunto(getContext(), claseEnvio._id);
                 }
 
 
@@ -386,21 +391,20 @@ public class PointFragment extends BaseFragment
         });
     }
 
-    public void accionBotonBorrar(){
-        if (claseEnvio.accion==PointActions.MODIFICACION) {
+    public void accionBotonBorrar() {
+        if (claseEnvio.accion == PointActions.MODIFICACION) {
             bborrar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     presenter.borrarPunto(getContext(), claseEnvio._id);
                 }
             });
-        }
-        else
+        } else
             bborrar.setVisibility(View.GONE);
 
     }
 
-    public void nuevoBackStack(){
+    public void nuevoBackStack() {
         ocultarTeclado();
         //muestro la barra de abajo
         getActivity().findViewById(R.id.navigation).setVisibility(View.VISIBLE);
@@ -417,25 +421,12 @@ public class PointFragment extends BaseFragment
         }*/
     }
 
-    @Override
-    public void showProgressDialog() {
-
-        progress = new ProgressDialog(getActivity());
-        EventBus.getDefault().post(new ShowProgressDialogEvent(progress));
-    }
-
-    @Override
-    public void hideProgressDialog() {
-
-        EventBus.getDefault().post(new HideProgressDialogEvent(progress));
-    }
-
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (isChecked) {
             fechaVencimiento.setVisibility(View.VISIBLE);
         } else {
             fechaVencimiento.setVisibility(View.GONE);
-            claseEnvio.setFechaVto("01/01/2001");
+            claseEnvio.setFechaVto("20010101000000");
         }
     }
 
@@ -454,67 +445,77 @@ public class PointFragment extends BaseFragment
     @Override
     public void loadPoint(BasePoint punto) {
 
-            if(punto != null){
-                claseEnvio = punto;
+        if (punto != null) {
+            claseEnvio = punto;
 
-                //lleno el layout con los datos devueltos
-                cargarMapa();
-                ubicacion.setText(getCompleteAddressString(claseEnvio.latitud, claseEnvio.longitud));
+            //lleno el layout con los datos devueltos
+            cargarMapa();
+            ubicacion.setText(getCompleteAddressString(claseEnvio.latitud, claseEnvio.longitud));
 
-                int flags[] = {R.drawable.individuo_marker, R.drawable.heladera_marker, R.drawable.ropero_marker, R.drawable.emergencia_marker};
-                 CustomAdapter adapter=new CustomAdapter(getContext(),flags,R.array.tipos_array);
- //               ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
-   //                     R.array.tipos_array, android.R.layout.simple_spinner_item);
+            int flags[] = {R.drawable.individuo_marker, R.drawable.heladera_marker, R.drawable.ropero_marker, R.drawable.emergencia_marker};
+            CustomAdapter adapter = new CustomAdapter(getContext(), flags, R.array.tipos_array);
+            //               ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+            //                     R.array.tipos_array, android.R.layout.simple_spinner_item);
 //                int spinnerPosition = adapter.getPosition(claseEnvio.tipo);
-                spinner.setSelection(adapter.getPosition(claseEnvio.tipo));
+            spinner.setSelection(adapter.getPosition(claseEnvio.tipo));
 
-                titulo.setText(claseEnvio.titulo);
+            titulo.setText(claseEnvio.titulo);
 
-                if (claseEnvio.fechaVto=="01/01/2001"||claseEnvio.fechaVto==""){
-                    if (accion==PointActions.MODIFICACION) {
-                        vswitch.setChecked(false);
-                    }else{
-                        lvencimiento.setVisibility(View.GONE);
-                    }
-                }else {
-                    fechaVencimiento.setVisibility(View.VISIBLE);
-                    fechaVencimiento.setText(claseEnvio.fechaVto);
-                    if (accion==PointActions.MODIFICACION) {
-                        vswitch.setChecked(true);}
+            if (claseEnvio.getFechaVto().equals("20010101000000") || claseEnvio.fechaVto == "") {
+                if (accion == PointActions.MODIFICACION) {
+                    vswitch.setChecked(false);
+                } else {
+                    lvencimiento.setVisibility(View.GONE);
                 }
-                descripcion.setText(claseEnvio.descripcion);
-
-                //Mostrarlo en el text view
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
-                fechacreacion.setText(sdf.format(claseEnvio.fechaCreacion.getTime()));
-
-                ayudas.setText(String.valueOf(claseEnvio.contador));
-
-                claseEnvio.setAccion(accion);
-            }else{
-                Toast.makeText(getContext(), "Error al obtener los datos", Toast.LENGTH_LONG ).show();
+            } else {
+                fechaVencimiento.setVisibility(View.VISIBLE);
+                fechaVencimiento.setText(convertirFecha(claseEnvio.fechaVto));
+                if (accion == PointActions.MODIFICACION) {
+                    vswitch.setChecked(true);
+                }
             }
+            descripcion.setText(claseEnvio.descripcion);
+
+            //Mostrarlo en el text view
+//            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+//            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmss", Locale.US);
+//            fechacreacion.setText(sdf.format(claseEnvio.fechaCreacion));
+            fechacreacion.setText(convertirFecha(claseEnvio.fechaCreacion));
+
+            ayudas.setText(String.valueOf(claseEnvio.contador));
+
+            claseEnvio.setAccion(accion);
+        } else {
+            Toast.makeText(getContext(), "Error al obtener los datos", Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+    public String convertirFecha (String fecha){
+        String fechaBonita = "";
+        fechaBonita = fecha.substring(6,8)+"/"+fecha.substring(4,6)+"/"+fecha.substring(0,4);
+        return fechaBonita;
     }
 
     @Override
     public void okPoint(BasePoint punto) {
 
-        if(punto != null){
+        if (punto != null) {
             claseEnvio = punto;
             if (accion == PointActions.CONSULTA) {
                 Toast.makeText(getContext(), "¡Gracias por tu ayuda!", Toast.LENGTH_LONG).show();
-            }else {
+            } else {
                 Toast.makeText(getContext(), "Punto Guardado correctamente", Toast.LENGTH_LONG).show();
             }
-        }else{
-            Toast.makeText(getContext(), "Error al obtener los datos", Toast.LENGTH_LONG ).show();
+        } else {
+            Toast.makeText(getContext(), "Error al obtener los datos", Toast.LENGTH_LONG).show();
         }
         nuevoBackStack();
     }
 
     @Override
     public void showMessageError(FetchPuntosErrors error) {
-        Toast.makeText(getContext(), "Error al consultar el servidor", Toast.LENGTH_LONG ).show();
+        Toast.makeText(getContext(), "Error al consultar el servidor", Toast.LENGTH_LONG).show();
 /*        String msjError = "";
         String title = getString(R.string.POPUP_TITLE_SERVIDOR);
         switch (error) {
@@ -576,6 +577,6 @@ public class PointFragment extends BaseFragment
     }
 
     public interface OnFragmentInteractionListener {
-        void goBack ();
+        void goBack();
     }
 }

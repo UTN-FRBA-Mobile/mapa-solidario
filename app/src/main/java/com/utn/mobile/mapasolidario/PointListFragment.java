@@ -2,32 +2,31 @@ package com.utn.mobile.mapasolidario;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.utn.mobile.mapasolidario.dummy.DummyContent;
+import com.google.inject.Inject;
+import com.utn.mobile.mapasolidario.dto.PuntoResponse;
 import com.utn.mobile.mapasolidario.dummy.DummyContent.DummyItem;
+import com.utn.mobile.mapasolidario.util.FetchPuntosErrors;
 
 import java.util.List;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
- */
-public class PointListFragment extends Fragment {
+import roboguice.inject.InjectView;
 
-    // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
-    private int mColumnCount = 1;
+public class PointListFragment extends BaseFragment implements PointItemListFragmentView {
+
     private OnListFragmentInteractionListener mListener;
+
+    @InjectView(R.id.pointitem_list)
+    private RecyclerView recyclerView;
+
+    @Inject
+    private PointListFragmentPresenter presenter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -36,42 +35,44 @@ public class PointListFragment extends Fragment {
     public PointListFragment() {
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
-    public static PointListFragment newInstance(int columnCount) {
-        PointListFragment fragment = new PointListFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
+        presenter.onCreate(this);
+        //presenter.fetchPuntos(getContext());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_pointitem_list, container, false);
-
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            recyclerView.setAdapter(new PointItemRecyclerViewAdapter(PointListProvider.get(), mListener));
-        }
+        presenter.fetchPuntos(getContext());
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //presenter.fetchPuntos(getContext());
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        PointItemRecyclerViewAdapter projectAdapter = new PointItemRecyclerViewAdapter(getContext(), this);
+        recyclerView.setAdapter(projectAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+//        projectAdapter.SetOnItemClickListener(new NewsFragmentAdapter.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(View v, int position, String id) {
+//                BasePoint claseEnvio = new BasePoint();
+//                claseEnvio.setId(id);
+//                claseEnvio.setAccion(PointActions.CONSULTA);
+//                FragmentManager fragmentManager = getFragmentManager();
+//                consultarPunto(claseEnvio, fragmentManager);
+//            }
+//        });
     }
 
 
@@ -90,6 +91,30 @@ public class PointListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void showMessageError(FetchPuntosErrors error) {
+        String msjError = "";
+        String title = getString(R.string.POPUP_TITLE_SERVIDOR);
+        switch (error) {
+            case PROBLEMA_SERVIDOR:
+                msjError = getString(R.string.sin_comunicacion);
+                break;
+            case PROBLEMA_BUSQUEDA:
+                title = getString(R.string.POPUP_TITLE_SIN_NOVEDADES);
+                msjError = getString(R.string.POPUP_MENSAJE_SIN_NOVEDADES);
+                break;
+            case TIME_OUT:
+                msjError = getString(R.string.sin_comunicacion);
+                break;
+        }
+    }
+
+
+    @Override
+    public void loadPoints(List<PuntoResponse> resultadoDTO) {
+        ((PointItemRecyclerViewAdapter) recyclerView.getAdapter()).updateData(resultadoDTO);
     }
 
     /**
