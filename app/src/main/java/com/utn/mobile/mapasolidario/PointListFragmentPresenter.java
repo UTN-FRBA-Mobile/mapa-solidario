@@ -3,8 +3,9 @@ package com.utn.mobile.mapasolidario;
 import android.content.Context;
 
 import com.utn.mobile.mapasolidario.event.FetchPuntosFailedEvent;
+import com.utn.mobile.mapasolidario.event.FetchPuntosParaListaSuccessEvent;
 import com.utn.mobile.mapasolidario.event.FetchPuntosSuccessEvent;
-import com.utn.mobile.mapasolidario.task.FetchPuntosTask;
+import com.utn.mobile.mapasolidario.task.FetchPuntosParaListaTask;
 import com.utn.mobile.mapasolidario.util.UiUtils;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -19,7 +20,7 @@ public class PointListFragmentPresenter extends BasePresenter<PointItemListFragm
     public void fetchPuntos(Context context) {
         view.showProgressDialog();
         if (UiUtils.checkNetworkAvailable(context)) {
-            new FetchPuntosTask(context).execute();
+            new FetchPuntosParaListaTask(context).execute();
         } else {
             view.hideProgressDialog();
         }
@@ -32,7 +33,7 @@ public class PointListFragmentPresenter extends BasePresenter<PointItemListFragm
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onFetchPuntosSuccessEvent(FetchPuntosSuccessEvent event) {
+    public void onFetchPuntosSuccessEvent(FetchPuntosParaListaSuccessEvent event) {
         view.hideProgressDialog();
         if (event.getResultadoDTO() != null) {
             if (!event.getResultadoDTO().isEmpty()) {

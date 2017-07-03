@@ -71,7 +71,6 @@ public class NewsFragmentAdapter extends RecyclerView.Adapter<NewsFragmentAdapte
         private TextView newsTitle;
         private TextView newsDescription;
         private TextView newsExpireDate;
-        private View relativeLayout;
         TextView newsID;
 
         ViewHolder(View itemView) {
@@ -80,7 +79,6 @@ public class NewsFragmentAdapter extends RecyclerView.Adapter<NewsFragmentAdapte
             newsTitle = (TextView) itemView.findViewById(R.id.txt_newsTitle);
             newsDescription = (TextView) itemView.findViewById(R.id.txt_newsDescription);
             newsExpireDate = (TextView) itemView.findViewById(R.id.txt_newsExpireDate);
-            relativeLayout = (View) itemView.findViewById(R.id.lay_newsIsImportant);
             newsID = (TextView) itemView.findViewById(R.id.txt_newsID);
             itemView.setOnClickListener(this);
         }
