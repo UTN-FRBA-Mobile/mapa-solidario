@@ -101,6 +101,7 @@ public class UserFragment  extends BaseFragment implements UserView {
         ((TextView)view.findViewById(R.id.tv_apellido)).setText(UserProvider.get().getApellido());
         ((TextView)view.findViewById(R.id.tv_nombre)).setText(UserProvider.get().getNombre());
         ((TextView)view.findViewById(R.id.tv_email)).setText(UserProvider.get().getCorreo());
+        ((TextView)view.findViewById(R.id.tv_mis_puntos)).setText("Mis puntos: " + UserProvider.get().getPuntuacion());
         Picasso.with(this.getActivity()).load(UserProvider.get().getUrl_imagen()).fit().centerCrop().into((ImageView) view.findViewById(R.id.iv_usuario));
 
     }
