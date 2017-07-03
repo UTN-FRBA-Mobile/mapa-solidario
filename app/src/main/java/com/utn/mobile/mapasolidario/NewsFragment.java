@@ -124,6 +124,7 @@ public class NewsFragment extends BaseFragment implements NewsFragmentView {
                 msjError = getString(R.string.sin_comunicacion);
                 break;
         }
+        Utils.createMessageDialog(this.getContext(), title, msjError, R.drawable.ic_notifications_black_24dp);
     }
 
     @Override

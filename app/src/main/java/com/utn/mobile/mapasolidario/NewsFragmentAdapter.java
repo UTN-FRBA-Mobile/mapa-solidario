@@ -99,7 +99,7 @@ public class NewsFragmentAdapter extends RecyclerView.Adapter<NewsFragmentAdapte
             newsTitle.setText(novedad.getTitulo());
             newsDescription.setText(novedad.getDescripcion());
             newsID.setText(novedad.get_id());
-            if (novedad.getFechaVto() != null && !novedad.getFechaVto().isEmpty()) {
+            if (novedad.getFechaVto() != null && !novedad.getFechaVto().isEmpty() && !novedad.getFechaVto().equals("20010101000000")) {
                 newsFragmentView.changeItemColor(itemView);
                 newsExpireDate.setVisibility(View.VISIBLE);
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");

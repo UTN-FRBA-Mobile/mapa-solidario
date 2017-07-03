@@ -25,6 +25,8 @@ class NewsFragmentPresenter extends BasePresenter<NewsFragmentView> {
         }
     }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(FetchNewsFailedEvent event) {
         view.hideProgressDialog();
         view.showMessageError(event.getError());
