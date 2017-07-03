@@ -160,4 +160,11 @@ public class MainActivity extends RoboFragmentActivity
     public void onListFragmentInteraction(DummyContent.DummyItem item) {
 
     }
+
+    public void navigateToLogin(){
+        Intent i = new Intent(this, LoginActivity.class);
+        startActivity(i);
+        finish();
+    }
+
 }

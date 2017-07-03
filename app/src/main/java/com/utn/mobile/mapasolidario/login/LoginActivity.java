@@ -53,6 +53,12 @@ public class LoginActivity extends RoboActivity implements  LoginView {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        loginButton.unregisterCallback(callbackManager);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
@@ -62,6 +68,7 @@ public class LoginActivity extends RoboActivity implements  LoginView {
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+                accessToken = AccessToken.getCurrentAccessToken();
                 getUser();
             }
             @Override
@@ -103,4 +110,5 @@ public class LoginActivity extends RoboActivity implements  LoginView {
 
     @Override
     public void hideProgress(){}
+
 }
