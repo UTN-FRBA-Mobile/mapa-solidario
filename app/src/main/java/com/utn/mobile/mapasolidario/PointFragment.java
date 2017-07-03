@@ -461,7 +461,7 @@ public class PointFragment extends BaseFragment
 
             titulo.setText(claseEnvio.titulo);
 
-            if (claseEnvio.fechaVto == "20010101000000" || claseEnvio.fechaVto == "") {
+            if (claseEnvio.getFechaVto().equals("20010101000000") || claseEnvio.fechaVto == "") {
                 if (accion == PointActions.MODIFICACION) {
                     vswitch.setChecked(false);
                 } else {

@@ -29,7 +29,7 @@ public class BasePoint
     int contador = 0;
 
     public BasePoint() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmss", Locale.US);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US);
         fechaCreacion = sdf.format(new Date());
         fechaModificacion = sdf.format(new Date());
     }
