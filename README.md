@@ -10,6 +10,10 @@ La información de los puntos como la de los usuarios se persiste en una base de
 * Login
 
 El usuario podrá loguearse en la aplicación mediante Facebook. Se utiliza su API y se genera el perfil del usuario en la aplicación cuando ingresa por primera vez.
+<p align="center">
+  <img src="https://github.com/UTN-FRBA-Mobile/mapa-solidario/blob/master/img/Screenshot_1499450824.png?raw=true" width="350"/>
+  <img src="https://github.com/UTN-FRBA-Mobile/mapa-solidario/blob/master/img/Screenshot_1499450883.png?raw=true" width="350"/>
+</p>
 
 # Mapa
 
@@ -45,8 +49,12 @@ Se presentará una pantalla en donde se solicitará indicar:
 
 * Descripción de necesidad del punto (textbox-obligatorio)
 
-
 Una vez ingresados los datos, si se presiona guardar, se cargará dicho punto y actualizará en el mapa. Si se presiona Volver, se volverá a presentar el mapa en el estado anterior.
+
+<p align="center">
+  <img src="https://github.com/UTN-FRBA-Mobile/mapa-solidario/blob/master/img/Screenshot_1499451088.png?raw=true" width="350"/>
+  <img src="https://github.com/UTN-FRBA-Mobile/mapa-solidario/blob/master/img/Screenshot_1499451100.png?raw=true" width="350"/>
+</p>
 
 	 
 * Visualización del Punto
@@ -63,10 +71,20 @@ Los puntos expirados no se visualizarán en el mapa.
 * Sistema de puntos
 Con el objetivo de incentivar la colaboración se otorgarán puntos cada vez que se genere una nueva necesidad o se colabore con las existentes.
 
+<p align="center">
+  <img src="https://github.com/UTN-FRBA-Mobile/mapa-solidario/blob/master/img/Screenshot_1499450942.png?raw=true" width="350"/>
+  <img src="https://github.com/UTN-FRBA-Mobile/mapa-solidario/blob/master/img/Screenshot_1499450954.png?raw=true" width="350"/>
+  <img src="https://github.com/UTN-FRBA-Mobile/mapa-solidario/blob/master/img/Screenshot_1499450977.png?raw=true" width="350"/>
+</p>
+
 # Novedades
 	 
 Se dispondrá de una sección de novedades en la que se puedan visualizar los últimos diez puntos generados. Se priorizarán los puntos con vencimiento.
 Al hacer click en la novedad nos permitirá visualizar el detalle del punto generado.
+
+<p align="center">
+  <img src="https://github.com/UTN-FRBA-Mobile/mapa-solidario/blob/master/img/Screenshot_1499451018.png?raw=true" width="350"/>
+</p>
 
 # Usuarios
 	 
@@ -75,3 +93,8 @@ Estos datos serán obtenidos en primera instancia de la cuenta de Facebook con l
 También dispondrá de un historial catalogado por los puntos creados por el usuario, a los cuales podrá acceder para visualizar, modificar o borrar .
 También se podrá visualizar el puntaje acumulado en base a la creación de puntos y ayudas realizadas.
 En ésta misma sección se encontrará el botón de logout.
+
+<p align="center">
+  <img src="https://github.com/UTN-FRBA-Mobile/mapa-solidario/blob/master/img/Screenshot_1499451030.png?raw=true" width="350"/>
+  <img src="https://github.com/UTN-FRBA-Mobile/mapa-solidario/blob/master/img/Screenshot_1499451077.png?raw=true" width="350"/>
+</p>
