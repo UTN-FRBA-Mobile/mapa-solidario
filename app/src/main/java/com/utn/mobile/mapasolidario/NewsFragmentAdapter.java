@@ -8,10 +8,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.utn.mobile.mapasolidario.dto.NovedadResponse;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -65,7 +68,7 @@ public class NewsFragmentAdapter extends RecyclerView.Adapter<NewsFragmentAdapte
         notifyItemRemoved(position);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView newsUserImg;
         private TextView newsTitle;
@@ -96,14 +99,27 @@ public class NewsFragmentAdapter extends RecyclerView.Adapter<NewsFragmentAdapte
 //            if (user != null) {
 //                ImageLoader.instance.loadImage(user.getProfile().getImage_24(), newsUserImg);
 //            }
+
+
+//            Picasso.with(layoutInflater.getContext()).load(UserProvider.get().getUrl_imagen()).fit().centerCrop().into(newsUserImg);
+
             newsTitle.setText(novedad.getTitulo());
             newsDescription.setText(novedad.getDescripcion());
             newsID.setText(novedad.get_id());
             if (novedad.getFechaVto() != null && !novedad.getFechaVto().isEmpty() && !novedad.getFechaVto().equals("20010101000000")) {
                 newsFragmentView.changeItemColor(itemView);
                 newsExpireDate.setVisibility(View.VISIBLE);
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                newsExpireDate.setText("Fecha de Finalizazión: " + novedad.getFechaVto());
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmss");
+                Date vto = null;
+                String fechaVto = "-";
+                try {
+                    vto = sdf.parse(novedad.getFechaVto());
+                    SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
+                    fechaVto = sdf2.format(vto);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                newsExpireDate.setText("Fecha de Finalizazión: " + fechaVto);
             } else {
                 newsExpireDate.setVisibility(View.INVISIBLE);
             }
