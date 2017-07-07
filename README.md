@@ -28,7 +28,7 @@ Los cuatro tipo de puntos se generan desde la misma pantalla y son los siguiente
 
 * Punto de tipo Emergencia: Éste punto está orientado a sucesos, por ej: inundaciones, para los cuales se disponen puntos de recolección de donaciones. Como usuario de la aplicación y responsable del punto de recolección se genera dicho punto en el mapa.
 
-* Carga del Punto
+**Carga del Punto**
 
 Para los cuatro puntos se presenta la misma interfaz de carga:
 
@@ -57,7 +57,7 @@ Una vez ingresados los datos, si se presiona guardar, se cargará dicho punto y 
 </p>
 
 	 
-* Visualización del Punto
+**Visualización del Punto**
 
 Se dispondrán los puntos en el mapa que no se encuentren expirados. Al presionar sobre éstos se podrá observar una ventana de información.
 
