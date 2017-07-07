@@ -11,7 +11,7 @@ La información de los puntos como la de los usuarios se persiste en una base de
 
 El usuario podrá loguearse en la aplicación mediante Facebook. Se utiliza su API y se genera el perfil del usuario en la aplicación cuando ingresa por primera vez.
 
-* Mapa
+# Mapa
 
 Se presenta el mapa de Google en el cual se visualizan los distintos puntos generados. Se utiliza la API de Google Maps para interactuar con el mapa.
 Los cuatro tipo de puntos se generan desde la misma pantalla y son los siguientes:
@@ -24,7 +24,6 @@ Los cuatro tipo de puntos se generan desde la misma pantalla y son los siguiente
 
 * Punto de tipo Emergencia: Éste punto está orientado a sucesos, por ej: inundaciones, para los cuales se disponen puntos de recolección de donaciones. Como usuario de la aplicación y responsable del punto de recolección se genera dicho punto en el mapa.
 
-   * Mapa 
 * Carga del Punto
 
 Para los cuatro puntos se presenta la misma interfaz de carga:
@@ -49,7 +48,7 @@ Se presentará una pantalla en donde se solicitará indicar:
 
 Una vez ingresados los datos, si se presiona guardar, se cargará dicho punto y actualizará en el mapa. Si se presiona Volver, se volverá a presentar el mapa en el estado anterior.
 
-   * Mapa
+	 
 * Visualización del Punto
 
 Se dispondrán los puntos en el mapa que no se encuentren expirados. Al presionar sobre éstos se podrá observar una ventana de información.
@@ -64,11 +63,13 @@ Los puntos expirados no se visualizarán en el mapa.
 * Sistema de puntos
 Con el objetivo de incentivar la colaboración se otorgarán puntos cada vez que se genere una nueva necesidad o se colabore con las existentes.
 
-   * Novedades
+# Novedades
+	 
 Se dispondrá de una sección de novedades en la que se puedan visualizar los últimos diez puntos generados. Se priorizarán los puntos con vencimiento.
 Al hacer click en la novedad nos permitirá visualizar el detalle del punto generado.
 
-   * Usuarios
+# Usuarios
+	 
 Los usuarios tendrán los siguientes atributos: Nombre, Apellido y Correo Electrónico.  
 Estos datos serán obtenidos en primera instancia de la cuenta de Facebook con los permisos de perfil público que se nos brinda al iniciar sesión. Esta información será guardada en nuestra base de datos para mantener un registro de usuarios y brindar la posibilidad al usuario de actualizar su perfil.
 También dispondrá de un historial catalogado por los puntos creados por el usuario, a los cuales podrá acceder para visualizar, modificar o borrar .
